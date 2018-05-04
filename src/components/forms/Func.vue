@@ -14,7 +14,7 @@ import ABtn from '@/components/forms/ABtn'
 import RegularModal from '@/components/modals/RegularModal'
 
 export default {
-  name: 'func',
+  name: 'Func',
   props: {
     funcs: {
       type: [Array, Object],

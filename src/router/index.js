@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/views/home'
+import Home from '@/views/Home'
 import Apps from '@/views/Apps'
 import App from '@/views/App'
 /* import OrderOrderRead from '@/views/order/order/Read'

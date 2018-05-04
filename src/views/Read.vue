@@ -10,7 +10,7 @@
 import { mapGetters } from 'vuex'
 import RegularCard from '@/components/cards/RegularCard'
 import PageSearch from '@/components/forms/PageSearch'
-import Func from '@/components/forms/func'
+import Func from '@/components/forms/Func'
 import { nameToId } from '@/assets/js/custom'
 
 export default {
