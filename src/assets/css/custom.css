@@ -1,0 +1,100 @@
+::selection{ background-color: #00CCFF; color: white; }
+::moz-selection{ background-color: #00CCFF; color: white; }
+::webkit-selection{ background-color: #00CCFF; color: white; }
+
+/*
+ * Top navigation
+ * Hide default border to remove 1px line.
+ */
+.navbar-fixed-top {
+  border: 0;
+}
+
+@media (min-width: 768px) {
+  .menu {
+    position: absolute;
+    z-index: 999;
+    left: -1px;
+    top: 56px;
+    width: 8.33333333%;
+    overflow: visible;
+    display: block ;
+  }
+
+  .menu > li {
+    float: none;
+    background-color: #428bca;
+    border-right: 1px solid #eee;
+    border-bottom: 1px solid #fff;
+    text-align: center;
+  }
+
+  .menu > li > a > i {
+    display: block;
+    font-size: 24px;
+  }
+
+  .menu .dropdown.open {
+    background-color: #428bca;
+  }
+  .navbar-light .navbar-nav.menu>.open>a, .navbar-light .navbar-nav.menu>.open>a:focus, .navbar-light .navbar-nav.menu>.open>a:hover {
+    background-color: #428bca;
+  }
+
+  .navbar-light .navbar-nav > li >a {
+    color: #CDCDCD;
+    font-size: 16px;
+  }
+
+  .navbar-light .navbar-nav.menu>.open>a, .navbar-light .navbar-nav.menu>.open>a:focus, .navbar-light .navbar-nav.menu>.open>a:hover {
+    color: #333;
+  }
+
+  .navbar-nav.menu > li > .dropdown-menu {
+    top: 10%;
+    left: 80%;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+
+  .navbar-nav.menu .dropdown-menu > a:not(:last-child) {
+    border-bottom: 1px solid #CDCDCD;
+  }
+
+  .navbar-nav.menu .dropdown-menu > a {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  .navbar-nav.menu .dropdown-menu:before, .navbar-nav.menu .dropdown-menu:after{
+    right: 100%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+  }
+
+  .navbar-nav.menu .dropdown-menu:before{
+    border-color: rgba(215, 215, 215, 0);
+    border-right-color: #fff;
+    border-width: 11px;
+    top: 20px;
+    margin-top: -11px;
+  }
+}
+
+.nav-tabs > li > a > i.fa-times:hover {
+  cursor: pointer;
+  color: #d9534f;
+}
+
+.clone {
+  display: none !important;
+}
+
+.py-6 {
+  padding-top: 4.5rem;
+  padding-bottom: 4.5rem;
+}
