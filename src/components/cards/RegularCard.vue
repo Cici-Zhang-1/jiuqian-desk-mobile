@@ -1,6 +1,6 @@
 <template>
   <div class="col-12">
-    <div class="card" v-if="!error">
+    <div class="card mb-5" v-if="!error">
       <div class="card-body p-0 card-body-h">
         <regular-table v-if="card.card_type_name === 'table'" :table="card.data.content" :tableThead="card.elements" :search="search"/>
         <regular-list-group v-else-if="card.card_type_name === 'list'" :lists="card.data.content"/>
@@ -55,31 +55,43 @@ export default {
     }
   },
   created () {
-    if (!this.card.data.num || this.page !== this.card.data.p) { // 第一种情况是因为数据还没有加载，第二种情况是因为加载的page不同
+    if (this.$store.state.app.reload ||
+      (!this.card.data.num && !parseInt(this.card.lazy_load)) ||
+      (this.card.data.p !== undefined && this.page !== this.card.data.p)) { // 第一种情况是因为数据还没有加载，第二种情况是因为加载的page不同
       this.fetchData(this.pageSearchValues)
     }
   },
   watch: {
     '$route': function (to, from) { // route变化时更新数据
-      this.$store.commit('RESET_CARD', { card: this.card })
-      this.fetchData(this.pageSearchValues, to.query.page || 1)
-    },
-    '$store.state.app.reload': function (to, from) {
-      if (to) {
+      let page = to.query.page || 1
+      if ((!this.card.data.num && !parseInt(this.card.lazy_load)) || JSON.stringify(to.query) !== '{}' ||
+        (this.card.data.p !== undefined && page !== parseInt(this.card.data.p))) { // 第一种情况是因为数据还没有加载，第二种情况是因为加载的page不同
         this.$store.commit('RESET_CARD', { card: this.card })
-        this.fetchData(this.pageSearchValues)
-        this.$store.commit('SET_APP_RELOAD', { reload: false })
+        this.fetchData(this.pageSearchValues, page)
       }
+      // this.$store.commit('RESET_CARD', { card: this.card })
+      // !parseInt(this.card.lazy_load) && this.fetchData(this.pageSearchValues, to.query.page || 1)
+    },
+    '$store.state.app.reload': {
+      handler: function (to, from) {
+        if (to) {
+          this.$store.commit('RESET_CARD', { card: this.card })
+          this.fetchData(this.pageSearchValues)
+          this.$store.commit('SET_APP_RELOAD', { reload: false })
+        }
+      },
+      deep: true
     }
   },
   methods: {
     fetchData (pageSearch = {}, to = this.page) { // 获取数据
       this.$bar.start()
       this.$store.dispatch('FETCH_DATA', {
-        params: {
-          uri: this.card.url,
-          data: {
+        url: this.card.url,
+        configs: {
+          params: {
             ...pageSearch,
+            ...this.$router.currentRoute.query,
             p: to
           }
         },

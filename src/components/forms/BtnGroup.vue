@@ -5,13 +5,15 @@
       <span class="caret"></span>
     </button>
     <div class="dropdown-menu" :aria-labelledby="id">
-      <a class="dropdown-item" v-for="(func, key, index) in funcGroup.funcs" :key="index" :href="disposeUri(func)"  :data-toggle="func.toggle_name" :data-target="func.target" :data-multiple="func.multiple_name ? true : false" :data-source="func.source"><i :class="func.img"></i>{{ func.label }}</a>
+      <a class="dropdown-item" v-for="(func, key, index) in funcGroup.funcs" :key="uuid(index)" :href="disposeUri(func)"  :data-toggle="func.toggle_name" :data-target="func.target" :data-multiple=!!parseInt(func.multiple_v) :data-single=!!parseInt(func.single_v) :data-source="func.source" :data-query="func.query" @click="btnGroupAClick"><i :class="func.img"></i>{{ func.label }}</a>
     </div>
   </div>
 </template>
 
 <script>
-// import $ from 'jquery'
+import { uuid } from '@/assets/js/custom'
+import $ from 'jquery'
+import service from '@/axios'
 export default {
   name: 'btn-group',
   props: {
@@ -41,6 +43,85 @@ export default {
   created () {
   },
   methods: {
+    uuid (index) {
+      return index + uuid()
+    },
+    btnGroupAClick (event) {
+      let Toggle = $(event.currentTarget).data('toggle')
+      switch (Toggle) {
+        case 'child':
+          this.func_child(event.currentTarget) || event.preventDefault()
+          break
+        case 'backstage':
+          event.preventDefault()
+          this.func_backstage(event.currentTarget)
+          break
+        case 'save':
+          event.preventDefault()
+          this.func_save(event.currentTarget)
+          break
+      }
+    },
+    func_child (E) {
+      if ($(E).data('multiple') || $(E).data('single')) {
+        if ($(E).data('target')) {
+          let V = this.$store.getters.currentPageActiveLineVs({source: $(E).data('target'), all: $(E).data('multiple')}).map(__ => __.v)
+          if (V.length !== 0) {
+            $(E).attr('href', function (index, attr) {
+              return attr.indexOf('?') >= 0 ? attr.substr(0, attr.lastIndexOf('?')) + '?v=' + V.join(',') : attr + '?v=' + V.join(',')
+            })
+          } else {
+            alert('请先选中!')
+            return false
+          }
+        } else {
+          console.log('没有定义Target')
+        }
+      }
+      return true
+    },
+    async func_backstage (E) {
+      let Data = {}
+      if ($(E).data('multiple') || $(E).data('single')) {
+        if ($(E).data('target')) {
+          let Target = $(E).data('target')
+          let [ Query, Keys ] = $(E).data('query') ? $(E).data('query').split('-') : [ null, null ]
+          Query = Query !== '' && Query ? Query.split(',') : null
+          Keys = Keys !== '' && Keys ? Keys.split(',') : null
+          let V = this.$store.getters.currentPageActiveLineVs({source: Target, all: $(E).data('multiple')}).map(__ => __.v)
+          if (V.length !== 0) {
+            if (confirm('确定执行' + $(E).text() + '操作?')) {
+              Data['v'] = V
+              if (Keys) {
+                Data['relate'] = this.$store.getters.currentPageActiveLineVs({source: Target, all: false, keys: Keys})
+              }
+              if (Query) {
+                let QueryValue = this.$store.getters.currentPageQuery({source: Target, query: Query})
+                Data = { ...Data, ...QueryValue }
+              }
+            } else {
+              return false
+            }
+          } else {
+            alert('请先选中')
+            return false
+          }
+        } else {
+          console.log('没有定义Target')
+        }
+      }
+      let postReturn = await service.post($(E).attr('href'), Data)
+      if (!postReturn.code) {
+        this.$store.commit('SET_APP_RELOAD', { reload: true })
+        return true
+      } else {
+        alert(postReturn.message)
+        return false
+      }
+    },
+    func_save (E) {
+
+    },
     disposeUri (func) {
       if (func.toggle_name === 'child') {
         return '#' + func.url

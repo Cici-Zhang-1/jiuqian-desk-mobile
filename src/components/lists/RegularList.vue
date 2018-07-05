@@ -1,5 +1,8 @@
 <template>
-  <a :href="list.url" class="list-group-item list-group-item-action px-1 text-size-sm">{{ list.message }}</a>
+  <dl class="dl-horizontal">
+    <dt>$value[create_datetime]</dt>
+    <dd>$value[creator]-$value[target]-$value[msg]</dd>
+  </dl>
 </template>
 
 <script>

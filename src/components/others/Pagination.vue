@@ -1,13 +1,13 @@
 <template>
   <nav aria-label="Page navigation">
-    <ul class="pagination justify-content-center m-0">
+    <ul class="pagination pagination-lg justify-content-center m-0">
       <li class="page-item" :class="{disabled: previous}">
         <router-link class="page-link" :to="previousRouter" aria-label="Previous">
           <span aria-hidden="true">&laquo;</span>
           <span class="sr-only">Previous</span>
         </router-link>
       </li>
-      <li class="page-item active"><a class="page-link" href="javascript:void(0);">{{ page }}/{{ maxPage }}<span class="sr-only">(current)</span></a></li>
+      <li class="page-item active"><a class="page-link" href="javascript:void(0);">{{ page }}/{{ maxPage }}共{{ num }}条<span class="sr-only">(current)</span></a></li>
       <li class="page-item" :class="{disabled: next}">
         <router-link class="page-link" :to="nextRouter" aria-label="Next">
           <span aria-hidden="true">&raquo;</span>

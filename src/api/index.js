@@ -2,10 +2,8 @@
  * Created by chuangchuangzhang on 2018/2/3.
  */
 import $ from 'jquery'
-
-const configs = {
-  site_url: 'http://localhost/jiuqian-mobile'
-}
+import { baseUrl } from './env'
+const EXIT_SIGNIN = 10
 
 const getJSON = function (uri, data = {}) {
   if (uri.indexOf('/') !== 0) {
@@ -15,13 +13,15 @@ const getJSON = function (uri, data = {}) {
     $.ajax({
       async: true,
       type: 'GET',
-      url: configs.site_url + uri,
+      url: baseUrl + uri,
       data: { ...data },
       dataType: 'JSONP',
       success: function (data) {
+        console.log('bbb')
         resolve(data)
       },
       error: function (XMLHttpRequest, textStatus, errorThrown) {
+        console.log(XMLHttpRequest)
         reject(new Error(textStatus))
       }
     })
@@ -29,8 +29,15 @@ const getJSON = function (uri, data = {}) {
   return promise
 }
 
-export function fetchJsonByParams ({ uri, data }) {
+export function fetchJsonByParams ({ uri, data = {} }) {
   return getJSON(uri, data).then(function (json) {
     return json
   })
+    /* .cache(function (error) {
+    let Message = JSON.parse(error.message)
+    if (parseInt(Message.code) === EXIT_SIGNIN) {
+
+    } else {
+    }
+  }) */
 }

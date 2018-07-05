@@ -1,14 +1,18 @@
 /**
  * Created by chuangchuangzhang on 2018/2/6.
  */
-let baseUrl = ''
+let baseUrl
+let host
 
 if (process.env.NODE_ENV === 'development') {
+  host = 'http://localhost:8080'
   baseUrl = 'http://localhost/jiuqian-mobile'
 } else if (process.env.NODE_ENV === 'production') {
-  baseUrl = 'http://localhost/jiuqian-mobile'
+  host = 'https://www.365huijia.com'
+  baseUrl = 'https://www.365huijia.com'
 }
 
 export {
-  baseUrl
+  baseUrl,
+  host
 }

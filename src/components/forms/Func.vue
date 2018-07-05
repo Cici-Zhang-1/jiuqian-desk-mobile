@@ -1,5 +1,5 @@
 <template>
-  <div class="col-md-9 text-md-right j-func" id="function">
+  <div class="col-md-9 text-md-right d-print-none j-func" id="function">
     <div is="BtnGroup" v-for="(funcGroup, key, index) in funcGroups" :funcGroup="funcGroup" :target="key" :key="index" :index="index"></div>
     <button is="Btn" v-for="(btn, key, index) in btnGroups" :func="btn" :key="index"></button>
     <a is="ABtn" v-for="(a, key, index) in aGroups" :func="a" :key="index"></a>

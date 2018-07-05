@@ -1,14 +1,15 @@
 <template>
-  <div v-if="checkData.length || checkData.num">
-    <div v-for="(value, key, index) in checkData.content" :key='index' class="form-check">
-      <input type="checkbox" :name="configs.name" class="form-check-input" :id="id" v-model="checkValue" :value="value.v" :readonly="readonly" :required="required" :multiple="multiple" :max="max" :min="min" :maxlength="maxlength" :pattern="pattern"  />
-      <label class="form-check-label" :for="id">{{ value.label || value.name }}</label>
+  <div v-if="checkData && (checkData.length || checkData.num)">
+    <div v-for="(value, key, index) in checkData.content" :key='index' class="custom-control custom-checkbox">
+      <input type="checkbox" :name="configs.name" class="custom-control-input" :id="generateId(key)" v-model="checkValue" :value="value.v" :disabled="readonly" :multiple="multiple" :max="max" :min="min" :maxlength="maxlength" :pattern="pattern"/>
+      <label class="custom-control-label" :for="generateId(key)" >{{ value.label || value.name || value.v }}</label>
     </div>
   </div>
 </template>
 
 <script>
-import { nameToId } from '@/assets/js/custom'
+import { nameToId, uuid } from '@/assets/js/custom'
+let self
 
 export default {
   name: 'form-group-checkbox',
@@ -16,33 +17,36 @@ export default {
     configs: {
       type: [Array, Object],
       required: true
+    },
+    forms: {
+      type: [Array, Object],
+      required: true
+    }
+  },
+  data () {
+    return {
+      checkValue: []
     }
   },
   computed: {
     id () {
-      return nameToId(this.configs.name)
+      return nameToId(this.configs.name) + uuid()
     },
     checkData: {
       get () {
         return this.$store.getters.getSourceData({ uri: this.configs.url })
       }
     },
-    checkValue: {
+    dynamic: {
       get () {
-        return this.configs.dv
-      },
-      set (value) {
-        this.configs.dv = value
+        return this.forms[this.configs.query].dv // 这里query定义的是相关表单变量
       }
     },
     readonly () {
-      return this.configs.readonly_name === '1'
-    },
-    required () {
-      return this.configs.required_name === '1'
+      return this.configs.readonly_v === '1'
     },
     multiple () {
-      return this.configs.multiple_name === '1'
+      return this.configs.multiple_v === '1'
     },
     max () {
       return this.configs.max === '' ? false : this.configs.max
@@ -58,7 +62,9 @@ export default {
     }
   },
   created () {
-    this.loadSourceData()
+    this.defaultCheck((this.checkData && this.checkData.content) || [])
+    this.loadSourceData(true)
+    self = this
   },
   watch: {
     configs: {
@@ -66,14 +72,49 @@ export default {
         this.loadSourceData()
       },
       deep: true
+    },
+    dynamic: {
+      handler: function (to, from) {
+        self.dynamicCheck()
+      }
+    },
+    checkValue: {
+      handler: function (to, from) {
+        this.configs.dv = to
+      }
+    },
+    checkData: {
+      handler: function (to, from) {
+        this.defaultCheck((to && to.content) || [])
+      }
     }
   },
   methods: {
-    loadSourceData () {
-      if (this.checkData === undefined || JSON.stringify(this.checkData) === '{}') {
+    generateId (key) {
+      return this.id + key
+    },
+    dynamicCheck () {
+      if (this.checkValue.indexOf(this.dynamic) < 0) {
+        this.checkData.content.filter(__ => {
+          return __.v === this.dynamic
+        }).length > 0 && this.checkValue.push(this.dynamic)
+      }
+    },
+    defaultCheck (Data) {
+      this.checkValue = Data && Data.filter(__ => {
+        return __.checked
+      }).map(__ => {
+        return __.v
+      })
+    },
+    loadSourceData (Update = false) {
+      if (Update || this.checkData === undefined || JSON.stringify(this.checkData) === '{}') {
         this.$store.dispatch('FETCH_SOURCE_DATA', {
-          params: {
-            uri: this.configs.url
+          url: this.configs.url,
+          configs: {
+            params: {
+              ...this.$router.currentRoute.query
+            }
           },
           target: this.configs.url
         })

@@ -1,12 +1,12 @@
 <template>
   <div class="form-group">
     <label :for="id">{{ configs.label }}</label>
-    <input :type="configs.form_type_name" :name="configs.name" class="form-control" :id="id" v-model="value" :readonly="readonly" :required="required" :max="max" :min="min" :maxlength="maxlength" :pattern="pattern" />
+    <input :type="configs.form_type_v" :name="configs.name" class="form-control" :id="id" v-model="value" :readonly="readonly" :required="required" :max="max" :min="min" :maxlength="maxlength" :pattern="pattern" :placeholder="placeholder" />
   </div>
 </template>
 
 <script>
-import { nameToId } from '@/assets/js/custom'
+import { nameToId, uuid } from '@/assets/js/custom'
 
 export default {
   name: 'form-group-input',
@@ -14,11 +14,14 @@ export default {
     configs: {
       type: [Array, Object],
       required: true
+    },
+    query: {
+      type: [String, Number, Boolean]
     }
   },
   computed: {
     id () {
-      return nameToId(this.configs.name)
+      return nameToId(this.configs.name) + uuid()
     },
     value: {
       get () {
@@ -29,13 +32,13 @@ export default {
       }
     },
     readonly () {
-      return this.configs.readonly_name === '1'
+      return this.configs.readonly_v === '1'
     },
     required () {
-      return this.configs.required_name === '1'
+      return this.configs.required_v === '1'
     },
     multiple () {
-      return this.configs.multiple_name === '1'
+      return this.configs.multiple_v === '1'
     },
     max () {
       return this.configs.max === '' ? false : this.configs.max
@@ -48,6 +51,9 @@ export default {
     },
     pattern () {
       return this.configs.pattern === '' ? false : this.configs.pattern
+    },
+    placeholder () {
+      return this.configs.placeholder
     }
   }
 }

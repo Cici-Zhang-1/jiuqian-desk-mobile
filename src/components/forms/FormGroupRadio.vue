@@ -2,13 +2,13 @@
   <div v-if="checkData.length || checkData.num" >
     <div v-for="(value, key, index) in checkData.content" :key="index" class="form-check">
       <input class="form-check-input" type="radio" :name="configs.name" :id="id" v-model="radioValue" :value="value.v" :readonly="readonly" :required="required" :multiple="multiple" :max="max" :min="min" :maxlength="maxlength" :pattern="pattern"  />
-      <label class="form-check-label" :for="id">{{ value.label || value.label }}</label>
+      <label class="form-check-label" :for="id">{{ value.label || value.name || value.v }}</label>
     </div>
   </div>
 </template>
 
 <script>
-import { nameToId } from '@/assets/js/custom'
+import { nameToId, uuid } from '@/assets/js/custom'
 
 export default {
   name: 'form-group-radio',
@@ -20,7 +20,7 @@ export default {
   },
   computed: {
     id () {
-      return nameToId(this.configs.name)
+      return nameToId(this.configs.name) + uuid()
     },
     radioData: {
       get () {
@@ -36,13 +36,13 @@ export default {
       }
     },
     readonly () {
-      return this.configs.readonly_name === '1'
+      return this.configs.readonly_v === '1'
     },
     required () {
-      return this.configs.required_name === '1'
+      return this.configs.required_v === '1'
     },
     multiple () {
-      return this.configs.multiple_name === '1'
+      return this.configs.multiple_v === '1'
     },
     max () {
       return this.configs.max === '' ? false : this.configs.max
@@ -70,11 +70,9 @@ export default {
   },
   methods: {
     loadSourceData () {
-      if (this.radioData === undefined || JSON.stringify(this.radioData) === '{}') {
+      if (typeof this.radioData === 'undefined' || JSON.stringify(this.radioData) === '{}') {
         this.$store.dispatch('FETCH_SOURCE_DATA', {
-          params: {
-            uri: this.configs.url
-          },
+          url: this.configs.url,
           target: this.configs.url
         })
       }

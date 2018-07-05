@@ -75,8 +75,15 @@ export default {
     return state[key]
   },
 
+  getConfigs: (state) => {
+    return state.configs
+  },
   getReload: (state) => {
     return state.reload
+  },
+
+  getSignin: (state) => {
+    return state.signin
   },
 
   /**
@@ -85,15 +92,18 @@ export default {
    * @returns {function({uri: *})}
    */
   getSourceData: (state) => ({ uri }) => {
-    return state.sourceData[uri]
+    return state.sourceData[uri] && state.sourceData[uri]
   },
 
+  currentLabel (state) {
+    return state.app.label
+  },
   /**
    * 当前页面Cards
    * @param state
    */
   currentPageCards (state) {
-    return state.apps.filter(app => {
+    return state.apps.length > 0 && state.apps.filter(app => {
       return app.url === state.route.path
     })[0].cards
   },
@@ -104,7 +114,7 @@ export default {
    * @returns {*}
    */
   currentPageSearches (state) {
-    return state.apps.filter(app => {
+    return state.apps.length > 0 && state.apps.filter(app => {
       return app.url === state.route.path
     })[0].page_search
   },
@@ -120,9 +130,21 @@ export default {
     })[0].page_search
 
     let r = {}
-
     for (let i in t) {
       r[i] = t[i].dv
+    }
+    return r
+  },
+  currentPageSearchSearchValues: (state) => ({search}) => {
+    let t = state.apps.filter(app => {
+      return app.url === state.route.path
+    })[0].page_search
+
+    let r = {}
+    for (let i in t) {
+      if (search.indexOf(i) >= 0) {
+        r[i] = t[i].dv
+      }
     }
     return r
   },
@@ -133,9 +155,20 @@ export default {
    * @returns {function({url: *})}
    */
   currentPageFuncs (state) {
-    return state.apps.filter(app => {
+    return state.apps.length > 0 && state.apps.filter(app => {
       return app.url === state.route.path
     })[0].funcs
+  },
+
+  /**
+   * 当前表单页面
+   * @param state
+   * @returns {boolean|*}
+   */
+  currentformPages (state) {
+    return state.apps.length > 0 && state.apps.filter(app => {
+      return app.url === state.route.path
+    })[0].form_pages
   },
 
   /**
@@ -220,6 +253,39 @@ export default {
         }
       }
       return line.length
+    }
+  },
+
+  /**
+   * 当前页面Query
+   * @param state
+   * @returns {Function}
+   */
+  currentPageQuery: (state) => ({ source, query }) => {
+    if (source === false || source === undefined || source === null) {
+      return {}
+    } else {
+      let Return = {}
+      let __ = state.apps.filter(app => {
+        return app.url === state.route.path
+      })[0].cards.filter(card => {
+        return '#' + nameToId(card.name) === source
+      })[0]
+      if ((__ !== undefined) && ((__.data.query !== undefined && ((__.data.query instanceof Array && __.data.query.length > 0) ||
+          (__.data.query instanceof Object && JSON.stringify(__.data.query) !== '{}'))))) {
+        if (query instanceof Array) { // 多值
+          for (let j in query) {
+            if (__.data.query[query[j]]) {
+              Return[query[j]] = __.data.query[query[j]]
+            }
+          }
+        } else {
+          if (__.data.query[query]) { // 单值
+            Return[query] = __.data.query[query]
+          }
+        }
+      }
+      return Return
     }
   },
 

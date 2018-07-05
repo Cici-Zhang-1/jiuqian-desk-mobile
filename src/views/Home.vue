@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid">
-    Waiting Home Happened
+    看板定制
   </div>
 </template>
 

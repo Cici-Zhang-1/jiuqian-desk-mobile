@@ -1,8 +1,10 @@
 <template>
   <div class="row mt-3 j-page" :id="title">
+    <div class="col-12 border-bottom rounded-bottom mb-2 border-primary text-center d-print-none"><h5>{{ label }}</h5></div>
     <div is="page-search" :pageSearches="pageSearches" v-if="pageSearches"></div>
     <div is="func" :funcs="funcs" v-if="funcs"></div>
     <div is="regular-card" v-for="(card, index) in cards" :card="card" :key="index" v-if="cards.length"></div>
+    <div is="regular-form" v-for="(form, key, index) in formPages" :form="form" :key="index" v-if="formPages.length"></div>
   </div>
 </template>
 
@@ -11,6 +13,7 @@ import { mapGetters } from 'vuex'
 import RegularCard from '@/components/cards/RegularCard'
 import PageSearch from '@/components/forms/PageSearch'
 import Func from '@/components/forms/Func'
+import RegularForm from '@/components/forms/RegularForm'
 import { nameToId } from '@/assets/js/custom'
 
 export default {
@@ -32,7 +35,9 @@ export default {
     ...mapGetters({
       cards: 'currentPageCards', // 当前页面应该展示的数据
       pageSearches: 'currentPageSearches',
-      funcs: 'currentPageFuncs'
+      funcs: 'currentPageFuncs',
+      formPages: 'currentformPages',
+      label: 'currentLabel'
     })
   },
   created () {
@@ -57,7 +62,8 @@ export default {
   components: {
     RegularCard,
     PageSearch,
-    Func
+    Func,
+    RegularForm
   }
 }
 </script>

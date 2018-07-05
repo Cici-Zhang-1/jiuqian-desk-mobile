@@ -13,12 +13,12 @@
             <div class="alert alert-danger" role="alert">{{ errorMessage }}</div>
           </div>
           <div class="modal-body" v-else>
-            <div v-for="(value, key, index) in modal.forms" :is="formGroupType(value.form_type_name)" :configs="value" :key="index"></div>
+            <div v-for="(value, key, index) in modal.forms" :is="formGroupType(value.form_type_v)" :configs="value" :forms="modal.forms" :key="index" :data-query="disposeQuery(value)"></div>
             <div class="alert alert-danger fade" role="alert" :class="{show: alert}">{{ alertMessage }}</div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
-            <button type="submit" class="btn btn-primary" v-if="!error">保存</button>
+            <button type="submit" class="btn btn-primary" :disabled="disabled" v-if="!error">保存</button>
           </div>
         </form>
       </div>
@@ -29,12 +29,14 @@
 <script>
 import FormGroupInput from '@/components/forms/FormGroupInput'
 import FormGroupSelect from '@/components/forms/FormGroupSelect'
+import FormGroupSelectRecommend from '@/components/forms/FormGroupSelectRecommend'
 import FormGroupRadio from '@/components/forms/FormGroupRadio'
 import FormGroupCheckbox from '@/components/forms/FormGroupCheckbox'
 import FormGroupTextarea from '@/components/forms/FormGroupTextarea'
+import InputDatalist from '@/components/forms/InputDatalist'
 import InputHidden from '@/components/forms/InputHidden'
 import { trimLeft } from 'voca'
-import { postData } from '@/service/service'
+import service from '@/axios'
 import $ from 'jquery'
 export default {
   name: 'regular-modal',
@@ -51,7 +53,8 @@ export default {
       tr: [],
       v: '',
       alertMessage: '', // 表单提交时错误
-      alert: false
+      alert: false,
+      disabled: false
     }
   },
   computed: {
@@ -62,12 +65,12 @@ export default {
     },
     modalType: {
       get () {
-        return this.modal.modal_type_name ? this.modal.modal_type_name : 'ajax'
+        return this.modal.modal_type_v ? this.modal.modal_type_v : 'ajax'
       }
     },
     trs: {
       get () {
-        return this.modalType === 'filter' ? [] : this.$store.getters.currentPageActiveLines({ source: this.modal.source, all: true })
+        return this.modalType === 'filter' || (!parseInt(this.modal.multiple_v) && !parseInt(this.modal.single_v)) ? [] : this.$store.getters.currentPageActiveLines({ source: this.modal.source, all: true })
       },
       set (Value) {}
     }
@@ -84,7 +87,7 @@ export default {
           this.error = false
           this.errorMessage = ''
           this.tr = this.trs.slice(0, 1)[0]
-          if (this.modal.multiple) {
+          if (parseInt(this.modal.multiple_v)) {
             this.v = this.trs.map(__ => {
               return __.v
             }).join(',')
@@ -116,6 +119,9 @@ export default {
         case 'select':
           type = 'form-group-select'
           break
+        case 'recommend':
+          type = 'form-group-select-recommend'
+          break
         case 'checkbox':
           type = 'form-group-checkbox'
           break
@@ -127,6 +133,9 @@ export default {
           break
         case 'hidden':
           type = 'input-hidden'
+          break
+        case 'datalist':
+          type = 'input-datalist'
           break
         default:
           type = 'form-group-input'
@@ -151,14 +160,20 @@ export default {
           this.$store.commit('SET_APP_RELOAD', { reload: true })
           $('#' + this.id).modal('hide')
         } else {
-          let postReturn = await postData(this.modal.url, this.$store.getters.generatePostData({ forms: this.modal.forms }))
-          if (!postReturn.code) {
-            this.$store.commit('SET_APP_RELOAD', { reload: true })
-            $('#' + this.id).modal('hide')
+          if (this.disabled) { // 防止重复提交
+            return false
           } else {
-            this.alertMessage = postReturn.message
-            this.alert = true
-            e.target.addEventListener('click', this.errorClear)
+            this.disabled = true
+            let postReturn = await service.post(this.modal.url, this.$store.getters.generatePostData({ forms: this.modal.forms }))
+            this.disabled = false
+            if (postReturn.code === 0) {
+              this.$store.commit('SET_APP_RELOAD', { reload: true })
+              $('#' + this.id).modal('hide')
+            } else {
+              this.alertMessage = postReturn.message
+              this.alert = true
+              e.target.addEventListener('click', this.errorClear)
+            }
           }
         }
       }
@@ -166,14 +181,25 @@ export default {
     errorClear (e) { // 清除错误提示
       this.alert = false
       e.currentTarget.removeEventListener(e.type, this.errorClear)
+    },
+    disposeQuery (Value) {
+      let Query = Value.query
+      let QueryValue = null
+      if (Query) {
+        QueryValue = this.$store.getters.currentPageQuery({source: this.modal.source, query: Query}) // Query返回执
+        Value.dv = QueryValue ? QueryValue[Query] : (this.$router.currentRoute.query[Query] ? this.$router.currentRoute.query[Query] : null) // URLQuery
+      }
+      return Query
     }
   },
   components: {
     FormGroupInput,
     FormGroupCheckbox,
     FormGroupSelect,
+    FormGroupSelectRecommend,
     FormGroupRadio,
     FormGroupTextarea,
+    InputDatalist,
     InputHidden
   }
 }

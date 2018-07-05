@@ -3,20 +3,17 @@ import Router from 'vue-router'
 import Home from '@/views/Home'
 import Apps from '@/views/Apps'
 import App from '@/views/App'
-/* import OrderOrderRead from '@/views/order/order/Read'
-import Order from '@/views/Order'
-import OrderIndexRead from '@/views/order/index/Read'
-import OrderIndexAdd from '@/views/order/index/Add'
-import OrderEdit from '@/views/order/Edit'
-import OrderAdd from '@/views/order/Add'
-import OrderRemove from '@/views/order/Remove' */
 import Read from '@/views/Read'
 import Edit from '@/views/Edit'
 import Add from '@/views/Add'
 import Remove from '@/views/Remove'
 import Myself from '@/views/Myself'
-import Funcs from '@/views/Funcs'
-import FuncLocation from '@/views/func/FuncLocation'
+/* import Funcs from '@/views/Funcs'
+import FuncLocation from '@/views/func/FuncLocation' */
+import SignIn from '@/views/SignIn'
+import Upload from '@/views/Upload'
+import PickSheet from '@/views/print/PickSheet'
+import UnqrcodeLabel from '@/views/label/UnqrcodeLabel'
 
 Vue.use(Router)
 
@@ -39,6 +36,16 @@ export default new Router({
       name: 'Home',
       path: '/home',
       component: Home
+    },
+    {
+      name: 'Upload',
+      path: '/upload',
+      component: Upload
+    },
+    {
+      name: 'SignIn',
+      path: '/sign/index/in',
+      component: SignIn
     },
     {
       name: 'Apps',
@@ -75,73 +82,23 @@ export default new Router({
       component: Remove,
       props: true
     },
-    /* {
-      name: 'OrderOrderIndexRead',
-      path: '/order/order/index/read',
-      component: Read
+    {
+      name: 'UnqrcodeLabel',
+      path: '/warehouse/unqrcode_label',
+      component: UnqrcodeLabel,
+      props: true
     },
     {
-      name: 'OrderOrderEdit',
-      path: '/order/order/edit',
-      component: Edit
+      name: 'PickSheet',
+      path: '/warehouse/pick_sheet_print',
+      component: PickSheet,
+      props: true
     },
-    {
-      name: 'OrderOrderAdd',
-      path: '/order/order/add',
-      component: Add
-    },
-    {
-      name: 'OrderOrderRemove',
-      path: '/order/order/remove',
-      component: Remove
-    }, */
-    /* {
-      name: 'Order',
-      path: '/order',
-      component: Order,
-      children: [
-        {
-          name: 'OrderIndexRead',
-          path: 'order/index/read',
-          component: OrderIndexRead
-        },
-        {
-          name: 'OrderIndexAdd',
-          path: 'order/index/add',
-          component: OrderIndexAdd
-        },
-        {
-          name: 'OrderAdd',
-          path: 'order/add',
-          component: OrderAdd,
-          meta: {
-            showNavbars: false,
-            showHeaderbar: false,
-            showFuncbars: true
-          }
-        },
-        {
-          name: 'OrderEdit',
-          path: 'order/edit',
-          component: OrderEdit,
-          meta: {
-            showNavbars: false,
-            showHeaderbar: false,
-            showFuncbars: true
-          }
-        },
-        {
-          name: 'OrderRemove',
-          path: 'order/remove',
-          component: OrderRemove
-        }
-      ]
-    }, */
     {
       name: 'Myself',
       path: '/myself',
       component: Myself
-    },
+    }/* ,
     {
       name: 'Funcs',
       path: '/funcs',
@@ -155,6 +112,6 @@ export default new Router({
         }
       ],
       props: true
-    }
+    } */
   ]
 })

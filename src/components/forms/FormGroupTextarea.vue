@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { nameToId } from '@/assets/js/custom'
+import { nameToId, uuid } from '@/assets/js/custom'
 
 export default {
   name: 'form-group-textarea',
@@ -18,7 +18,7 @@ export default {
   },
   computed: {
     id () {
-      return nameToId(this.configs.name)
+      return nameToId(this.configs.name) + uuid()
     },
     value: {
       get () {
@@ -29,10 +29,10 @@ export default {
       }
     },
     readonly () {
-      return this.configs.readonly_name === '1'
+      return this.configs.readonly_v === '1'
     },
     required () {
-      return this.configs.required_name === '1'
+      return this.configs.required_v === '1'
     },
     max () {
       return this.configs.max === '' ? false : this.configs.max

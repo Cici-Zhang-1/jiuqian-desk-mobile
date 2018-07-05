@@ -50,7 +50,8 @@
 
 <script type="module">
 import { mapState, mapMutations } from 'vuex'
-import { getData, postData } from '@/service/service'
+import service from '@/axios'
+// import { getData, postData } from '@/service/service'
 
 export default {
   name: 'FuncLocation',
@@ -133,7 +134,7 @@ export default {
         e.stopPropagation()
         e.target.classList.add('was-validated')
       } else {
-        let postReturn = await postData(this.uri, { sn: this.sn, status: this.status })
+        let postReturn = await service.post(this.uri, { sn: this.sn, status: this.status })
         if (!postReturn.code) {
           this.set_reload({reload: true})
           this.$router.go(-1)
@@ -149,7 +150,7 @@ export default {
         e.stopPropagation()
         e.target.classList.add('was-validated')
       } else {
-        let postReturn = await postData(this.uri, { id: this.id, sn: this.sn, order: this.order })
+        let postReturn = await service.post(this.uri, { id: this.id, sn: this.sn, order: this.order })
         if (postReturn.code > 0) {
           this.message = postReturn.message
           this.alert = true
@@ -170,7 +171,7 @@ export default {
         alert('请选择需要修改的库位')
         this.$router.go(-1)
       } else {
-        let getReturn = await getData(this.uri, { id: this.id })
+        let getReturn = await service.get(this.uri, { params: { id: this.id } })
         if (!getReturn.code) {
           this.sn = getReturn.contents.sn
           this.status = getReturn.contents.status
@@ -187,7 +188,7 @@ export default {
         this.$router.go(-1)
       } else {
         if (window.confirm('您确定要删除库位?')) {
-          let postReturn = await postData(this.uri, { id: this.id })
+          let postReturn = await service.post(this.uri, { id: this.id })
           if (!postReturn.code) {
             window.alert('库位删除成功!')
             this.$router.go(-1)
@@ -214,7 +215,7 @@ export default {
         ele.addEventListener('focus', this.errorClear)
       } else {
         let This = this
-        getData('/order/search', { num: this.searchOrder }).then(function (getReturn) {
+        service.get('/order/search', { params: { num: this.searchOrder } }).then(function (getReturn) {
           if (getReturn.code > 0) { // 出现错误
             This.message = getReturn.message
             This.alert = true
@@ -271,7 +272,7 @@ export default {
         this.$router.go(-1)
       } else {
         let This = this
-        getData('/location/search', { id: this.id }).then(function (getReturn) {
+        service.get('/location/search', { params: { id: this.id } }).then(function (getReturn) {
           if (getReturn.code > 0) { // 出现错误
             alert(getReturn.message)
             This.$router.go(-1)

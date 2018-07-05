@@ -1,8 +1,8 @@
 <template>
-  <table class="table table-striped table-responsive" :id="id">
+  <table class="table table-striped table-responsive text-nowrap j-table" :id="id">
     <thead>
       <tr>
-        <th class="d-none">选中</th>
+        <th class="d-print-none"><input type="checkbox" name="select_all" @click="selectAll($event.currentTarget)"  v-model="selectAllChecked" /></th>
         <th v-for="(value, key, index) in tableThead" :class="[ value.classes ]" :key="index" v-if="value.checked_name">{{ value.label }}</th>
       </tr>
     </thead>
@@ -31,6 +31,11 @@ export default {
       type: String
     }
   },
+  data () {
+    return {
+      selectAllChecked: false
+    }
+  },
   computed: {
     id: {
       get () {
@@ -38,11 +43,12 @@ export default {
       }
     }
   },
-  created () {
-  },
   methods: {
     inactiveTr (e) {
       this.$store.commit('SET_INACTIVE_LINES', { table: this.table })
+    },
+    selectAll (e) {
+      this.$store.commit('SET_ALL_LINE_ACTIVITY', { table: this.table, activity: !this.selectAllChecked, search: this.search })
     }
   },
   components: {

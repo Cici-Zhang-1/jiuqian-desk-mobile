@@ -2,13 +2,14 @@
   <div class="form-group" v-if="selectData && (selectData.length || selectData.num)">
     <label :for="id">{{ configs.label }}</label>
     <select class="form-control" :name="configs.name" :id="id" v-model="selectValue" :readonly="readonly" :required="required" :multiple="multiple" :max="max" :min="min" :maxlength="maxlength" :pattern="pattern"  >
-      <option v-for="(value, key, index) in selectData.content" :value="value.v" :key="index">{{ value.class_alien || '' }}{{ value.label || value.name}}</option>
+      <option value="" v-if="!required">---</option>
+      <option v-for="(value, key, index) in selectData.content" :value="value.v" :key="index">{{ value.class_alien || '' }}{{ value.label || value.name || value.v }}</option>
     </select>
   </div>
 </template>
 
 <script>
-import { nameToId } from '@/assets/js/custom'
+import { nameToId, uuid } from '@/assets/js/custom'
 
 export default {
   name: 'form-group-select',
@@ -20,7 +21,7 @@ export default {
   },
   computed: {
     id () {
-      return nameToId(this.configs.name)
+      return nameToId(this.configs.name) + uuid()
     },
     selectData: {
       get () {
@@ -36,13 +37,13 @@ export default {
       }
     },
     readonly () {
-      return this.configs.readonly_name === '1'
+      return this.configs.readonly_v === '1'
     },
     required () {
-      return this.configs.required_name === '1'
+      return this.configs.required_v === '1'
     },
     multiple () {
-      return this.configs.multiple_name === '1'
+      return this.configs.multiple_v === '1'
     },
     max () {
       return this.configs.max === '' ? false : this.configs.max
@@ -70,11 +71,9 @@ export default {
   },
   methods: {
     loadSourceData () {
-      if (this.selectData === undefined || JSON.stringify(this.selectData) === '{}') {
+      if (typeof this.selectData === 'undefined' || JSON.stringify(this.selectData) === '{}') {
         this.$store.dispatch('FETCH_SOURCE_DATA', {
-          params: {
-            uri: this.configs.url
-          },
+          url: this.configs.url,
           target: this.configs.url
         })
       }
