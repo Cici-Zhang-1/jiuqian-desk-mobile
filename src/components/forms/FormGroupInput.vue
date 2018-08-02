@@ -1,6 +1,6 @@
 <template>
   <div class="form-group">
-    <label :for="id">{{ configs.label }}</label>
+    <label :for="id">{{ configs.label }}<span v-if="required">*</span></label>
     <input :type="configs.form_type_v" :name="configs.name" class="form-control" :id="id" v-model="value" :readonly="readonly" :required="required" :max="max" :min="min" :maxlength="maxlength" :pattern="pattern" :placeholder="placeholder" />
   </div>
 </template>

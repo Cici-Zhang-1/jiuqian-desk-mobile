@@ -13,7 +13,7 @@
             <div class="alert alert-danger" role="alert">{{ errorMessage }}</div>
           </div>
           <div class="modal-body" v-else>
-            <div v-for="(value, key, index) in modal.forms" :is="formGroupType(value.form_type_v)" :configs="value" :forms="modal.forms" :key="index" :data-query="disposeQuery(value)"></div>
+            <div v-for="(value, key, index) in modal.forms" :is="formGroupType(value.form_type_v)" :configs="value" :forms="modal.forms" :key="index" :data-query="disposeQuery(value)" :force-readonly="readonly"></div>
             <div class="alert alert-danger fade" role="alert" :class="{show: alert}">{{ alertMessage }}</div>
           </div>
           <div class="modal-footer">
@@ -33,11 +33,15 @@ import FormGroupSelectRecommend from '@/components/forms/FormGroupSelectRecommen
 import FormGroupRadio from '@/components/forms/FormGroupRadio'
 import FormGroupCheckbox from '@/components/forms/FormGroupCheckbox'
 import FormGroupTextarea from '@/components/forms/FormGroupTextarea'
+import FormGroupAutoComplete from '@/components/forms/FormGroupAutoComplete'
+import FormGroupGoodsSpeci from '@/components/forms/FormGroupGoodsSpeci'
 import InputDatalist from '@/components/forms/InputDatalist'
 import InputHidden from '@/components/forms/InputHidden'
 import { trimLeft } from 'voca'
 import service from '@/axios'
 import $ from 'jquery'
+import Vue from 'vue'
+
 export default {
   name: 'regular-modal',
   props: {
@@ -48,6 +52,7 @@ export default {
   },
   data () {
     return {
+      readonly: false, // Query值时强制数据只读
       error: false, // Modal 载入时错误
       errorMessage: '',
       tr: [],
@@ -137,6 +142,12 @@ export default {
         case 'datalist':
           type = 'input-datalist'
           break
+        case 'auto-complete':
+          type = 'form-group-auto-complete'
+          break
+        case 'goods-speci':
+          type = 'form-group-goods-speci'
+          break
         default:
           type = 'form-group-input'
       }
@@ -183,13 +194,48 @@ export default {
       e.currentTarget.removeEventListener(e.type, this.errorClear)
     },
     disposeQuery (Value) {
-      let Query = Value.query
-      let QueryValue = null
-      if (Query) {
-        QueryValue = this.$store.getters.currentPageQuery({source: this.modal.source, query: Query}) // Query返回执
-        Value.dv = QueryValue ? QueryValue[Query] : (this.$router.currentRoute.query[Query] ? this.$router.currentRoute.query[Query] : null) // URLQuery
+      if (Value.query) {
+        let [ Query = null, Params = null, Related = null ] = Value.query.split('-')
+        Params = Params ? Params.split(',') : null
+        Related = Related ? Related.split(',') : null
+        if (Query) {
+          let QueryValue = this.$store.getters.currentPageQuery({source: this.modal.source, query: Query}) // Query返回执
+          if (JSON.stringify(QueryValue) !== '{}') {
+            Value.dv = QueryValue[Query]
+            this.readonly = true
+          } else if (this.$router.currentRoute.query[Query]) {
+            Value.dv = this.$router.currentRoute.query[Query]
+            this.readonly = true
+          } else {
+            this.readonly = false
+          }
+        }
+        if (Params) {
+          let ParamsValue = this.$store.getters.currentPageQuery({source: this.modal.source, query: Params}) // Query返回执
+          if (JSON.stringify(ParamsValue) !== '{}') {
+          } else {
+            let Length = Params.length
+            for (let I = 0; I < Length; I++) {
+              if (this.$router.currentRoute.query[Params[I]]) {
+                ParamsValue[Params[I]] = this.$router.currentRoute.query[Params[I]]
+              }
+            }
+          }
+          Vue.set(Value, 'params', ParamsValue)
+        }
+        if (Related) {
+          let RelatedValue = {}
+          let Length = Related.length
+          for (let I = 0; I < Length; I++) {
+            if (this.modal.forms[Related[I]]) {
+              RelatedValue[Related[I]] = this.modal.forms[Related[I]].dv
+            }
+          }
+          Vue.set(Value, 'related', RelatedValue)
+        }
+        return Query
       }
-      return Query
+      return null
     }
   },
   components: {
@@ -199,6 +245,8 @@ export default {
     FormGroupSelectRecommend,
     FormGroupRadio,
     FormGroupTextarea,
+    FormGroupAutoComplete,
+    FormGroupGoodsSpeci,
     InputDatalist,
     InputHidden
   }

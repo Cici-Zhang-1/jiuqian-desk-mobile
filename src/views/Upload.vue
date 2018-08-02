@@ -19,6 +19,7 @@ import { host } from '@/axios/env'
 export default {
   name: 'Upload',
   mounted () {
+    /* eslint-disable */
     var c = new CFUpdate()
     c.style(challsFlashStyle())
     c.update(challsFlashUpdate())

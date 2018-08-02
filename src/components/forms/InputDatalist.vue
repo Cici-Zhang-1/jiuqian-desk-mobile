@@ -1,9 +1,9 @@
 <template>
     <div class="form-group" v-if="dataList && (dataList.length || dataList.num)">
-        <label :for="id">{{ configs.label }}</label>
+        <label :for="id">{{ configs.label }}<span v-if="required">*</span></label>
         <input type="text" :name="configs.name" class="form-control" :id="id" v-model="value" :readonly="readonly" :required="required" :max="max" :min="min" :maxlength="maxlength" :pattern="pattern" :placeholder="placeholder" :list="listId"/>
         <datalist :id="listId">
-            <option v-for="(value, key, index) in dataList.content" :value="value.v" :key="index">{{ value.class_alien || '' }}{{ value.label || value.name || value.v }}</option>
+            <option v-for="(value, key, index) in dataList.content" :value="value.v" :key="index">{{ value.class_alien || '' }}{{ value.label || value.truename || value.name || value.v }}</option>
         </datalist>
     </div>
 </template>

@@ -10,7 +10,7 @@
         <pagination :page="page" :maxPage="maxPage" :num="num" :pagesize="pagesize"/>
       </div>
     </div>
-    <div class="col-12 mt-2" v-if="error">No Data Available</div>
+    <div class="col-12 mt-2" v-if="error">{{ errorMsg }}</div>
   </div>
 </template>
 
@@ -30,7 +30,8 @@ export default {
   },
   data () {
     return {
-      page: Number(this.$router.currentRoute.query.page) || 1 // 当前展示的页数
+      page: Number(this.$router.currentRoute.query.page) || 1, // 当前展示的页数
+      errorMsg: 'No Data Available'
     }
   },
   computed: {
@@ -96,7 +97,8 @@ export default {
           }
         },
         target: this.card
-      }).then(() => {
+      }).then((res) => {
+        this.errorMsg = res.message
         this.page = Number(to)
         this.$bar.finish()
       })

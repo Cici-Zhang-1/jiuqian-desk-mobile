@@ -101,7 +101,7 @@ export default {
           },
           target: this.configs.url
         }).then(() => {
-          this.selectValue = this.selectData.content && this.selectData.content.map(__ => {
+          this.selectValue = this.selectData && this.selectData.content && this.selectData.content.map(__ => {
             return __.v
           })
           this.$bar.finish()

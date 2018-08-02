@@ -55,7 +55,6 @@ export default {
       }
       if (Search) {
         let SearchValues = this.$store.getters.currentPageSearchSearchValues({search: Search})
-
         Data = { ...Data, ...SearchValues }
       }
       if ($(E).data('multiple') || $(E).data('single')) {
@@ -109,6 +108,7 @@ export default {
       }
       let postReturn = await service.post($(E).attr('href'), Data)
       if (!postReturn.code) {
+        alert(postReturn.message)
         this.$store.commit('SET_APP_RELOAD', { reload: true })
         return true
       } else {

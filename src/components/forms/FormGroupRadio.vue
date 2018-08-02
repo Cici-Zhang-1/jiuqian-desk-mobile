@@ -1,6 +1,6 @@
 <template>
-  <div v-if="checkData.length || checkData.num" >
-    <div v-for="(value, key, index) in checkData.content" :key="index" class="form-check">
+  <div v-if="radioData.length || radioData.num" >
+    <div v-for="(value, key, index) in radioData.content" :key="index" class="form-check">
       <input class="form-check-input" type="radio" :name="configs.name" :id="id" v-model="radioValue" :value="value.v" :readonly="readonly" :required="required" :multiple="multiple" :max="max" :min="min" :maxlength="maxlength" :pattern="pattern"  />
       <label class="form-check-label" :for="id">{{ value.label || value.name || value.v }}</label>
     </div>

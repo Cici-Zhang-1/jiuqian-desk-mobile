@@ -50,7 +50,13 @@ export default {
   },
   methods: {
     onSubmit () {
-      this.$store.commit('SET_APP_RELOAD', { reload: true })
+      let page = this.$router.currentRoute.query.page || 1
+      if (page === 1) {
+        this.$store.commit('SET_APP_RELOAD', { reload: true })
+      } else {
+        let Query = { ...this.$router.currentRoute.query, page: 1 }
+        this.$router.replace({ path: this.$router.currentRoute.path, query: Query })
+      }
     }
   },
   components: {

@@ -3,6 +3,7 @@
  */
 import service from '@/axios'
 
+let Loading = {}
 export default {
   FETCH_APPS: ({commit}) => {
     return service.get('permission/menu/read').then(data => {
@@ -52,6 +53,7 @@ export default {
     return service.get(url, configs).then(data => {
       // if (data.code === 0) {
       commit('SET_DATA', { ...data, target })
+      return data
       // }
     })
   },
@@ -67,10 +69,18 @@ export default {
    * @constructor
    */
   FETCH_SOURCE_DATA: ({ commit, dispatch, state }, { url, configs, target }) => {
+    let Key = JSON.stringify({ url, configs, target })
+    if (Loading[Key] !== undefined) {
+      return true
+    } else {
+      Loading[Key] = true
+    }
     return service.get(url, configs).then(data => {
       // let data = response.data
       // if (data.code === 0) {
       commit('SET_SOURCE_DATA', { ...data, target })
+      delete Loading[Key]
+      return data
       // }
     })
   },
@@ -81,6 +91,7 @@ export default {
       if (data.code === 0) {
         commit('SET_FORM_SOURCE_DATA', { ...data, target })
       }
+      return data
     })
   }
 }

@@ -298,11 +298,11 @@ export default {
     let data = {}
     if (JSON.stringify(forms) !== '{}' && trs.length === 0) {
       for (let i in forms) {
-        data[i] = forms[i].dv
+        data[i] = forms[i].dv === undefined ? '' : forms[i].dv
       }
     } else if (trs.length !== 0) {
       for (let i in trs) {
-        data[i] = trs[i].v
+        data[i] = trs[i].v === undefined ? '' : trs[i].v
       }
     }
 

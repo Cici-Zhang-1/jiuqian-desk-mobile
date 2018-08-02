@@ -72,7 +72,7 @@ export default new Router({
     },
     {
       name: 'Add',
-      path: '/:f/:c/Add',
+      path: '/:f/:c/index/add',
       component: Add,
       props: true
     },

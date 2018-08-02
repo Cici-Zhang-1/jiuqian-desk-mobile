@@ -59,39 +59,6 @@ let uuid = function (len = 8, radix = 0) {
 }
 
 /**
- * 判断form group type
- * @param value
- * @returns {string}
- */
-let formGroupType = function (value) {
-  let type = ''
-  switch (value) {
-    case 'text':
-    case 'password':
-    case 'hidden':
-    case 'number':
-    case 'date':
-      type = 'form-group-input'
-      break
-    case 'select':
-      type = 'form-group-select'
-      break
-    case 'checkbox':
-      type = 'form-group-checkbox'
-      break
-    case 'radio':
-      type = 'form-group-radio'
-      break
-    case 'textarea':
-      type = 'form-group-textarea'
-      break
-    default:
-      type = 'form-group-input'
-  }
-  return type
-}
-
-/**
  * Name To Id
  * @param name
  */
@@ -131,4 +98,26 @@ let attr = function (configs) {
   return a
 }
 
-export { settingSave, uuid, formGroupType, nameToId, attr }
+let isJSON = function (str, pass_object) {
+  if (pass_object && isObject(str)) return true
+
+  if (!isString(str)) return false
+
+  str = str.replace(/\s/g, '').replace(/\n|\r/, '')
+
+  if (/^\{(.*?)\}$/.test(str))
+    return /"(.*?)":(.*?)/g.test(str)
+
+  if (/^\[(.*?)\]$/.test(str)) {
+    return str.replace(/^\[/, '')
+      .replace(/\]$/, '')
+      .replace(/},{/g, '}\n{')
+      .split(/\n/)
+      .map(function (s) { return isJSON(s) })
+      .reduce(function (prev, curr) { return !!curr })
+  }
+
+  return false
+}
+
+export { settingSave, uuid, nameToId, attr, isJSON }

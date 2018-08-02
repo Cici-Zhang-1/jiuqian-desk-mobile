@@ -2,21 +2,24 @@
   <div class="col-12">
     <form role="form" @submit.prevent="formSubmit" :id="id" :action="form.url">
       <div v-for="(value, key, index) in form.page_forms" :is="formGroupType(value.form_type_v)" :forms="form.page_forms" :data-query="disposeQuery(value)" :configs="value" :key="index"></div>
-      <div class="alert alert-danger fade" role="alert" :class="{show: alert}">{{ alertMessage }}</div>
+      <div class="alert alert-danger fade" role="alert"></div>
       <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>保存</button>
     </form>
   </div>
 </template>
 
 <script>
-import FormGroupInput from '@/components/forms/FormGroupInput'
-import FormGroupSelect from '@/components/forms/FormGroupSelect'
-import FormGroupRadio from '@/components/forms/FormGroupRadio'
-import FormGroupCheckbox from '@/components/forms/FormGroupCheckbox'
-import FormGroupTextarea from '@/components/forms/FormGroupTextarea'
+import RegularInput from '@/components/forms/RegularInput'
+import RegularSelect from '@/components/forms/RegularSelect'
+import RegularRadio from '@/components/forms/RegularRadio'
+import RegularCheckbox from '@/components/forms/RegularCheckbox'
+import RegularTextarea from '@/components/forms/RegularTextarea'
+import RegularButton from '@/components/forms/RegularButton'
 import InputHidden from '@/components/forms/InputHidden'
+import DealerForm from '@/components/forms/DealerForm'
 import service from '@/axios'
 import { nameToId, uuid } from '@/assets/js/custom'
+import $ from 'jquery'
 
 export default {
   name: 'RegularForm',
@@ -29,8 +32,7 @@ export default {
   data () {
     return {
       v: '',
-      alertMessage: '', // 表单提交时错误
-      alert: false
+      alertMessage: '' // 表单提交时错误
     }
   },
   computed: {
@@ -46,6 +48,10 @@ export default {
   watch: {
     '$store.state.app.reload': {
       handler: function (to, from) {
+        if (to) {
+          this.form.source_url && this.fetchData()
+          this.$store.commit('SET_APP_RELOAD', { reload: false })
+        }
       },
       deep: true
     }
@@ -58,45 +64,71 @@ export default {
         case 'password':
         case 'number':
         case 'date':
-          type = 'form-group-input'
+          type = 'regular-input'
           break
         case 'select':
-          type = 'form-group-select'
+          type = 'regular-select'
           break
         case 'checkbox':
-          type = 'form-group-checkbox'
+
+          type = 'regular-checkbox'
           break
         case 'radio':
-          type = 'form-group-radio'
+          type = 'regular-radio'
           break
         case 'textarea':
-          type = 'form-group-textarea'
+          type = 'regular-textarea'
+          break
+        case 'button':
+        case 'submit':
+          type = 'regular-button'
           break
         case 'hidden':
           type = 'input-hidden'
           break
+        case 'dealer':
+          type = 'dealer-form'
+          break
         default:
-          type = 'form-group-input'
+          type = 'regular-input'
       }
       return type
+    },
+    getNonDv () {
+      let data = {}
+      $('.non-dv').each(function (i, v) {
+        data[v.name] = v.value
+      })
+      return data
     },
     async formSubmit (e) { // Modal数据数据提交
       if (e.target.checkValidity() === false) {
         e.stopPropagation()
       } else {
-        let postReturn = await service.post(this.form.url, this.$store.getters.generatePostData({ forms: this.form.page_forms }))
+        let nonDvData = this.getNonDv()
+        let dvData = this.$store.getters.generatePostData({ forms: this.form.page_forms })
+        let postReturn = await service.post(this.form.url, { ...nonDvData, ...dvData })
         if (!postReturn.code) {
-          alert('保存成功!')
-          this.$store.commit('SET_APP_RELOAD', { reload: true })
+          if (postReturn.location !== '') {
+            if (postReturn.confirm !== '') {
+              if (window.confirm(postReturn.confirm)) {
+                this.$router.push(postReturn.location)
+              }
+            } else {
+              this.$router.push(postReturn.location)
+            }
+          } else {
+            alert('保存成功!')
+            this.$store.commit('SET_APP_RELOAD', { reload: true })
+          }
         } else {
-          this.alertMessage = postReturn.message
-          this.alert = true
+          $('.alert').addClass('show').text(postReturn.message)
           e.target.addEventListener('click', this.errorClear)
         }
       }
     },
     errorClear (e) { // 清除错误提示
-      this.alert = false
+      $('.alert').removeClass('show').text('')
       e.currentTarget.removeEventListener(e.type, this.errorClear)
     },
     fetchData () { // 获取数据
@@ -117,11 +149,13 @@ export default {
     }
   },
   components: {
-    FormGroupInput,
-    FormGroupCheckbox,
-    FormGroupSelect,
-    FormGroupRadio,
-    FormGroupTextarea,
+    RegularInput,
+    RegularCheckbox,
+    RegularSelect,
+    RegularRadio,
+    RegularTextarea,
+    DealerForm,
+    RegularButton,
     InputHidden
   }
 }
