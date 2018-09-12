@@ -72,6 +72,10 @@ export default {
     Vue.set(state.sourceData, target, contents)
   },
 
+  RESET_SOURCE_DATA: (state, { target }) => {
+    Vue.delete(state.sourceData, target)
+  },
+
   SET_FORM_SOURCE_DATA: (state, { contents, target }) => {
     let I
     for (I in contents) {
@@ -165,5 +169,24 @@ export default {
     } else {
 
     }
+  },
+
+  /**
+   * 设置拆单数据结构
+   * @param state
+   * @param contents
+   * @param target
+   * @constructor
+   */
+  SET_DISMANTLE_STRUCT: (state, { contents, target }) => {
+    Vue.set(target, 'struct', contents)
+  },
+
+  SET_DISMANTLE_ORDER_PRODUCT_BOARD_PLATE: (state, { contents, target }) => {
+    Vue.set(target, 'order_product_board_plate', contents.content)
+  },
+
+  SET_VALUATE_DATA: (state, { contents, target }) => {
+    Vue.set(target, 'valuate', contents)
   }
 }

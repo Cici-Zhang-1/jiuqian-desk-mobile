@@ -5,8 +5,10 @@
         <regular-table v-if="card.card_type_name === 'table'" :table="card.data.content" :tableThead="card.elements" :search="search"/>
         <regular-list-group v-else-if="card.card_type_name === 'list'" :lists="card.data.content"/>
         <check-lists class="p-1" v-else-if="card.card_type_name === 'checkbox'" :checkLists="card.data.content"/>
+        <echarts class="p-1" v-else-if="card.card_type_name === 'echarts'" :chartsData="card.data.content" :yAxis="card.data['y_axis']" :id="id"/>
       </div>
-      <div class="card-footer p-0">
+      <images v-if="card.card_type_name === 'image'" :images="card.data.content" />
+      <div class="card-footer p-0" v-if="card.card_type_name !== 'image' && card.card_type_name !== 'echarts'">
         <pagination :page="page" :maxPage="maxPage" :num="num" :pagesize="pagesize"/>
       </div>
     </div>
@@ -19,7 +21,10 @@ import { mapGetters } from 'vuex'
 import RegularTable from '@/components/tables/RegularTable'
 import RegularListGroup from '@/components/lists/RegularListGroup'
 import CheckLists from '@/components/forms/CheckLists'
+import Echarts from '@/components/echarts/Echarts'
+import Images from '@/components/images/Images'
 import Pagination from '@/components/others/Pagination'
+import { nameToId, uuid } from '@/assets/js/custom'
 
 export default {
   name: 'RegularCard',
@@ -53,6 +58,9 @@ export default {
     },
     error () {
       return !this.maxPage
+    },
+    id () {
+      return nameToId(this.card.name) + uuid()
     }
   },
   created () {
@@ -70,8 +78,6 @@ export default {
         this.$store.commit('RESET_CARD', { card: this.card })
         this.fetchData(this.pageSearchValues, page)
       }
-      // this.$store.commit('RESET_CARD', { card: this.card })
-      // !parseInt(this.card.lazy_load) && this.fetchData(this.pageSearchValues, to.query.page || 1)
     },
     '$store.state.app.reload': {
       handler: function (to, from) {
@@ -108,6 +114,8 @@ export default {
     RegularTable,
     RegularListGroup,
     CheckLists,
+    Echarts,
+    Images,
     Pagination
   }
 }

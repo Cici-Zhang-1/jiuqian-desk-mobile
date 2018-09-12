@@ -1,6 +1,7 @@
 // 定制js
 'use strict'
 import $ from 'jquery'
+import { trimRight } from 'voca'
 
 let getData = function (sourceData, key) {
   return sourceData[key]
@@ -120,4 +121,111 @@ let isJSON = function (str, pass_object) {
   return false
 }
 
-export { settingSave, uuid, nameToId, attr, isJSON }
+let cloneData = function (obj) {
+  let o
+  switch (typeof obj) {
+    case 'undefined':
+      break
+    case 'string':
+      o = obj + ''
+      break
+    case 'number':
+      o = obj - 0
+      break
+    case 'boolean':
+      o = obj
+      break
+    case 'object':
+      if (obj === null) {
+        o = null
+      } else {
+        if(obj instanceof Array) {
+          o = []
+          for (let i = 0, len = obj.length; i < len; i++) {
+            o.push(cloneData(obj[i]))
+          }
+        } else {
+          o = {}
+          for (let k in obj) {
+            o[k] = cloneData(obj[k])
+          }
+        }
+      }
+      break
+    default:
+      o = obj
+      break
+  }
+  return o
+}
+
+let highLightTable = function ($$) {
+  $$.find('tbody tr').each(function (i, v) {
+    $(this).off('click.high-light').on('click.high-light', function (e) {
+      $(this).addClass('table-success').siblings().removeClass('table-success')
+    })
+  })
+}
+
+/**
+ * 表格中生产链接
+ * @param Data // 内嵌文本
+ * @param Thead // 表格头
+ * @param Table // 表格数据
+ * @returns {*}
+ */
+let generateLink = function (Data, Thead, Table) {
+  let Url = Thead.url
+  let Query = Thead.query
+  if (Url && Url !== '') {
+    Query = (Query && Query.split(',')) || []
+    if (Query.length > 0) {
+      let I = Query.length
+      let Params = ''
+      for (let J = 0; J < I; J++) {
+        if (Table[Query[J]] !== undefined) {
+          Params += Query[J] + '=' + Table[Query[J]] + '&'
+        }
+      }
+      Params = trimRight(Params, '&')
+      Url = Url.indexOf('?') >= 0 ? Url + '&' + Params : Url + '?' + Params
+    }
+    Data = '<a href="#' + Url + '">' + Data + '</a>'
+  }
+  return Data
+}
+
+let dataToStr = function (data, p = '') {
+  if (typeof data !== 'object') {
+    return data
+  }
+  if (data) {
+    let dataStr = '' // 数据拼接字符串
+    Object.keys(data).forEach(key => {
+      let realKey
+      if (p !== '') {
+        realKey = p + '[' + key + ']'
+      } else {
+        realKey = key
+      }
+      if (data[key] === null || data[key] === undefined) {
+        dataStr += realKey + '=&'
+      } if (typeof data[key] === 'object') {
+        data[key] = dataToStr(data[key], realKey)
+        dataStr += data[key] + '&'
+      } else {
+        data[key] = encodeURIComponent(data[key])
+        if (p !== '') {
+          dataStr += realKey + '=' + data[key] + '&'
+        } else {
+          dataStr += realKey + '=' + data[key] + '&'
+        }
+      }
+    })
+    return trimRight(dataStr, '&')
+  } else {
+    return data
+  }
+}
+
+export { settingSave, uuid, nameToId, attr, isJSON, cloneData, highLightTable, generateLink, dataToStr }

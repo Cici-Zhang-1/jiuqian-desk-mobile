@@ -36,7 +36,7 @@ export default {
       cards: 'currentPageCards', // 当前页面应该展示的数据
       pageSearches: 'currentPageSearches',
       funcs: 'currentPageFuncs',
-      formPages: 'currentformPages',
+      formPages: 'currentFormPages',
       label: 'currentLabel'
     })
   },

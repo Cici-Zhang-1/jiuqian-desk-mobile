@@ -11,6 +11,10 @@
 }
 .j-table {
   max-height: 800px;
+  table-layout:fixed;
+}
+.j-caption {
+  caption-side: top;
 }
 @media (max-width: 767.98px) {
   .j-table {
@@ -25,6 +29,12 @@
   }
   .j-contanier-top {
     margin-top: 56px;
+  }
+  .j-text-nowrap {
+    white-space: nowrap!important;
+  }
+  .j-phone-none {
+    display: none !important;
   }
 }
 @media print {
@@ -106,6 +116,15 @@
     top: 20px;
     margin-top: -11px;
   }
+  .j-pc-none {
+    display: none!important;
+  }
+}
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active.diff-red {
+  color: #BA445F;
+}
+.nav-tabs > li > a.diff-red{
+  color: #BA445F;
 }
 
 .nav-tabs > li > a > i.fa-times:hover {
@@ -120,6 +139,42 @@
 .py-6 {
   padding-top: 4.5rem;
   padding-bottom: 4.5rem;
+}
+
+table.table-form > tbody > tr > td{
+  padding: 0;
+}
+table.table-form td select, table.table-form td input {
+  border: none;
+}
+.table-center > thead > tr > th, .table-center > tbody > tr > td{
+  text-align: center;
+  vertical-align: middle;
+}
+tr.table-success > td input,
+tr.table-success > td select{
+  background-color: #dff0d8;
+}
+table .td-xs {
+  width: 50px;
+}
+table .td-sm {
+  width: 100px;
+}
+
+table .td-md {
+  width: 150px;
+}
+table .td-lg {
+  width: 200px;
+}
+
+.bg-hint {
+  background-color: #ccc!important;
+}
+
+.j-card-body {
+  padding: 0;
 }
 
 .twitter-typeahead {

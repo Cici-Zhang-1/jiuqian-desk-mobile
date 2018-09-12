@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { host } from '@/axios/env'
+import { baseUrl } from '@/axios/env'
 export default {
   name: 'Upload',
   mounted () {
@@ -42,7 +42,8 @@ export default {
     }
 
     function challsFlashOnCompleteData (a) {
-      document.getElementById('show').innerHTML = '<font color="#ff0000">服务器端反馈信息：</font><br />' + a + '<br />' + document.getElementById('show').innerHTML
+      a = JSON.parse(a)
+      document.getElementById('show').innerHTML = '<font color="#ff0000">服务器端反馈信息：</font><br />' + a.message + '<br />' + document.getElementById('show').innerHTML
     }
 
     function challsFlashOnStart (a) {
@@ -76,7 +77,7 @@ export default {
       var a = {}
       a.title = '上传BD/PIC文件'
       a.FormName = 'uploadForm'
-      a.url = host + '/order/upload/add'
+      a.url = baseUrl + '/order/upload/add'
       a.parameter = 'post'
       a.typefile = '*.bmp;*.gif;*.png;*.jpg;*.jpeg;*.bd;*.xls;*.xlsx;*.saw;'
       a.UpSize = 0
@@ -86,7 +87,7 @@ export default {
       a.autoClose = 1
       a.CompleteClose = true
       a.repeatFile = true
-      a.MD5File = 0
+      a.MD5File = 1
       a.loadFileOrder = true
       a.mixFileNum = 0
       a.ListShowType = 1

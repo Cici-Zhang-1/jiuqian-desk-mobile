@@ -37,7 +37,9 @@ export default {
    * @param commit
    * @param dispatch
    * @param state
-   * @param params
+   * @param url
+   * @param configs
+   * @param target
    * {
    *    uri: this.card.url,
    *    data: {
@@ -46,15 +48,13 @@ export default {
    *      pagesize: this.card ? this.card.pagesize : this.pagesize
    *    }
    *  }
-   * @param target
+   * @returns {*|PromiseLike<T | never>|Promise<T | never>}
    * @constructor
    */
   FETCH_DATA: ({commit, dispatch, state}, { url, configs = {}, target }) => {
     return service.get(url, configs).then(data => {
-      // if (data.code === 0) {
       commit('SET_DATA', { ...data, target })
       return data
-      // }
     })
   },
 
@@ -63,9 +63,10 @@ export default {
    * @param commit
    * @param dispatch
    * @param state
-   * @param params
+   * @param url
+   * @param configs
    * @param target
-   * @returns {*|PromiseLike<T>|Promise<T>}
+   * @returns {*}
    * @constructor
    */
   FETCH_SOURCE_DATA: ({ commit, dispatch, state }, { url, configs, target }) => {
@@ -91,6 +92,92 @@ export default {
       if (data.code === 0) {
         commit('SET_FORM_SOURCE_DATA', { ...data, target })
       }
+      return data
+    })
+  },
+
+  /**
+   * 获取拆单数据结构
+   * @param commit
+   * @param dispatch
+   * @param state
+   * @param configs
+   * @param target
+   * @returns {*}
+   * @constructor
+   */
+  FETCH_CABINET_STRUCT: ({ commit, dispatch, state }, { configs, target }) => {
+    return service.get('/order/order_product_cabinet_struct/read', configs).then(data => {
+      if (data.code === 0) {
+        commit('SET_DISMANTLE_STRUCT', { ...data, target })
+      } else {
+        commit('SET_DISMANTLE_STRUCT', {
+          contents: {
+            board: '18多层板古典红木R',
+            facefb: '0.8同色封边',
+            v: 0
+          },
+          target
+        })
+      }
+      return data
+    })
+  },
+
+  FETCH_DISMANTLE_ORDER_PRODUCT_BOARD_PLATE: ({ commit, dispatch, state }, { url, configs, target }) => {
+    return service.get(url, configs).then(data => {
+      if (data.code === 0) {
+        commit('SET_DISMANTLE_ORDER_PRODUCT_BOARD_PLATE', { ...data, target })
+      } else {
+        commit('SET_DISMANTLE_ORDER_PRODUCT_BOARD_PLATE', {
+          contents: {
+            content: []
+          },
+          target
+        })
+      }
+      return data
+    })
+  },
+
+  FETCH_WARDROBE_STRUCT: ({ commit, dispatch, state }, { configs, target }) => {
+    return service.get('/order/order_product_wardrobe_struct/read', configs).then(data => {
+      if (data.code === 0) {
+        commit('SET_DISMANTLE_STRUCT', { ...data, target })
+      } else {
+        commit('SET_DISMANTLE_STRUCT', {
+          contents: {
+            board: '18多层板古典红木R',
+            v: 0
+          },
+          target
+        })
+      }
+      return data
+    })
+  },
+
+  FETCH_DOOR_STRUCT: ({ commit, dispatch, state }, { configs, target }) => {
+    return service.get('/order/order_product_door/read', configs).then(data => {
+      if (data.code === 0) {
+        commit('SET_DISMANTLE_STRUCT', { ...data, target })
+      } else {
+        commit('SET_DISMANTLE_STRUCT', {
+          contents: {
+            board: '18多层板古典红木R',
+            edge: '',
+            v: 0
+          },
+          target
+        })
+      }
+      return data
+    })
+  },
+
+  FETCH_VALUATE_DATA: ({ commit, dispatch, state }, { url, configs, target }) => {
+    return service.get(url, configs).then(data => {
+      commit('SET_VALUATE_DATA', { ...data, target })
       return data
     })
   }

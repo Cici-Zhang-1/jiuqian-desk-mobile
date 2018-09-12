@@ -27,7 +27,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      formPages: 'currentformPages',
+      formPages: 'currentFormPages',
       label: 'currentLabel'
     })
   },
