@@ -25,7 +25,7 @@
         <th>业主:</th>
         <td>{{ tables.owner }}</td>
         <th>备注:</th>
-        <td></td>
+        <td>{{ tables['dealer_remark'] }}</td>
       </tr>
       </tbody>
     </table>

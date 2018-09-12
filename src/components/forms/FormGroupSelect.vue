@@ -1,16 +1,17 @@
 <template>
   <div class="form-group" v-if="selectData && (selectData.length || selectData.num)">
     <label :for="id">{{ configs.label }}<span v-if="required">*</span></label>
-    <select class="form-control" :name="configs.name" :id="id" v-model="selectValue" :required="required" :multiple="multiple" >
+    <select class="form-control" :name="configs.name" :id="id" v-model="selectValue" :required="required" :readonly="readonly" :multiple="multiple" >
       <option value="" v-if="!required">---</option>
       <option v-for="(value, key, index) in selectData.content" :value="value.v" :key="index">{{ value.class_alien || '' }}{{ value.label || value.truename || value.name || value.v }}</option>
     </select>
-    <small class="form-text text-muted" v-if="multiple">{{selectValue.toString()}}</small>
+    <small class="form-text text-muted" v-if="multiple">{{ showSelect()}}</small>
   </div>
 </template>
 
 <script>
 import { nameToId, uuid } from '@/assets/js/custom'
+import $ from 'jquery'
 
 export default {
   name: 'form-group-select',
@@ -25,9 +26,7 @@ export default {
     }
   },
   data () {
-    return {
-      // selectValue: []
-    }
+    return {}
   },
   computed: {
     id () {
@@ -69,7 +68,6 @@ export default {
     }
   },
   created () {
-    // (this.selectData && this.selectData.content) && this.defaultSelect()
     this.loadSourceData()
   },
   watch: {
@@ -96,29 +94,25 @@ export default {
       },
       deep: true
     }
-    /* selectValue: {
-      handler: function (to, from) {
-        this.configs.dv = to
-      },
-      deep: true
-    },
-    selectData: {
-      handler: function (to, from) {
-        (to && to.content) && this.defaultSelect()
-      },
-      deep: true
-    } */
   },
   methods: {
+    showSelect () {
+      let selected = []
+      let self = this
+      this.selectData.content.map(__ => {
+        if ($.inArray(__.v, self.selectValue) >= 0) {
+          selected.push(__.label || __.name || __.v)
+        }
+        return __
+      })
+      return selected.toString()
+    },
     multipleDv () {
       if (this.multiple && !(this.configs.dv instanceof Array)) {
         this.configs.dv = this.configs.dv ? [ this.configs.dv ] : []
       }
       return this.configs.dv
     },
-    /* defaultSelect () {
-      this.selectValue = this.configs.dv ? (this.multiple ? (this.configs.dv instanceof Array ? this.configs.dv : [this.configs.dv]) : this.configs.dv) : []
-    }, */
     loadSourceData (Reload = false) {
       if ((Reload || typeof this.selectData === 'undefined' || JSON.stringify(this.selectData) === '{}') && this.configs.url !== '') {
         let params = this.configs.params || {}

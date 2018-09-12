@@ -28,12 +28,14 @@
 
 <script>
 import FormGroupInput from '@/components/forms/FormGroupInput'
+import FormGroupNumber from '@/components/forms/FormGroupNumber'
 import FormGroupSelect from '@/components/forms/FormGroupSelect'
 import FormGroupSelectRecommend from '@/components/forms/FormGroupSelectRecommend'
 import FormGroupRadio from '@/components/forms/FormGroupRadio'
 import FormGroupCheckbox from '@/components/forms/FormGroupCheckbox'
 import FormGroupTextarea from '@/components/forms/FormGroupTextarea'
 import FormGroupAutoComplete from '@/components/forms/FormGroupAutoComplete'
+import FormGroupRemote from '@/components/forms/FormGroupRemote'
 import FormGroupGoodsSpeci from '@/components/forms/FormGroupGoodsSpeci'
 import InputDatalist from '@/components/forms/InputDatalist'
 import InputHidden from '@/components/forms/InputHidden'
@@ -117,9 +119,11 @@ export default {
       switch (value) {
         case 'text':
         case 'password':
-        case 'number':
         case 'date':
           type = 'form-group-input'
+          break
+        case 'number':
+          type = 'form-group-number'
           break
         case 'select':
           type = 'form-group-select'
@@ -144,6 +148,9 @@ export default {
           break
         case 'auto-complete':
           type = 'form-group-auto-complete'
+          break
+        case 'remote':
+          type = 'form-group-remote'
           break
         case 'goods-speci':
           type = 'form-group-goods-speci'
@@ -240,12 +247,14 @@ export default {
   },
   components: {
     FormGroupInput,
+    FormGroupNumber,
     FormGroupCheckbox,
     FormGroupSelect,
     FormGroupSelectRecommend,
     FormGroupRadio,
     FormGroupTextarea,
     FormGroupAutoComplete,
+    FormGroupRemote,
     FormGroupGoodsSpeci,
     InputDatalist,
     InputHidden

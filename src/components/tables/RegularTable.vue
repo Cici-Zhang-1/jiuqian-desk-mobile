@@ -1,8 +1,8 @@
 <template>
-  <table class="table table-striped table-responsive text-nowrap j-table" :id="id">
+  <table class="table table-striped table-responsive j-text-nowrap j-table" :id="id">
     <thead>
       <tr>
-        <th class="d-print-none"><input type="checkbox" name="select_all" @click="selectAll($event.currentTarget)"  v-model="selectAllChecked" /></th>
+        <th class="d-print-none d-sm-none d-md-block"><input type="checkbox" name="select_all" @click="selectAll($event.currentTarget)"  v-model="selectAllChecked" /></th>
         <th v-for="(value, key, index) in tableThead" :class="[ value.classes ]" :key="index" v-if="value.checked_name">{{ value.label }}</th>
       </tr>
     </thead>

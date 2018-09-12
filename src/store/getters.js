@@ -58,8 +58,17 @@ export default {
         }
       }
     }
-
     return First
+  },
+
+  getHomes (state) {
+    let Homes = {}
+    for (let i in state.apps) {
+      if (state.apps[i].home === '1') {
+        Homes[i] = state.apps[i]
+      }
+    }
+    return Homes
   },
 
   /**
@@ -92,7 +101,38 @@ export default {
    * @returns {function({uri: *})}
    */
   getSourceData: (state) => ({ uri }) => {
-    return state.sourceData[uri] && state.sourceData[uri]
+    return state.sourceData[uri] || {}
+  },
+
+  /**
+   * 获取拆单信息
+   * @param state
+   * @returns {function({uri: *, child: *}): (*|undefined)}
+   */
+  getDismantleData: (state) => ({ uri, child }) => {
+    return (state.sourceData[uri] && state.sourceData[uri][child]) || undefined
+  },
+
+  getActiveDismantleData: (state) => ({ uri, child }) => {
+    let Data
+    if (state.sourceData[uri] !== undefined) {
+      let OrderProductId = state.sourceData[uri]['order_info']['order_product_id']
+      if (OrderProductId > 0) {
+        for (let i in state.sourceData[uri][child]['order_product']) {
+          if (state.sourceData[uri][child]['order_product'][i]['v'] === OrderProductId) {
+            Data = state.sourceData[uri][child]['order_product'][i]
+            break
+          }
+        }
+      }
+    }
+    return Data
+    /* let Data = (state.sourceData[uri] && state.sourceData[uri][child]) || undefined
+    if (Data === undefined) {
+      return Data
+    } else {
+
+    } */
   },
 
   currentLabel (state) {
@@ -165,7 +205,7 @@ export default {
    * @param state
    * @returns {boolean|*}
    */
-  currentformPages (state) {
+  currentFormPages (state) {
     return state.apps.length > 0 && state.apps.filter(app => {
       return app.url === state.route.path
     })[0].form_pages
@@ -177,7 +217,7 @@ export default {
    * @returns {function({source: *, all?: *})}
    */
   currentPageActiveLines: (state) => ({ source, all = false }) => {
-    if (source === false || source === undefined || source === null) {
+    if (source === false || source === undefined || source === null || source === '') {
       return []
     } else {
       let lines = []
@@ -262,7 +302,7 @@ export default {
    * @returns {Function}
    */
   currentPageQuery: (state) => ({ source, query }) => {
-    if (source === false || source === undefined || source === null) {
+    if (source === false || source === undefined || source === null || source === '') {
       return {}
     } else {
       let Return = {}

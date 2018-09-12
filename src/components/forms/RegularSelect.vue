@@ -1,13 +1,13 @@
 <template>
   <div class="form-group row" v-if="selectData && (selectData.length || selectData.num)">
-    <label :for="id" class="col-2 col-form-label">{{ configs.label }}</label>
-    <div class="col-9">
+    <label :for="id" class="col-md-2 col-form-label">{{ configs.label }}<small class="j-pc-none text-danger" v-if="required">*</small></label>
+    <div class="col-md-9">
       <select class="form-control" :name="configs.name" :id="id" v-model="selectValue" :required="required" :multiple="multiple" >
         <option value="" v-if="!required">---</option>
         <option v-for="(value, key, index) in selectData.content" :value="value.v" :key="index">{{ value.class_alien || '' }}{{ value.label || value.truename || value.name || value.v }}</option>
       </select>
     </div>
-    <div class="col-1">
+    <div class="j-phone-none col-md-1">
       <small class="text-danger" v-if="required">*</small>
     </div>
   </div>

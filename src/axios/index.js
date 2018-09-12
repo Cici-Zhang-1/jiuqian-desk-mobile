@@ -2,22 +2,59 @@ import axios from 'axios/dist/axios'
 import router from '@/router'
 import store from '@/store'
 import { baseUrl } from './env'
-
+import { dataToStr } from '@/assets/js/custom'
+//
+// let dataToStr = function (data, p = '') {
+//   if (data) {
+//     let dataStr = '' // 数据拼接字符串
+//     Object.keys(data).forEach(key => {
+//       let realKey
+//       if (p !== '') {
+//         realKey = p + '[' + key + ']'
+//       } else {
+//         realKey = key
+//       }
+//       if (data[key] === null || data[key] === undefined) {
+//         dataStr += realKey + '=&'
+//       } if (typeof data[key] === 'object') {
+//         data[key] = dataToStr(data[key], realKey)
+//         dataStr += data[key] + '&'
+//       } else {
+//         data[key] = encodeURIComponent(data[key])
+//
+//         if (p !== '') {
+//           dataStr += realKey + '=' + data[key] + '&'
+//         } else {
+//           dataStr += realKey + '=' + data[key] + '&'
+//         }
+//       }
+//     })
+//     return trimRight(dataStr, '&')
+//   } else {
+//     return data
+//   }
+// }
 // 创建axios实例
 const service = axios.create({
   baseURL: baseUrl, // api的base_url
   withCredentials: true,
   transformRequest: [function (data) {
+    return dataToStr(data)
     // 对 data 进行任意转换处理
-    if (data) {
+    /* if (data) {
       let dataStr = '' // 数据拼接字符串
       Object.keys(data).forEach(key => {
-        dataStr += key + '=' + data[key] + '&'
+        if (typeof data[key] === "object") {
+          data[key] = dataToStr(data[key], key)
+          dataStr += data[key] + '&'
+        } else {
+          dataStr += key + '=' + data[key] + '&'
+        }
       })
       return dataStr
     } else {
       return data
-    }
+    } */
   }],
   timeout: 10000 // 请求超时时间
 })

@@ -1,10 +1,10 @@
 <template>
   <div class="form-group row">
-    <label :for="id" class="col-2 col-form-label">{{ configs.label }}</label>
-    <div class="col-9">
+    <label :for="id" class="col-md-2 col-form-label">{{ configs.label }}<small class="j-pc-none text-danger" v-if="required">*</small></label>
+    <div class="col-md-9">
       <textarea class="form-control" :name="configs.name" :id="id" rows="3" v-model="value" :readonly="readonly" :required="required" :max="max" :min="min" :maxlength="maxlength" :pattern="pattern"  ></textarea>
     </div>
-    <div class="col-1">
+    <div class="j-phone-none col-md-1">
       <small class="text-danger" v-if="required">*</small>
     </div>
   </div>

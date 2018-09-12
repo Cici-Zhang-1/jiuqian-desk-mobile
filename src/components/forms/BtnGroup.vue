@@ -5,15 +5,18 @@
       <span class="caret"></span>
     </button>
     <div class="dropdown-menu" :aria-labelledby="id">
-      <a class="dropdown-item mt-1 mb-1" v-for="(func, key, index) in funcGroup.funcs" :key="uuid(index)" :href="disposeUri(func)"  :data-toggle="func.toggle_name" :data-target="func.target" :data-multiple=!!parseInt(func.multiple_v) :data-single=!!parseInt(func.single_v) :data-source="func.source" :data-query="func.query" @click="btnGroupAClick"><i class="mr-1" :class="func.img"></i>{{ func.label }}</a>
+      <a class="dropdown-item mt-1 mb-1" v-for="(func, key, index) in funcGroup.funcs" :key="uuid(index)" :href="disposeUri(func)" :target="func.toggle_v === 'blank' ? '_blank' : '_self'"  :data-toggle="func.toggle_name" :data-target="func.target" :data-multiple=!!parseInt(func.multiple_v) :data-single=!!parseInt(func.single_v) :data-source="func.source" :data-query="func.query" @click="btnGroupAClick"><i class="mr-1" :class="func.img"></i>{{ func.label }}</a>
     </div>
   </div>
 </template>
 
 <script>
-import { uuid } from '@/assets/js/custom'
+import { uuid, dataToStr } from '@/assets/js/custom'
 import $ from 'jquery'
 import service from '@/axios'
+import { baseUrl } from '@/axios/env'
+import { trimRight } from 'voca'
+
 export default {
   name: 'btn-group',
   props: {
@@ -46,13 +49,13 @@ export default {
     uuid (index) {
       return index + uuid()
     },
-    dataStr (data) {
-      let DataStr = ''
-      Object.keys(data).forEach(key => {
-        DataStr += key + '=' + data[key] + '&'
-      })
-      return DataStr
-    },
+    // dataStr (data) {
+    //   let DataStr = ''
+    //   Object.keys(data).forEach(key => {
+    //     DataStr += key + '=' + data[key] + '&'
+    //   })
+    //   return DataStr
+    // },
     btnGroupAClick (event) {
       let Toggle = $(event.currentTarget).data('toggle')
       switch (Toggle) {
@@ -66,6 +69,9 @@ export default {
         case 'save':
           event.preventDefault()
           this.func_save(event.currentTarget)
+          break
+        case 'blank':
+          this.func_blank(event.currentTarget) || event.preventDefault()
           break
       }
     },
@@ -87,6 +93,9 @@ export default {
       if ($(E).data('multiple') || $(E).data('single')) {
         let V = this.$store.getters.currentPageActiveLineVs({source: $(E).data('target') || '', all: $(E).data('multiple') || false}).map(__ => __.v)
         if (V && V.length !== 0) {
+          if ($(E).data('single')) {
+            V = V.pop()
+          }
           Data['v'] = V
           if (Keys) {
             Data['relate'] = this.$store.getters.currentPageActiveLineVs({source: $(E).data('target') || '', all: false, keys: Keys})
@@ -96,29 +105,12 @@ export default {
           return false
         }
       }
-      let DataStr = this.dataStr(Data)
+      let DataStr = dataToStr(Data)
 
       $(E).attr('href', function (index, attr) {
         return attr.indexOf('?') >= 0 ? attr.substr(0, attr.lastIndexOf('?')) + '?' + DataStr : attr + '?' + DataStr
       })
       return true
-      /*
-      if ($(E).data('multiple') || $(E).data('single')) {
-        if ($(E).data('target')) {
-          let V = this.$store.getters.currentPageActiveLineVs({source: $(E).data('target'), all: $(E).data('multiple')}).map(__ => __.v)
-          if (V.length !== 0) {
-            $(E).attr('href', function (index, attr) {
-              return attr.indexOf('?') >= 0 ? attr.substr(0, attr.lastIndexOf('?')) + '?v=' + V.join(',') : attr + '?v=' + V.join(',')
-            })
-          } else {
-            alert('请先选中!')
-            return false
-          }
-        } else {
-          console.log('没有定义Target')
-        }
-      }
-      return true */
     },
     async func_backstage (E) {
       let Data = {}
@@ -130,6 +122,9 @@ export default {
           Keys = Keys !== '' && Keys ? Keys.split(',') : null
           let V = this.$store.getters.currentPageActiveLineVs({source: Target, all: $(E).data('multiple')}).map(__ => __.v)
           if (V.length !== 0) {
+            if ($(E).data('single')) {
+              V = V.pop()
+            }
             if (confirm('确定执行' + $(E).text() + '操作?')) {
               Data['v'] = V
               if (Keys) {
@@ -152,8 +147,18 @@ export default {
       }
       let postReturn = await service.post($(E).attr('href'), Data)
       if (!postReturn.code) {
-        this.$store.commit('SET_APP_RELOAD', { reload: true })
-        return true
+        if (postReturn.location !== '') {
+          if (postReturn.confirm !== '') {
+            if (window.confirm(postReturn.confirm)) {
+              this.$router.push(postReturn.location)
+            }
+          } else {
+            this.$router.push(postReturn.location)
+          }
+        } else {
+          this.$store.commit('SET_APP_RELOAD', { reload: true })
+          return true
+        }
       } else {
         alert(postReturn.message)
         return false
@@ -162,11 +167,59 @@ export default {
     func_save (E) {
 
     },
+    func_blank (E) {
+      let Data = this.parseData(E)
+      if (Data !== false && Data !== undefined) {
+        let DataStr = dataToStr(Data)
+        DataStr = trimRight(DataStr, '&')
+        $(E).attr('href', function (index, attr) {
+          return attr.indexOf('?') >= 0 ? attr.substr(0, attr.lastIndexOf('?')) + '?' + DataStr : attr + '?' + DataStr
+        })
+        return true
+      } else {
+        return false
+      }
+    },
+    parseData (E) {
+      let Data = {}
+      let [ Query = null, Keys = null, Search = null ] = $(E).data('query').split('-')
+      Query = Query ? Query.split(',') : null
+      Keys = Keys ? Keys.split(',') : null
+      Search = Search ? Search.split(',') : null
+      if (Query) {
+        let QueryValue = this.$store.getters.currentPageQuery({source: $(E).data('target') || '', query: Query})
+        Data = { ...Data, ...QueryValue }
+      }
+      if (Search) {
+        let SearchValues = this.$store.getters.currentPageSearchSearchValues({search: Search})
+        Data = { ...Data, ...SearchValues }
+      }
+      if ($(E).data('multiple') || $(E).data('single')) {
+        let V = this.$store.getters.currentPageActiveLineVs({source: $(E).data('target') || '', all: $(E).data('multiple') || false}).map(__ => __.v)
+        if (V && V.length !== 0) {
+          Data['v'] = V
+          if (Keys) {
+            // Data['relate'] = this.$store.getters.currentPageActiveLineVs({source: $(E).data('target') || '', all: $(E).data('multiple'), keys: Keys})
+            let Relate = this.$store.getters.currentPageActiveLineVs({source: $(E).data('target') || '', all: $(E).data('multiple'), keys: Keys})
+            if ($(E).data('single')) {
+              Relate = Relate.shift()
+              Data = { ...Data, ...Relate }
+            } else {
+              Data['relate'] = Relate
+            }
+          }
+        } else {
+          alert('请先选中!!')
+          return false
+        }
+      }
+      return Data
+    },
     disposeUri (func) {
       if (func.toggle_name === 'child') {
         return '#' + func.url
       } else {
-        return func.url
+        return baseUrl + func.url
       }
     }
   }
