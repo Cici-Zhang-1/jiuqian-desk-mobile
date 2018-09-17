@@ -67,6 +67,7 @@ export default {
       } else {
         return false
       }
+
       let dataStr = dataToStr(this.data)
       $(E).attr('href', function (index, attr) {
         return attr.indexOf('?') >= 0 ? attr.substr(0, attr.lastIndexOf('?')) + '?' + dataStr : attr + '?' + dataStr
@@ -108,15 +109,18 @@ export default {
       return true
     },
     parse_keys () {
-      if (this.keys.length > 0) {
-        let Relate = this.$store.getters.currentPageActiveLineVs({source: this.target, all: this.multiple, keys: this.keys})
-        if (this.single) {
-          Relate = Relate.shift()
-          this.data = { ...this.data, ...Relate }
-        } else {
-          this.data['relate'] = Relate
+      if (this.multiple || this.single) {
+        if (this.keys.length > 0) {
+          let Relate = this.$store.getters.currentPageActiveLineVs({source: this.target, all: this.multiple, keys: this.keys})
+          if (this.single) {
+            Relate = Relate.shift()
+            this.data = { ...this.data, ...Relate }
+          } else {
+            this.data['relate'] = Relate
+          }
         }
       }
+      return true
     },
     parse_params (E) {
       this.data = {}
