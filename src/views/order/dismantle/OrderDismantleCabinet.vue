@@ -9,7 +9,7 @@
           <option v-for="(item, key, index) in orderProduct['order_product']" :key="index" :value="item.v" v-if="orderProduct['order_product']">{{ item.num }}-{{ item.product }}-{{ item.status_label }}</option>
         </select>
       </div>
-      <div class="form-group col-md-2">
+      <div class="form-group col-md-1">
         <label>产品名称</label>
         <input type="text" class="form-control" name="product" v-model="activeOrderProduct['product']" placeholder="请添加产品名称" v-if="activeOrderProduct">
         <input type="text" class="form-control" name="product" v-model="orderProduct['product']['name']" placeholder="请添加产品名称" v-if="!activeOrderProduct">
@@ -25,6 +25,10 @@
         <label>备注</label>
         <input type="text" class="form-control" name="remark" v-model="activeOrderProduct['remark']" placeholder="添加备注" v-if="activeOrderProduct">
         <input type="text" class="form-control" name="remark" v-model="orderProduct['product']['remark']" placeholder="添加备注" v-if="!activeOrderProduct">
+      </div>
+      <div class="form-group col-md-2" v-if="activeOrderProduct">
+        <label>设计图集</label>
+        <input type="text" class="form-control" name="design_atlas" v-model="activeOrderProduct['design_atlas']" readonly placeholder="设计图集">
       </div>
     </div>
     <table class="table-center table-form table table-bordered table-responsive text-nowrap" id="dismantleWTable" v-if="!loading && activeOrderProduct">

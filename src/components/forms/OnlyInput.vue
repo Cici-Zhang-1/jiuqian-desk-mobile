@@ -1,5 +1,5 @@
 <template>
-  <input :type="configs.form_type_v" :name="configs.name" class="form-control form-control-sm" :id="id" v-model="value" :readonly="readonly" :required="required" :max="max" :min="min" :maxlength="maxlength" :pattern="pattern" :placeholder="placeholder" />
+  <input :type="configs.form_type_v" :name="configs.name" class="form-control" :id="id" v-model="value" :readonly="readonly" :required="required" :max="max" :min="min" :maxlength="maxlength" :pattern="pattern" :placeholder="placeholder" />
 </template>
 
 <script>
@@ -13,7 +13,7 @@ export default {
       required: true
     },
     query: {
-      type: [String, Number, Boolean]
+      type: [Array, Object]
     }
   },
   computed: {

@@ -29,6 +29,7 @@ export default {
       required: true
     }
   },
+  inject: ['reload'],
   data () {
     return {
       v: '',
@@ -113,6 +114,9 @@ export default {
             if (postReturn.confirm !== '') {
               if (window.confirm(postReturn.confirm)) {
                 this.$router.push(postReturn.location)
+              } else {
+                // this.$store.commit('SET_APP_RELOAD', { reload: true })
+                this.reload()
               }
             } else {
               this.$router.push(postReturn.location)

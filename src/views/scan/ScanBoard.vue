@@ -2,8 +2,8 @@
   <div class="row mt-3 j-page" :id="title">
     <div class="col-12 border-bottom rounded-bottom mb-2 border-primary text-center d-print-none"><h5>{{ label }}</h5></div>
     <div is="scan-board-page-search" :pageSearches="pageSearches" v-if="pageSearches" @search="searchQrcode($event)" :qrcodeFocus="focus"></div>
-    <div is="scan-board-func" @show="show($event)" @save="save($event)" @refresh="disposeRefresh($event)"></div>
-    <div is="scan-board-card" :card="get_card('scan_board_table')" v-if="cards" :reload="reload" :search="search" :showAll="showAll" :refresh="refresh" @focus-qrcode="disposeFocus()"></div>
+    <div is="scan-board-func" @show="show($event)" @save="save($event)" @refresh="disposeRefresh($event)" @last="disposeLast($event)"></div>
+    <div is="scan-board-card" :card="get_card('scan_board_table')" v-if="cards" :reload="reload" :search="search" :showAll="showAll" :refresh="refresh" :last="last" @focus-qrcode="disposeFocus()"></div>
   </div>
 </template>
 
@@ -28,6 +28,7 @@ export default {
       showAll: false,
       refresh: false,
       focus: false,
+      last: false,
       data: {}
     }
   },
@@ -71,6 +72,12 @@ export default {
     },
     searchQrcode (e) {
       this.search = !this.search
+    },
+    disposeLast (E) {
+      if (window.confirm('确认找回上次扫描?')) {
+        this.last = !this.last
+      }
+      return true
     },
     disposeRefresh (E) { // 刷新
       if (this.setData(E)) {

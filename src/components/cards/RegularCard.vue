@@ -91,7 +91,7 @@ export default {
     }
   },
   methods: {
-    fetchData (pageSearch = {}, to = this.page) { // 获取数据
+    fetchData (pageSearch = {}, to = this.page) { // 获取数据//
       this.$bar.start()
       this.$store.dispatch('FETCH_DATA', {
         url: this.card.url,
@@ -106,6 +106,9 @@ export default {
       }).then((res) => {
         this.errorMsg = res.message
         this.page = Number(to)
+      }).catch(err => {
+        this.errorMsg = err.message
+      }).finally(() => {
         this.$bar.finish()
       })
     }

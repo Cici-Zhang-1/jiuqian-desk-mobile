@@ -22,6 +22,8 @@
             <th >金额</th>
             <th v-if="show('area_diff')">差面</th>
             <th v-if="show('sum_diff')">差额</th>
+            <th class="d-none" v-if="show('virtual_area')">虚拟面积</th>
+            <th class="d-none" v-if="show('virtual_sum')">虚拟金额</th>
             <th class="d-none">Index</th>
           </tr>
           </thead>
@@ -43,7 +45,9 @@
               <td v-if="show('invisibility_unit_price')"><input class="form-control input-sm bg-hint" name="handle_unit_price" type="number" v-model="item['invisibility_unit_price']" @focusout="computeSum($event)"/></td>
               <td ><input class="form-control input-sm bg-hint" name="sum" type="number" v-model="item['sum']" readonly /></td>
               <td v-if="show('area_diff')" ><input class="form-control input-sm bg-hint" name="area_diff" type="number" v-model="item['area_diff']" @focusout="computeSum($event)"/></td>
-              <td v-if="show('area_diff')" ><input class="form-control input-sm bg-hint" name="sum_diff" type="number" v-model="item['sum_diff']" @focusout="computeSum($event)"/></td>
+              <td v-if="show('sum_diff')" ><input class="form-control input-sm bg-hint" name="sum_diff" type="number" v-model="item['sum_diff']" @focusout="computeSum($event)"/></td>
+              <td class="d-none" v-if="show('virtual_area')" ><input class="form-control input-sm bg-hint" name="virtual_area" type="number" v-model="item['virtual_area']" /></td>
+              <td class="d-none" v-if="show('virtual_sum')" ><input class="form-control input-sm bg-hint" name="virtual_sum" type="number" v-model="item['virtual_sum']" /></td>
               <td class="d-none"><input class="form-control input-sm" name="index" type="number" :value="key"/></td>
             </tr>
           </tbody>
@@ -125,8 +129,11 @@ export default {
         InvisibilityUnitPrice = parseFloat(Data['invisibility_unit_price'])
       }
       Data['sum'] = (Math.ceil((UnitPrice * Amount + OpenHole * OpenHoleUnitPrice + Invisibility * InvisibilityUnitPrice) * M_REGULAR) / M_REGULAR).toFixed(3)
+      Data['virtual_sum'] = Data['sum']
       if (Data['sum_diff'] !== undefined) {
         Data['sum_diff'] = (Math.ceil(UnitPrice * AreaDiff * M_REGULAR) / M_REGULAR).toFixed(3)
+        Data['virtual_area'] += AreaDiff
+        Data['virtual_sum'] += Data['sum_diff']
       }
     },
     fetchData () { // 获取数据

@@ -16,7 +16,7 @@ export default {
       required: true
     },
     query: {
-      type: [String, Number, Boolean]
+      type: [Array, Object]
     }
   },
   computed: {

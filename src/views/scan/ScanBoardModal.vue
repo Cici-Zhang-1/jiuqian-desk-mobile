@@ -56,16 +56,20 @@ export default {
       self.clearTimer(self)
       self.pauseAudio(self)
     })
+    if (this.abnormity) {
+      this.handleAbnormity()
+    }
   },
   watch: {
     abnormity: {
       handler: function (to, from) {
-        this.sure = true
-        this.msg = this.qrcode + this.scanning.remark + '当前异形是否已经做好?'
-        $('#scanBoardModal').modal({backdrop: 'static', keyword: false}).modal('show')
-        this.autoClose()
-        this.audio = document.getElementById('scanBoardAbnormityAudio')
-        this.playAudio()
+        this.handleAbnormity()
+        // this.sure = true
+        // this.msg = this.qrcode + this.scanning.remark + '当前异形是否已经做好?'
+        // $('#scanBoardModal').modal({backdrop: 'static', keyword: false}).modal('show')
+        // this.autoClose()
+        // this.audio = document.getElementById('scanBoardAbnormityAudio')
+        // this.playAudio()
       }
     },
     nonExist: {
@@ -79,6 +83,14 @@ export default {
     }
   },
   methods: {
+    handleAbnormity () {
+      this.sure = true
+      this.msg = this.qrcode + this.scanning.remark + '当前异形是否已经做好?'
+      $('#scanBoardModal').modal({backdrop: 'static', keyword: false}).modal('show')
+      this.autoClose()
+      this.audio = document.getElementById('scanBoardAbnormityAudio')
+      this.playAudio()
+    },
     autoClose () {
       let self = this
       this.sec = 5

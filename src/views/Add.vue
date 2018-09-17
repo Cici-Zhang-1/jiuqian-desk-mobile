@@ -1,7 +1,7 @@
 <template>
   <div class="row mt-3 j-page" :id="title">
     <div class="col-12 border-bottom rounded-bottom mb-2 border-primary text-center d-print-none"><h5>{{ label }}</h5></div>
-    <div is="regular-form" v-for="(form, key, index) in formPages" :form="form" :key="index" v-if="formPages.length"></div>
+    <div is="regular-form" v-for="(form, key, index) in formPages" :form="form" :key="index" v-if="formPages.length && isActive"></div>
   </div>
 </template>
 
@@ -20,9 +20,15 @@ export default {
       type: String
     }
   },
+  provide () {
+    return {
+      reload: this.reload
+    }
+  },
   data () {
     return {
-      title: ''
+      title: '',
+      isActive: true
     }
   },
   computed: {
@@ -48,6 +54,12 @@ export default {
   methods: {
     set_app_controller () {
       this.$store.commit('SET_APP_CONTROLLER', { controller: this.c })
+    },
+    reload () {
+      this.isActive = false
+      this.$nextTick(function () {
+        this.isActive = true
+      })
     }
   },
   components: {

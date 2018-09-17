@@ -20,10 +20,14 @@
       </div>
       <board :board="activeOrderProduct['struct']['board']" v-model="activeOrderProduct['struct']['board']" @focusout-board="changeBoard($event)" v-if="activeOrderProduct && activeOrderProduct['struct']" ></board>
       <thick :thick="changeLine" v-model="changeLine" v-if="activeOrderProduct"></thick>
-      <div class="form-group col-md-4">
+      <div class="form-group col-md-2">
         <label>备注</label>
         <input type="text" class="form-control" name="remark" v-model="activeOrderProduct['remark']" placeholder="添加备注" v-if="activeOrderProduct">
         <input type="text" class="form-control" name="remark" v-model="orderProduct['product']['remark']" placeholder="添加备注" v-if="!activeOrderProduct">
+      </div>
+      <div class="form-group col-md-2" v-if="activeOrderProduct">
+        <label>设计图集</label>
+        <input type="text" class="form-control" name="design_atlas" v-model="activeOrderProduct['design_atlas']" readonly placeholder="设计图集">
       </div>
     </div>
     <table class="table-center table-form table table-bordered table-responsive text-nowrap" id="dismantleYTable" v-if="!loading && activeOrderProduct">
@@ -56,7 +60,7 @@
         <td is="dismantle-plate" :plate="item['plate_name']" v-model="item['plate_name']"></td>
         <td><input class="form-control input-sm" name="good" type="text" v-model="item['board']"/></td>
         <td><input class="form-control input-sm" name="length" type="text" v-model="item['length']" @change="computeArea($event)"/></td>
-        <td><input class="form-control input-sm" name="width" type="text" v-model="item['width']" @change="computeArea($event)" /></td>
+        <td><input class="form-control input-sm" name="width" type="text" v-model="item['width']" @focusout="computeArea($event)" /></td>
         <td><input class="form-control input-sm" name="area" type="text" value="" readonly="readonly" v-model="item['area']"/></td>
         <td is="dismantle-edge" :edge="item['edge']" v-model="item['edge']"></td>
         <td is="dismantle-slot" :slots="item['slot']" v-model="item['slot']"></td>

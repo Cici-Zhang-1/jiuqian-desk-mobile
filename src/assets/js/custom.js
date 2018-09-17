@@ -228,4 +228,8 @@ let dataToStr = function (data, p = '') {
   }
 }
 
-export { settingSave, uuid, nameToId, attr, isJSON, cloneData, highLightTable, generateLink, dataToStr }
+let FetchError = function (message) {
+  this.message = message;
+  this.name = "FetchError";
+}
+export { settingSave, uuid, nameToId, attr, isJSON, cloneData, highLightTable, generateLink, dataToStr, FetchError }

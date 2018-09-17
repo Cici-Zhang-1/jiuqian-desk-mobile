@@ -35,6 +35,8 @@ export default {
   },
   methods: {
     fetchData () { // 获取数据
+      this.error = false
+      this.errorMsg = ''
       this.$bar.start()
       this.$store.dispatch('FETCH_DATA', {
         url: this.card.url,
@@ -48,9 +50,11 @@ export default {
         if (res.code > 0) {
           this.errorMsg = res.message
           this.error = true
-        } else {
-          this.error = false
         }
+      }).catch(err => {
+        self.errorMsg = err.message
+        self.error = true
+      }).finally(() => {
         this.$bar.finish()
       })
     }

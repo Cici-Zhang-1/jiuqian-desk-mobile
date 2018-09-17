@@ -21,7 +21,7 @@
       <div class="form-group row">
         <label class="col-md-2 col-form-label">对单:</label>
         <div class="col-md-9">
-          <input class="form-control non-dv" name="checker" type="text" v-model="checker" maxlength="64" placeholder="对单人" />
+          <input class="form-control non-dv" name="checker" type="text" v-model="checker" maxlength="64" placeholder="对单联系人" />
         </div>
       </div>
       <div class="form-group row">
@@ -106,6 +106,9 @@ export default {
     forms: {
       type: [Array, Object],
       required: true
+    },
+    query: {
+      type: [Array, Object]
     }
   },
   data () {
@@ -124,7 +127,12 @@ export default {
       payerPhone: '',
       logisticsUri: '/data/logistics/read',
       outMethodUri: '/data/out_method/read',
-      areaUri: '/data/area/read'
+      areaUri: '/data/area/read',
+      queryStr: '',
+      params: [],
+      paramsValue: {},
+      related: [],
+      relatedValue: {}
     }
   },
   computed: {
@@ -159,28 +167,42 @@ export default {
   },
   created () {
     self = this
-    this.loadSourceData()
+    this.parseQuery()
+    this.loadSourceData(true)
     this.loadLogisticsData()
     this.loadOutMethodData()
     this.loadAreaData()
   },
-  mounted () {
-
-  },
   watch: {
-    'configs.dv': {
+    query: {
+      handler: function (to, from) {
+        if (this.queryStr && this.query[this.queryStr] !== undefined) {
+          this.dealerId = this.query[this.queryStr]
+        }
+        if (this.params.length > 0) {
+          this.params.map(__ => {
+            if (this.query[__] !== undefined) {
+              this.paramsValue[__] = this.query[__]
+            }
+            return __
+          })
+        }
+      },
+      deep: true
+    },
+    /* 'configs.dv': {
       handler: function (to, from) {
         this.dealerId = to
       },
       deep: true
-    },
+    }, */
     'configs.url': {
       handler: function (to, from) {
         this.loadSourceData(true)
       },
       deep: true
     },
-    'configs.params': {
+    'paramsValue': {
       handler: function (to, from) {
         this.loadSourceData(true)
       },
@@ -194,6 +216,29 @@ export default {
     }
   },
   methods: {
+    parseQuery () {
+      if (this.configs.query) {
+        [ this.queryStr = '', this.params = '', this.related = '' ] = this.configs.query.split('-')
+        this.params = this.params.split(',')
+        this.related = this.related.split(',')
+        this.initQuery()
+      }
+    },
+    initQuery () {
+      if (this.queryStr) {
+        if (this.$router.currentRoute.query[this.queryStr] !== undefined) {
+          this.dealerId = this.query[this.queryStr]
+        }
+      }
+      if (this.params.length > 0) {
+        this.params.map(__ => {
+          if (this.$router.currentRoute.query[__] !== undefined) {
+            this.paramsValue[__] = this.query[__]
+          }
+          return __
+        })
+      }
+    },
     toggleDealerInfo () {
       $('#orderAddDealerInfo').toggleClass('d-none')
     },
@@ -219,7 +264,7 @@ export default {
         this.$store.dispatch('FETCH_SOURCE_DATA', {
           url: this.configs.url,
           configs: {
-            params: this.configs.params || {}
+            params: this.paramsValue || {}
           },
           target: this.configs.url
         })

@@ -19,6 +19,7 @@
           </tbody>
         </table>
         <scan-board-table :table="card.data.content" :tableThead="card.elements" :qrcode="qrcode" :showAll="showAll" :thick="thick"/>
+        <scanner :lastScanner="card.data['last_scanner']" v-if="card.data['last_scanner']"/>
         <scan-num :num="card.data.num" :unCheck="unCheck"/>
         <scan-info :scanning="scanning"/>
         <scan-board-modal :abnormity="abnormity" :nonExist="nonExist" :qrcode="pageSearchValues.qrcode" :scanning="scanning" @sure="disposeSure($event)" @hidden-modal="$emit('focus-qrcode', $event)"/>
@@ -36,6 +37,7 @@
 import { mapGetters } from 'vuex'
 import { baseUrl } from '@/axios/env'
 import ScanBoardTable from './ScanBoardTable'
+import Scanner from './Scanner'
 import ScanNum from './ScanNum'
 import ScanInfo from './ScanInfo'
 import ScanBoardModal from './ScanBoardModal'
@@ -57,6 +59,9 @@ export default {
     },
     refresh: {
       type: Boolean
+    },
+    last: {
+      type: Boolean
     }
   },
   data () {
@@ -69,7 +74,10 @@ export default {
       thick: '',
       scanning: {},
       abnormity: false,
-      nonExist: false
+      nonExist: false,
+      newScan: false,
+      lastScan: false,
+      lastScanned: {}
     }
   },
   computed: {
@@ -104,15 +112,44 @@ export default {
         this.$store.commit('RESET_CARD', { card: this.card })
         this.searching = false
         this.scanning = {}
+        this.abnormity = false
+      }
+    },
+    last: {
+      handler: function (to, from) {
+        this.$store.commit('RESET_CARD', { card: this.card })
+        this.searching = false
+        this.scanning = {}
+        this.abnormity = false
+
+        this.lastScanned = this.$localStorage.get('last_scanned')
+        if (this.lastScanned !== undefined) {
+          this.lastScanned = JSON.parse(this.lastScanned)
+          this.lastScan = true
+          this.fetchData({qrcode: this.lastScanned[Object.keys(this.lastScanned)[0]].qrcode})
+        } else {
+          window.alert('没有找到上次扫描数据')
+        }
       }
     }
   },
   methods: {
     dispose () {
-      this.setScanning()
-      if (!this.setNonExist()) {
-        if (!this.setAbnormity()) {
-          this.setQrcode()
+      if (this.lastScan) {
+        let lastScannedKeys = Object.keys(this.lastScanned)
+        this.card.data && this.card.data.num && this.card.data.content.map(__ => {
+          if (lastScannedKeys.includes(__.v)) {
+            __.checked = true
+          }
+          return __
+        })
+        this.lastScan = false
+      } else {
+        this.setScanning()
+        if (!this.setNonExist()) {
+          if (!this.setAbnormity()) {
+            this.setQrcode()
+          }
         }
       }
     },
@@ -131,6 +168,7 @@ export default {
     setQrcode () {
       this.qrcode = this.pageSearchValues.qrcode
       this.playAudio()
+      this.setLastScanned()
     },
     setAbnormity () {
       if (this.scanning.abnormity !== undefined && (this.scanning.abnormity === '1' || this.scanning.abnormity === 1)) {
@@ -142,7 +180,7 @@ export default {
     disposeSure (e) {
       this.setQrcode()
     },
-    fetchData () { // 获取数据
+    fetchData (params = {}) { // 获取数据
       this.$bar.start()
       this.loading = true
       this.error = false
@@ -151,21 +189,40 @@ export default {
         configs: {
           params: {
             ...this.pageSearchValues,
-            ...this.$router.currentRoute.query
+            ...this.$router.currentRoute.query,
+            ...params
           }
         },
         target: this.card
       }).then((res) => {
-        this.loading = false
-        this.$bar.finish()
         if (res.code > 0) {
           this.errorMsg = res.message
           this.error = true
         } else {
           this.searching = true
+          this.newScan = true
           this.dispose()
         }
+      }).catch(err => {
+        this.errorMsg = err.message
+        this.error = true
+      }).finally(() => {
+        this.loading = false
+        this.$bar.finish()
       })
+    },
+    setLastScanned () {
+      let lastScanned = this.$localStorage.get('last_scanned')
+      if (lastScanned === undefined || this.newScan) {
+        lastScanned = {}
+        this.newScan = false
+      } else {
+        lastScanned = JSON.parse(lastScanned)
+      }
+      if (lastScanned[this.scanning['v']] === undefined) {
+        lastScanned[this.scanning['v']] = this.scanning
+      }
+      this.$localStorage.set('last_scanned', JSON.stringify(lastScanned))
     },
     audioLink () {
       return baseUrl + '/style/audio/right.mp3'
@@ -184,6 +241,7 @@ export default {
   components: {
     ScanBoardModal,
     ScanBoardTable,
+    Scanner,
     ScanNum,
     ScanInfo
   }

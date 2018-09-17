@@ -30,6 +30,9 @@ export default {
     forceReadonly: {
       type: [Boolean],
       required: true
+    },
+    query: {
+      type: [Array, Object]
     }
   },
   data () {

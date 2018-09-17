@@ -14,6 +14,7 @@ import PickSheet from '@/views/print/PickSheet'
 import UnqrcodeLabel from '@/views/label/UnqrcodeLabel'
 import OrderDetail from '@/views/order/detail/OrderDetail'
 import OrderDismantle from '@/views/order/dismantle/OrderDismantle'
+import OrderQuote from '@/views/order/quote/Quote'
 import Valuate from '@/views/order/valuate/Valuate'
 import WaitDelivery from '@/views/order/wait_delivery/WaitDelivery'
 import WorkOut from '@/views/order/wait_delivery/WorkOut'
@@ -100,6 +101,11 @@ export default new Router({
       name: 'OrderDismantle',
       path: '/order/dismantle',
       component: OrderDismantle
+    },
+    {
+      name: 'OrderQuote',
+      path: '/order/quote',
+      component: OrderQuote
     },
     {
       name: 'Valuate',
