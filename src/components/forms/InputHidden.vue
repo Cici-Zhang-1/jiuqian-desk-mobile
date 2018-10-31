@@ -9,15 +9,23 @@ export default {
     configs: {
       type: [ Array, Object ],
       required: true
+    },
+    query: {
+      type: [Array, Object]
+    }
+  },
+  data () {
+    return {
+      queryStr: ''
     }
   },
   computed: {
     value: {
       get () {
-        return this.configs.value
+        return this.configs.dv
       },
       set (value) {
-        this.configs.value = value
+        this.configs.dv = value
       }
     },
     required () {
@@ -34,6 +42,34 @@ export default {
     },
     pattern () {
       return this.configs.pattern
+    }
+  },
+  created () {
+    this.parseQuery()
+  },
+  methods: {
+    parseQuery () {
+      if (this.configs.query) {
+        this.queryStr = this.configs.query
+        this.initQuery()
+      }
+    },
+    initQuery () {
+      if (this.queryStr) {
+        if (this.$router.currentRoute.query[this.queryStr] !== undefined) {
+          this.value = this.$router.currentRoute.query[this.queryStr]
+        }
+        this.watchQuery()
+      }
+    },
+    watchQuery () {
+      this.$watch('query', function (to, from) {
+        if (this.query[this.queryStr] !== undefined && this.value !== this.query[this.queryStr]) {
+          this.value = this.query[this.queryStr]
+        }
+      }, {
+        deep: true
+      })
     }
   }
 }

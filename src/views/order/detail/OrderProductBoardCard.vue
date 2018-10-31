@@ -2,7 +2,7 @@
   <div class="col-12">
     <div class="card mb-3" v-if="!error && !loading">
       <div class="card-body p-0 card-body-h">
-        <order-product-board-table v-for="(value, key, index) in boardData" :key="index" :table="value" :tableThead="card.elements" />
+        <order-product-board-table v-for="(value, key, index) in detailData" :key="index" :table="value" :tableThead="card.elements" />
       </div>
     </div>
     <div class="col-12 mt-2" v-if="loading"><i class="fa fa-spinner fa-spin fa-5x"></i></div>
@@ -10,12 +10,13 @@
 </template>
 
 <script>
-import service from '@/axios'
+import { detailCardMixins } from './mixins'
 import OrderProductBoardTable from './OrderProductBoardTable'
 
 export default {
+  mixins: [ detailCardMixins ],
   name: 'OrderProductBoardCard',
-  props: {
+  /* props: {
     card: {
       type: Object
     },
@@ -65,7 +66,7 @@ export default {
         self.loading = false
       })
     }
-  },
+  }, */
   components: {
     OrderProductBoardTable
   }

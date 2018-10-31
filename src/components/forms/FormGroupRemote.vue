@@ -31,13 +31,21 @@ export default {
     forceReadonly: {
       type: [Boolean],
       required: true
+    },
+    query: {
+      type: [Array, Object]
     }
   },
   data () {
     return {
       id: '',
       autoCompleteId: '',
-      autoCompleteText: ''
+      autoCompleteText: '',
+      queryStr: '',
+      params: [],
+      paramsValue: {},
+      related: [],
+      relatedValue: {}
     }
   },
   computed: {
@@ -74,12 +82,37 @@ export default {
   created () {
     this.id = nameToId(this.configs.name) + uuid()
     this.autoCompleteId = this.id + 'AutoComplete'
+    this.parseQuery()
   },
   mounted () {
     self[this.autoCompleteId] = this
     this.autoComplete()
   },
   methods: {
+    parseQuery () {
+      if (this.configs.query) {
+        this.queryStr = this.configs.query
+        this.initQuery()
+      }
+    },
+    initQuery () {
+      if (this.queryStr) {
+        if (this.$router.currentRoute.query[this.queryStr] !== undefined) {
+          this.autoCompleteValue = this.$router.currentRoute.query[this.queryStr]
+        }
+        this.watchQuery()
+      }
+    },
+    watchQuery () {
+      this.$watch('query', function (to, from) {
+        if (this.query[this.queryStr] !== undefined && this.query[this.queryStr] !== this.autoCompleteValue) {
+          this.autoCompleteValue = this.query[this.queryStr]
+        }
+      }, {
+        deep: true
+      })
+    },
+
     autoComplete () {
       if (this.configs && this.configs.url) {
         let url = this.configs.url

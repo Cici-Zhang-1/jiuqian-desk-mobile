@@ -1,5 +1,5 @@
 <template>
-  <a class="btn btn-outline-dark mb-2 mr-1 mb-md-3" role="button" :key="id" :href="disposeUri()" @click="aBtnClick" :target="func.toggle_v === 'blank' ? '_blank' : '_self'" :data-toggle="func.toggle_v" :data-target="func.target" :data-multiple=!!parseInt(func.multiple_v) :data-single=!!parseInt(func.single_v) :data-source="func.source" :data-query="func.query"><i :class="func.img"></i>{{ func.label }}</a>
+  <a class="btn btn-outline-dark mb-2 mr-1 mb-md-3" role="button" :key="id" :href="disposeUri()" @click="aBtnClick" :target="func.toggle_v === 'blank' ? '_blank' : '_self'" :data-toggle="func.toggle_v" :data-target="func.target" :data-multiple=!!parseInt(func.multiple_v) :data-single=!!parseInt(func.single_v) :data-source="func.source" :data-query="func.query" :data-hide=!!parseInt(func.hide)><i :class="func.img"></i>{{ func.label }}</a>
 </template>
 
 <script>
@@ -17,6 +17,7 @@ export default {
       target: '',
       multiple: false,
       single: false,
+      hide: false,
       query: [],
       keys: [],
       search: [],
@@ -54,12 +55,13 @@ export default {
     func_child (E) {
       this.data = {}
       let [ Query = '', Keys = '', Search = '' ] = $(E).data('query').split('-')
-      this.query = Query.split(',')
-      this.keys = Keys.split(',')
-      this.search = Search.split(',')
+      this.query = Query === '' ? [] : Query.split(',')
+      this.keys = Keys === '' ? [] : Keys.split(',')
+      this.search = Search === '' ? [] : Search.split(',')
       this.target = $(E).data('target') || ''
       this.multiple = $(E).data('multiple') || false
       this.single = $(E).data('single') || false
+      this.hide = $(E).data('hide') || false
       this.parse_query()
       this.parse_search()
       if (this.parse_v()) {
@@ -67,6 +69,7 @@ export default {
       } else {
         return false
       }
+
       let dataStr = dataToStr(this.data)
       $(E).attr('href', function (index, attr) {
         return attr.indexOf('?') >= 0 ? attr.substr(0, attr.lastIndexOf('?')) + '?' + dataStr : attr + '?' + dataStr
@@ -76,14 +79,18 @@ export default {
     parse_query () {
       if (this.query.length > 0) {
         let QueryValue = this.$store.getters.currentPageQuery({source: this.target, query: this.query})
-        this.data = { ...this.data, ...QueryValue }
+        if (QueryValue) {
+          this.data = { ...this.data, ...QueryValue }
+        }
       }
       return true
     },
     parse_search () {
       if (this.search.length > 0) {
         let SearchValues = this.$store.getters.currentPageSearchSearchValues({search: this.search})
-        this.data = { ...this.data, ...SearchValues }
+        if (SearchValues) {
+          this.data = { ...this.data, ...SearchValues }
+        }
       }
       return true
     },
@@ -108,22 +115,25 @@ export default {
       return true
     },
     parse_keys () {
-      if (this.keys.length > 0) {
-        let Relate = this.$store.getters.currentPageActiveLineVs({source: this.target, all: this.multiple, keys: this.keys})
-        if (this.single) {
-          Relate = Relate.shift()
-          this.data = { ...this.data, ...Relate }
-        } else {
-          this.data['relate'] = Relate
+      if (this.multiple || this.single) {
+        if (this.keys.length > 0) {
+          let Relate = this.$store.getters.currentPageActiveLineVs({source: this.target, all: this.multiple, keys: this.keys})
+          if (this.single) {
+            Relate = Relate.shift()
+            this.data = { ...this.data, ...Relate }
+          } else {
+            this.data['relate'] = Relate
+          }
         }
       }
+      return true
     },
     parse_params (E) {
       this.data = {}
       let [ Query = '', Keys = '', Search = '' ] = $(E).data('query').split('-')
-      this.query = Query.split(',')
-      this.keys = Keys.split(',')
-      this.search = Search.split(',')
+      this.query = Query === '' ? [] : Query.split(',')
+      this.keys = Keys === '' ? [] : Keys.split(',')
+      this.search = Search === '' ? [] : Search.split(',')
       this.target = $(E).data('target') || ''
       this.multiple = $(E).data('multiple') || false
       this.single = $(E).data('single') || false

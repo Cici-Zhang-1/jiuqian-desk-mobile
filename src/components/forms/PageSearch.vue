@@ -51,6 +51,7 @@ export default {
   methods: {
     onSubmit () {
       let page = this.$router.currentRoute.query.page || 1
+      page = parseInt(page)
       if (page === 1) {
         this.$store.commit('SET_APP_RELOAD', { reload: true })
       } else {

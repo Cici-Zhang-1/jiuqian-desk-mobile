@@ -88,6 +88,10 @@ export default {
           self.errorMsg = res.message
           self.error = true
         }
+      }).catch(err => {
+        self.errorMsg = err.message
+        self.error = true
+      }).finally(() => {
         self.loading = false
       })
     }

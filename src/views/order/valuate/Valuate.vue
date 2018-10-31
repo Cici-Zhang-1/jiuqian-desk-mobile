@@ -2,7 +2,7 @@
   <div class="row mt-3 j-page" :id="title">
     <div class="col-12 border-bottom rounded-bottom mb-2 border-primary text-center d-print-none"><h5>{{ label }}</h5></div>
     <div class="col-md-6 mb-2 mb-md-3 d-print-none"></div>
-    <div is="valuate-func" @save-tmp="saveTmp($event)" @save="save($event)"></div>
+    <div is="valuate-func" @save-tmp="saveTmp($event)" @save="save($event)" @re_valuate="reValuate($event)"></div>
     <div is="order-card" :card="get_card('valuate_add_table')" :formPages="formPages" v-if="cards" :reload="reload"></div>
   </div>
 </template>
@@ -10,7 +10,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import OrderCard from './OrderCard'
-import ValuateForm from './ValuateForm'
 import ValuateFunc from './ValuateFunc'
 import { nameToId, cloneData } from '@/assets/js/custom'
 import $ from 'jquery'
@@ -123,6 +122,17 @@ export default {
         alert(postReturn.message)
       }
     },
+    async reValuate (e) {
+      if (confirm('您确定要重新计价吗?')) {
+        let postReturn = await service.post($(e).data('action'), { ...this.$router.currentRoute.query })
+        if (!postReturn.code) {
+          alert('重新计价成功!')
+          this.$store.commit('SET_APP_RELOAD', { reload: true })
+        } else {
+          alert(postReturn.message)
+        }
+      }
+    },
     checkSum (formData) { // 检查金额是否存在为0的项目
       let str = ''
       Object.keys(formData).map(__ => {
@@ -143,7 +153,6 @@ export default {
   },
   components: {
     OrderCard,
-    ValuateForm,
     ValuateFunc
   }
 }

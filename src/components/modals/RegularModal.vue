@@ -13,7 +13,7 @@
             <div class="alert alert-danger" role="alert">{{ errorMessage }}</div>
           </div>
           <div class="modal-body" v-else>
-            <div v-for="(value, key, index) in modal.forms" :is="formGroupType(value.form_type_v)" :configs="value" :forms="modal.forms" :key="index" :data-query="disposeQuery(value)" :force-readonly="readonly"></div>
+            <div v-for="(value, key, index) in modal.forms" :is="formGroupType(value.form_type_v)" :configs="value" :forms="modal.forms" :key="id + 'Title' + index" :force-readonly="readonly" :query="query"></div>
             <div class="alert alert-danger fade" role="alert" :class="{show: alert}">{{ alertMessage }}</div>
           </div>
           <div class="modal-footer">
@@ -36,13 +36,12 @@ import FormGroupCheckbox from '@/components/forms/FormGroupCheckbox'
 import FormGroupTextarea from '@/components/forms/FormGroupTextarea'
 import FormGroupAutoComplete from '@/components/forms/FormGroupAutoComplete'
 import FormGroupRemote from '@/components/forms/FormGroupRemote'
-import FormGroupGoodsSpeci from '@/components/forms/FormGroupGoodsSpeci'
 import InputDatalist from '@/components/forms/InputDatalist'
 import InputHidden from '@/components/forms/InputHidden'
 import { trimLeft } from 'voca'
 import service from '@/axios'
 import $ from 'jquery'
-import Vue from 'vue'
+// import Vue from 'vue'
 
 export default {
   name: 'regular-modal',
@@ -80,6 +79,11 @@ export default {
         return this.modalType === 'filter' || (!parseInt(this.modal.multiple_v) && !parseInt(this.modal.single_v)) ? [] : this.$store.getters.currentPageActiveLines({ source: this.modal.source, all: true })
       },
       set (Value) {}
+    },
+    query: {
+      get () {
+        return this.$store.getters.getTargetQuery({source: this.modal.source})
+      }
     }
   },
   watch: {
@@ -109,6 +113,12 @@ export default {
       handler: function (to, from) {
         this.error = false
         this.errorMessage = ''
+      },
+      deep: true
+    },
+    query: {
+      handler: function (to, from) {
+        this.disposeQuery()
       },
       deep: true
     }
@@ -151,9 +161,6 @@ export default {
           break
         case 'remote':
           type = 'form-group-remote'
-          break
-        case 'goods-speci':
-          type = 'form-group-goods-speci'
           break
         default:
           type = 'form-group-input'
@@ -200,8 +207,41 @@ export default {
       this.alert = false
       e.currentTarget.removeEventListener(e.type, this.errorClear)
     },
-    disposeQuery (Value) {
-      if (Value.query) {
+    disposeQuery () {
+      /* Object.keys(this.modal.forms).map(__ => {
+        if (this.modal.forms[__].query) {
+          let [ Query = null, Params = null, Related = null ] = this.modal.forms[__].query.split('-')
+          Params = Params ? Params.split(',') : null
+          Related = Related ? Related.split(',') : null
+          if (Query) {
+            if (this.query[Query] !== undefined) {
+              this.modal.forms[__].dv = this.query[Query]
+              this.readonly = true
+            } else if (this.$router.currentRoute.query[Query] !== undefined) {
+              this.modal.forms[__].dv = this.$router.currentRoute.query[Query]
+              this.readonly = true
+            } else {
+              this.readonly = false
+            }
+          }
+          if (Params) {
+            let ParamsValue = {}
+            if (JSON.stringify(ParamsValue) !== '{}') {
+            } else {
+              let Length = Params.length
+              for (let I = 0; I < Length; I++) {
+                if (this.$router.currentRoute.query[Params[I]]) {
+                  ParamsValue[Params[I]] = this.$router.currentRoute.query[Params[I]]
+                }
+              }
+            }
+            Vue.set(Value, 'params', ParamsValue)
+          }
+        }
+        return __
+      })
+      console.log(this.modal.forms) */
+      /* if (Value.query) {
         let [ Query = null, Params = null, Related = null ] = Value.query.split('-')
         Params = Params ? Params.split(',') : null
         Related = Related ? Related.split(',') : null
@@ -242,7 +282,7 @@ export default {
         }
         return Query
       }
-      return null
+      return null */
     }
   },
   components: {
@@ -255,7 +295,6 @@ export default {
     FormGroupTextarea,
     FormGroupAutoComplete,
     FormGroupRemote,
-    FormGroupGoodsSpeci,
     InputDatalist,
     InputHidden
   }

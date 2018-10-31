@@ -10,6 +10,7 @@
               <th >业主</th>
               <th >备注</th>
               <th >金额</th>
+              <th >客户金额</th>
               <th >橱</th>
               <th >衣</th>
               <th >门</th>
@@ -26,6 +27,7 @@
               <td>{{ item['owner'] }}</td>
               <td >{{ item['remark'] }}</td>
               <td >{{ item['sum'] }}</td>
+              <td >{{ item['virtual_sum'] }}</td>
               <td >{{ item['cabinet'] }}</td>
               <td >{{ item['wardrobe'] }}</td>
               <td >{{ item['door'] }}</td>
@@ -36,7 +38,6 @@
             </tr>
           </tbody>
         </table>
-        <div is="valuate-table-form" :form="get_form('valuate_cabinet_form')" v-if="formPages" :reload="reload"></div>
         <div is="valuate-table-form" :form="get_form('valuate_cabinet_form')" v-if="formPages" :reload="reload"></div>
         <div is="valuate-table-form" :form="get_form('valuate_wardrobe_form')" v-if="formPages" :reload="reload"></div>
         <div is="valuate-table-form" :form="get_form('valuate_door_form')" v-if="formPages" :reload="reload"></div>
@@ -118,6 +119,10 @@ export default {
           self.errorMsg = res.message
           self.error = true
         }
+      }).catch(err => {
+        self.errorMsg = err.message
+        self.error = true
+      }).finally(() => {
         self.loading = false
       })
     }

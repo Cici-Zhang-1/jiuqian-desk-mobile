@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/views/Home'
-import Apps from '@/views/Apps'
-import App from '@/views/App'
 import Read from '@/views/Read'
 import Edit from '@/views/Edit'
 import Add from '@/views/Add'
@@ -14,6 +12,8 @@ import PickSheet from '@/views/print/PickSheet'
 import UnqrcodeLabel from '@/views/label/UnqrcodeLabel'
 import OrderDetail from '@/views/order/detail/OrderDetail'
 import OrderDismantle from '@/views/order/dismantle/OrderDismantle'
+import PostSale from '@/views/order/post_sale/PostSale'
+import OrderQuote from '@/views/order/quote/Quote'
 import Valuate from '@/views/order/valuate/Valuate'
 import WaitDelivery from '@/views/order/wait_delivery/WaitDelivery'
 import WorkOut from '@/views/order/wait_delivery/WorkOut'
@@ -57,16 +57,6 @@ export default new Router({
       component: SignIn
     },
     {
-      name: 'Apps',
-      path: '/apps',
-      component: Apps
-    },
-    {
-      name: 'App',
-      path: '/app',
-      component: App
-    },
-    {
       name: 'Read',
       path: '/:f/:c/index/read',
       // :f folder :c controller
@@ -100,6 +90,16 @@ export default new Router({
       name: 'OrderDismantle',
       path: '/order/dismantle',
       component: OrderDismantle
+    },
+    {
+      name: 'PostSale',
+      path: '/order/post_sale',
+      component: PostSale
+    },
+    {
+      name: 'OrderQuote',
+      path: '/order/quote',
+      component: OrderQuote
     },
     {
       name: 'Valuate',

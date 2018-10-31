@@ -14,7 +14,7 @@
       </tr>
     </thead>
     <tbody >
-      <tr v-for="(item, key, index) in table['order_product_other']" :key="index">
+      <tr v-for="(item, key, index) in table['order_product_detail']" :key="index">
         <td>{{ key + 1 }}</td>
         <td v-if="show('other')">{{ item.other }}</td>
         <td v-if="show('speci')">{{ item.speci }}</td>
@@ -25,38 +25,21 @@
         <td v-if="show('remark')">{{ item.remark }}</td>
       </tr>
     </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="10">
+          {{ table['order_product_remark'] }}
+        </td>
+      </tr>
+    </tfoot>
   </table>
 </template>
 
 <script>
-import { highLightTable, generateLink } from '@/assets/js/custom'
-import $ from 'jquery'
+import { detailTableMixins } from './mixins'
 export default {
-  name: 'OrderProductOtherTable',
-  props: {
-    table: {
-      type: Object | Array,
-      required: true
-    },
-    tableThead: {
-      type: Object | Array,
-      required: true
-    }
-  },
-  mounted () {
-    highLightTable($('.table-highlight'))
-  },
-  updated () {
-    highLightTable($('.table-highlight'))
-  },
-  methods: {
-    show (Name) {
-      return this.tableThead[Name] !== undefined
-    },
-    orderProductLink () {
-      return generateLink(this.table.num, this.tableThead.num, this.table)
-    }
-  }
+  mixins: [ detailTableMixins ],
+  name: 'OrderProductOtherTable'
 }
 </script>
 

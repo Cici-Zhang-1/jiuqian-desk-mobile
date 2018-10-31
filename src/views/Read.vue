@@ -42,6 +42,10 @@ export default {
   },
   created () {
     this.set_app_controller()
+    window.document.title = this.label + '|' + window.document.title.split('|').pop()
+  },
+  updated () {
+    window.document.title = this.label + '|' + window.document.title.split('|').pop()
   },
   beforeRouteEnter (to, from, next) {
     next(vm => {

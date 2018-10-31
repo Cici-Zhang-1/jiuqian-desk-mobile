@@ -1,5 +1,5 @@
 <template>
-  <div class="form-group col-md-2">
+  <div class="form-group col-md-1">
     <label>正面封边</label>
     <select class="form-control" name="facefb" v-model="dv" v-if="facefbData && facefbData.num" v-on:input="$emit('input', $event.target.value)">
       <option v-for="(value, key, index) in facefbData.content" :key="index" :value="value.v">{{ value.label || value.name || value.v }}</option>

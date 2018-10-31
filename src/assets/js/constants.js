@@ -7,9 +7,9 @@ const OP_DISMANTLED = 3
 const M_REGULAR = 1000
 const M_ONE = 10000
 const M_TWO = 100
-const MIN_AREA = 0.01
+const MIN_AREA = 0.1
 const MIN_M_AREA = 0.1
-const MIN_K_AREA = 0.4
+const MIN_K_AREA = 0.3
 const MIN_B_AREA = 0.01
 
 const THICK = 13

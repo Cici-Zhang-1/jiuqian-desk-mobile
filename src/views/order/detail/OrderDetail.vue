@@ -11,6 +11,7 @@
     <div is="order-product-fitting-card" :card="get_card('order_detail_order_product_fitting_table')" v-if="cards" :reload="reload"></div>
     <div is="order-product-other-card" :card="get_card('order_detail_order_product_other_table')" v-if="cards" :reload="reload"></div>
     <div is="order-product-server-card" :card="get_card('order_detail_order_product_server_table')" v-if="cards" :reload="reload"></div>
+    <div is="order-product-unqrcode-card" :card="get_card('order_unqrcode_table')" v-if="cards" :reload="reload"></div>
   </div>
 </template>
 
@@ -21,6 +22,7 @@ import OrderProductBoardCard from './OrderProductBoardCard'
 import OrderProductFittingCard from './OrderProductFittingCard'
 import OrderProductOtherCard from './OrderProductOtherCard'
 import OrderProductServerCard from './OrderProductServerCard'
+import OrderProductUnqrcodeCard from './OrderProductUnqrcodeCard'
 import Func from '@/components/forms/Func'
 import { nameToId } from '@/assets/js/custom'
 
@@ -76,6 +78,7 @@ export default {
     OrderProductFittingCard,
     OrderProductOtherCard,
     OrderProductServerCard,
+    OrderProductUnqrcodeCard,
     Func
   }
 }

@@ -67,6 +67,9 @@ export default {
           this.error = true
           this.errorMsg = res.message
         }
+      }).catch(err => {
+        self.errorMsg = err.message
+        self.error = true
       }).finally(() => {
         this.loading = false
       })

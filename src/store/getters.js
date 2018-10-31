@@ -100,8 +100,12 @@ export default {
    * @param state
    * @returns {function({uri: *})}
    */
-  getSourceData: (state) => ({ uri }) => {
-    return state.sourceData[uri] || {}
+  getSourceData: (state) => ({ uri, child = '' }) => {
+    if (child.length === 0) {
+      return state.sourceData[uri] || {}
+    } else {
+      return (state.sourceData[uri] && state.sourceData[uri][child]) || {}
+    }
   },
 
   /**
@@ -148,6 +152,23 @@ export default {
     })[0].cards
   },
 
+  /**
+   * 获取当前卡片的元素
+   * @param state
+   * @returns {Function}
+   */
+  currentPageCardElements: (state) => ({source}) => {
+    if (source === false || source === undefined || source === null || source === '') {
+      return []
+    } else {
+      let __ = state.apps.filter(app => {
+        return app.url === state.route.path
+      })[0].cards.filter(card => {
+        return '#' + nameToId(card.name) === source
+      })[0]
+      return __.elements
+    }
+  },
   /**
    * 获取当前页面搜索设置
    * @param state
@@ -324,6 +345,24 @@ export default {
             Return[query] = __.data.query[query]
           }
         }
+      }
+      return Return
+    }
+  },
+
+  getTargetQuery: (state) => ({ source }) => {
+    if (source === false || source === undefined || source === null || source === '') {
+      return {}
+    } else {
+      let Return = {}
+      let __ = state.apps.filter(app => {
+        return app.url === state.route.path
+      })[0].cards.filter(card => {
+        return '#' + nameToId(card.name) === source
+      })[0]
+      if ((__ !== undefined) && ((__.data.query !== undefined && ((__.data.query instanceof Array && __.data.query.length > 0) ||
+        (__.data.query instanceof Object && JSON.stringify(__.data.query) !== '{}'))))) {
+        Return = __.data.query
       }
       return Return
     }

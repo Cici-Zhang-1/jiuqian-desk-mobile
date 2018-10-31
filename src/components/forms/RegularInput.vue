@@ -14,14 +14,19 @@
 import { nameToId, uuid } from '@/assets/js/custom'
 
 export default {
-  name: 'form-group-input',
+  name: 'regular-input',
   props: {
     configs: {
       type: [Array, Object],
       required: true
     },
     query: {
-      type: [String, Number, Boolean]
+      type: [Array, Object]
+    }
+  },
+  data () {
+    return {
+      queryStr: ''
     }
   },
   computed: {
@@ -59,6 +64,34 @@ export default {
     },
     placeholder () {
       return this.configs.placeholder
+    }
+  },
+  created () {
+    this.parseQuery()
+  },
+  methods: {
+    parseQuery () {
+      if (this.configs.query) {
+        this.queryStr = this.configs.query
+        this.initQuery()
+      }
+    },
+    initQuery () {
+      if (this.queryStr) {
+        if (this.$router.currentRoute.query[this.queryStr] !== undefined) {
+          this.value = this.$router.currentRoute.query[this.queryStr]
+        }
+        this.watchQuery()
+      }
+    },
+    watchQuery () {
+      this.$watch('query', function (to, from) {
+        if (this.query[this.queryStr] !== undefined && this.value !== this.query[this.queryStr]) {
+          this.value = this.query[this.queryStr]
+        }
+      }, {
+        deep: true
+      })
     }
   }
 }

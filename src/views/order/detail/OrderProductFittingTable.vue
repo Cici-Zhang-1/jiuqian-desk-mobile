@@ -14,7 +14,7 @@
       </tr>
     </thead>
     <tbody >
-      <tr v-for="(item, key, index) in table['order_product_fitting']" :key="index">
+      <tr v-for="(item, key, index) in table['order_product_detail']" :key="index">
         <td>{{ key + 1 }}</td>
         <td v-if="show('fitting')">{{ item.fitting }}</td>
         <td v-if="show('speci')">{{ item.speci }}</td>
@@ -25,15 +25,22 @@
         <td v-if="show('remark')">{{ item.remark }}</td>
       </tr>
     </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="10">
+          {{ table['order_product_remark'] }}
+        </td>
+      </tr>
+    </tfoot>
   </table>
 </template>
 
 <script>
-import { highLightTable, generateLink } from '@/assets/js/custom'
-import $ from 'jquery'
+import { detailTableMixins } from './mixins'
 
 export default {
-  name: 'OrderProductFittingTable',
+  mixins: [ detailTableMixins ],
+  name: 'OrderProductFittingTable'/* ,
   props: {
     table: {
       type: Object | Array,
@@ -57,7 +64,7 @@ export default {
     orderProductLink () {
       return generateLink(this.table.num, this.tableThead.num, this.table)
     }
-  }
+  } */
 }
 </script>
 

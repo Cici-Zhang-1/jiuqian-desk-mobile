@@ -19,11 +19,19 @@
 import { nameToId, uuid } from '@/assets/js/custom'
 
 export default {
-  name: 'form-group-radio',
+  name: 'regular-radio',
   props: {
     configs: {
       type: [Array, Object],
       required: true
+    },
+    query: {
+      type: [Array, Object]
+    }
+  },
+  data () {
+    return {
+      queryStr: ''
     }
   },
   computed: {
@@ -66,14 +74,10 @@ export default {
     }
   },
   created () {
+    this.parseQuery()
     this.loadSourceData()
   },
   watch: {
-    'configs.dv': {
-      handler: function (to, from) {
-        this.radioValue = to
-      }
-    },
     'configs.url': {
       handler: function (to, from) {
         this.loadSourceData(true)
@@ -82,6 +86,33 @@ export default {
     }
   },
   methods: {
+    parseQuery () {
+      if (this.configs.query) {
+        [ this.queryStr = '', this.params = '', this.related = '' ] = this.configs.query.split('-')
+        this.params = this.params.split(',')
+        this.related = this.related.split(',')
+        this.initQuery()
+      }
+    },
+    initQuery () {
+      if (this.queryStr) {
+        if (this.$router.currentRoute.query[this.queryStr] !== undefined) {
+          this.radioValue = this.$router.currentRoute.query[this.queryStr]
+          this.multipleDv()
+        }
+        this.watchQuery()
+      }
+    },
+    watchQuery () {
+      this.$watch('query', function (to, from) {
+        if (this.query[this.queryStr] !== undefined && this.query[this.queryStr] !== this.radioValue) {
+          this.radioValue = this.query[this.queryStr]
+          this.multipleDv()
+        }
+      }, {
+        deep: true
+      })
+    },
     generateId (key) {
       return this.id + key
     },

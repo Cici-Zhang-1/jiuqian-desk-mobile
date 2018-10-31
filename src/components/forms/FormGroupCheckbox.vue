@@ -27,11 +27,18 @@ export default {
     forceReadonly: {
       type: [Boolean],
       required: true
+    },
+    query: {
+      type: [Array, Object]
     }
   },
   data () {
     return {
-      // checkValue: []
+      queryStr: '',
+      params: [],
+      paramsValue: {},
+      related: [],
+      relatedValue: {}
     }
   },
   computed: {
@@ -40,7 +47,7 @@ export default {
     },
     checkValue: {
       get () {
-        return this.multipleDv(this.configs.dv)
+        return this.configs.dv
       },
       set (Value) {
         this.configs.dv = Value
@@ -79,30 +86,13 @@ export default {
     }
   },
   created () {
-    // (this.checkData && this.checkData.content) && this.defaultCheck()
+    this.parseQuery()
+    this.multipleDv()
     this.loadSourceData(true)
     self = this
   },
   watch: {
-    'configs.dv': {
-      handler: function (to, from) {
-        this.checkValue = to
-      },
-      deep: true
-    },
     'configs.url': {
-      handler: function (to, from) {
-        this.loadSourceData(true)
-      },
-      deep: true
-    },
-    'configs.params': {
-      handler: function (to, from) {
-        this.loadSourceData(true)
-      },
-      deep: true
-    },
-    'configs.related': {
       handler: function (to, from) {
         this.loadSourceData(true)
       },
@@ -113,23 +103,92 @@ export default {
         self.dynamicCheck(to)
       }
     }
-    /* checkValue: {
-      handler: function (to, from) {
-        this.configs.dv = to
-      }
-    },
-    checkData: {
-      handler: function (to, from) {
-        (to && to.content) && this.defaultCheck()
-      }
-    } */
   },
   methods: {
-    multipleDv () {
-      if (!(this.configs.dv instanceof Array)) {
-        this.configs.dv = this.configs.dv ? [ this.configs.dv ] : []
+    parseQuery () {
+      if (this.configs.query) {
+        [ this.queryStr = '', this.params = '', this.related = '' ] = this.configs.query.split('-')
+        this.params = this.params.split(',')
+        this.related = this.related.split(',')
+        this.initQuery()
       }
-      return this.configs.dv
+    },
+    initQuery () {
+      if (this.queryStr) {
+        if (this.$router.currentRoute.query[this.queryStr] !== undefined) {
+          this.checkValue = this.$router.currentRoute.query[this.queryStr]
+          this.multipleDv()
+        }
+        this.watchQuery()
+      }
+      if (this.params.length > 0) {
+        this.params.map(__ => {
+          if (this.$router.currentRoute.query[__] !== undefined) {
+            this.paramsValue[__] = this.$router.currentRoute.query[__]
+          } else {
+            this.paramsValue[__] = ''
+          }
+          return __
+        })
+        this.watchParams()
+      }
+      if (this.related.length > 0) {
+        this.related.map(__ => {
+          if (this.forms[__] !== undefined) {
+            this.relatedValue[__] = this.forms[__].dv
+          }
+          return __
+        })
+        this.watchForms()
+      }
+    },
+    watchQuery () {
+      this.$watch('query', function (to, from) {
+        if (this.query[this.queryStr] !== undefined && this.query[this.queryStr] !== this.checkValue) {
+          this.checkValue = this.query[this.queryStr]
+          this.multipleDv()
+        }
+      }, {
+        deep: true
+      })
+    },
+    watchParams () {
+      this.$watch('query', function (to, from) {
+        let Flag = false
+        this.params.map(__ => {
+          if (this.query[__] !== undefined && this.query[__] !== this.paramsValue[__]) {
+            this.paramsValue[__] = this.query[__]
+            Flag = true
+          }
+          return __
+        })
+        if (Flag) {
+          this.loadSourceData(true)
+        }
+      }, {
+        deep: true
+      })
+    },
+    watchForms () {
+      this.related.map(__ => {
+        this.$watch(function () {
+          return this.forms[__].dv
+        }, function (to, from) {
+          if (this.forms[__].dv !== this.relatedValue[__]) {
+            this.relatedValue[__] = this.forms[__].dv
+            this.loadSourceData(true)
+          }
+        })
+        return __
+      }, {
+        deep: true
+      })
+    },
+    multipleDv () {
+      if (!(this.checkValue instanceof Array)) {
+        this.checkValue = this.checkValue ? [ this.checkValue ] : []
+      }
+      return this.checkValue
     },
     generateId (key) {
       return this.id + key
@@ -141,9 +200,6 @@ export default {
         }).length > 0 && this.checkValue.push(dynamic)
       }
     },
-    /* defaultCheck () {
-      this.checkValue = this.configs.dv ? (this.configs.dv instanceof Array ? this.configs.dv : [this.configs.dv]) : []
-    }, */
     checkChange (e) {
       let $Target = $(e.currentTarget)
       let Val = $Target.val()
@@ -165,8 +221,8 @@ export default {
     },
     loadSourceData (Reload = false) {
       if ((Reload || typeof this.selectData === 'undefined' || JSON.stringify(this.selectData) === '{}') && this.configs.url !== '') {
-        let params = this.configs.params || {}
-        let related = this.configs.related || {}
+        let params = this.paramsValue || {}
+        let related = this.relatedValue || {}
         this.$store.dispatch('FETCH_SOURCE_DATA', {
           url: this.configs.url,
           configs: {

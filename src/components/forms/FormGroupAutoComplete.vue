@@ -30,13 +30,21 @@ export default {
     forceReadonly: {
       type: [Boolean],
       required: true
+    },
+    query: {
+      type: [Array, Object]
     }
   },
   data () {
     return {
       id: '',
       autoCompleteId: '',
-      autoCompleteText: ''
+      autoCompleteText: '',
+      queryStr: '',
+      params: [],
+      paramsValue: {},
+      related: [],
+      relatedValue: {}
     }
   },
   computed: {
@@ -78,6 +86,7 @@ export default {
   created () {
     this.id = nameToId(this.configs.name) + uuid()
     this.autoCompleteId = this.id + 'AutoComplete'
+    this.parseQuery()
     this.loadSourceData()
   },
   mounted () {
@@ -86,12 +95,6 @@ export default {
   },
   watch: {
     'configs.url': {
-      handler: function (to, from) {
-        this.loadSourceData(true)
-      },
-      deep: true
-    },
-    'configs.params': {
       handler: function (to, from) {
         this.loadSourceData(true)
       },
@@ -110,6 +113,57 @@ export default {
     }
   },
   methods: {
+    parseQuery () {
+      if (this.configs.query) {
+        [ this.queryStr = '', this.params = '', this.related = '' ] = this.configs.query.split('-')
+        this.params = this.params.split(',')
+        this.related = this.related.split(',')
+        this.initQuery()
+      }
+    },
+    initQuery () {
+      if (this.queryStr) {
+        if (this.$router.currentRoute.query[this.queryStr] !== undefined) {
+          this.autoCompleteValue = this.$router.currentRoute.query[this.queryStr]
+        }
+        this.watchQuery()
+      }
+      if (this.params.length > 0) {
+        this.params.map(__ => {
+          if (this.$router.currentRoute.query[__] !== undefined) {
+            this.paramsValue[__] = this.$router.currentRoute.query[__]
+          }
+          return __
+        })
+        this.watchParams()
+      }
+    },
+    watchQuery () {
+      this.$watch('query', function (to, from) {
+        if (this.query[this.queryStr] !== undefined && this.query[this.queryStr] !== this.autoCompleteValue) {
+          this.autoCompleteValue = this.query[this.queryStr]
+        }
+      }, {
+        deep: true
+      })
+    },
+    watchParams () {
+      this.$watch('query', function (to, from) {
+        let Flag = false
+        this.params.map(__ => {
+          if (this.query[__] !== undefined && this.query[__] !== this.paramsValue[__]) {
+            this.paramsValue[__] = this.query[__]
+            Flag = true
+          }
+          return __
+        })
+        if (Flag) {
+          this.loadSourceData(true)
+        }
+      }, {
+        deep: true
+      })
+    },
     init () {
       if (this.autoCompleteData && this.autoCompleteData.content) {
         this.setAutoCompleteText()
@@ -141,7 +195,7 @@ export default {
         this.$store.dispatch('FETCH_SOURCE_DATA', {
           url: this.configs.url,
           configs: {
-            params: this.configs.params || {}
+            params: this.paramsValue || {}
           },
           target: this.configs.url
         })

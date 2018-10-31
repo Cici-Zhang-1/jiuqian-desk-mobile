@@ -11,6 +11,7 @@ import 'popper.js/dist/umd/popper'
 import 'bootstrap/dist/js/bootstrap.min'
 import Progressbar from './components/bars/Progressbar.vue'
 import VueCookies from 'vue-cookies'
+import VueLocalStorage from 'vue-localstorage'
 
 // global progress bar
 const bar = Vue.prototype.$bar = new Vue(Progressbar).$mount()
@@ -21,6 +22,7 @@ Vue.config.productionTip = false
 // const store = createStore()
 sync(store, router) // 同步store和router
 
+Vue.use(VueLocalStorage)
 const app = new Vue({
   store,
   router,

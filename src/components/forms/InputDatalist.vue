@@ -17,8 +17,21 @@ export default {
       type: [Array, Object],
       required: true
     },
+    forms: {
+      type: [Array, Object],
+      required: true
+    },
     query: {
-      type: [String, Number, Boolean]
+      type: [Array, Object]
+    }
+  },
+  data () {
+    return {
+      queryStr: '',
+      params: [],
+      paramsValue: {},
+      related: [],
+      relatedValue: {}
     }
   },
   computed: {
@@ -67,6 +80,7 @@ export default {
     }
   },
   created () {
+    this.parseQuery()
     this.loadSourceData()
   },
   watch: {
@@ -78,10 +92,92 @@ export default {
     }
   },
   methods: {
+    parseQuery () {
+      if (this.configs.query) {
+        [ this.queryStr = '', this.params = '', this.related = '' ] = this.configs.query.split('-')
+        this.params = this.params.split(',')
+        this.related = this.related.split(',')
+        this.initQuery()
+      }
+    },
+    initQuery () {
+      if (this.queryStr) {
+        if (this.$router.currentRoute.query[this.queryStr] !== undefined) {
+          this.value = this.$router.currentRoute.query[this.queryStr]
+        }
+        this.watchQuery()
+      }
+      if (this.params.length > 0) {
+        this.params.map(__ => {
+          if (this.$router.currentRoute.query[__] !== undefined) {
+            this.paramsValue[__] = this.$router.currentRoute.query[__]
+          } else {
+            this.paramsValue[__] = ''
+          }
+          return __
+        })
+        this.watchParams()
+      }
+      if (this.related.length > 0) {
+        this.related.map(__ => {
+          if (this.forms[__] !== undefined) {
+            this.relatedValue[__] = this.forms[__].dv
+          }
+          return __
+        })
+        this.watchForms()
+      }
+    },
+    watchQuery () {
+      this.$watch('query', function (to, from) {
+        if (this.query[this.queryStr] !== undefined && this.query[this.queryStr] !== this.value) {
+          this.value = this.query[this.queryStr]
+        }
+      }, {
+        deep: true
+      })
+    },
+    watchParams () {
+      this.$watch('query', function (to, from) {
+        let Flag = false
+        this.params.map(__ => {
+          if (this.query[__] !== undefined && this.query[__] !== this.paramsValue[__]) {
+            this.paramsValue[__] = this.query[__]
+            Flag = true
+          }
+          return __
+        })
+        if (Flag) {
+          this.loadSourceData(true)
+        }
+      }, {
+        deep: true
+      })
+    },
+    watchForms () {
+      this.related.map(__ => {
+        this.$watch(function () {
+          return this.forms[__].dv
+        }, function (to, from) {
+          if (this.forms[__].dv !== this.relatedValue[__]) {
+            this.relatedValue[__] = this.forms[__].dv
+            this.loadSourceData(true)
+          }
+        })
+        return __
+      }, {
+        deep: true
+      })
+    },
     loadSourceData () {
       if (typeof this.dataList === 'undefined' || JSON.stringify(this.dataList) === '{}') {
+        let params = this.paramsValue || {}
+        let related = this.relatedValue || {}
         this.$store.dispatch('FETCH_SOURCE_DATA', {
           url: this.configs.url,
+          configs: {
+            params: { ...params, ...related }
+          },
           target: this.configs.url
         })
       }

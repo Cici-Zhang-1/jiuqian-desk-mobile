@@ -9,7 +9,7 @@
           <option v-for="(item, key, index) in orderProduct['order_product']" :key="index" :value="item.v" v-if="orderProduct['order_product']">{{ item.num }}-{{ item.product }}-{{ item.status_label }}</option>
         </select>
       </div>
-      <div class="form-group col-md-2">
+      <div class="form-group col-md-1">
         <label>产品名称</label>
         <input type="text" class="form-control" name="product" v-model="activeOrderProduct['product']" placeholder="请添加产品名称" v-if="activeOrderProduct">
         <input type="text" class="form-control" name="product" v-model="orderProduct['product']['name']" placeholder="请添加产品名称" v-if="!activeOrderProduct">
@@ -25,6 +25,10 @@
         <label>备注</label>
         <input type="text" class="form-control" name="remark" v-model="activeOrderProduct['remark']" placeholder="添加备注" v-if="activeOrderProduct">
         <input type="text" class="form-control" name="remark" v-model="orderProduct['product']['remark']" placeholder="添加备注" v-if="!activeOrderProduct">
+      </div>
+      <div class="form-group col-md-2" v-if="activeOrderProduct">
+        <label>设计图集</label>
+        <input type="text" class="form-control" name="design_atlas" v-model="activeOrderProduct['design_atlas']" readonly placeholder="设计图集">
       </div>
     </div>
     <table class="table-center table-form table table-bordered table-responsive text-nowrap" id="dismantleWTable" v-if="!loading && activeOrderProduct">
@@ -107,9 +111,7 @@
 </template>
 
 <script>
-import $ from 'jquery'
-import { cloneData } from '@/assets/js/custom'
-import { M_ONE, M_TWO, MIN_AREA } from '../../../assets/js/constants'
+import { dismantleMixins } from './mixins'
 import Board from './Board'
 import Thick from './Thick'
 import DismantleFacefb from './DismantleFacefb'
@@ -120,6 +122,7 @@ import DismantlePunch from './DismantlePunch'
 import DismantleRemark from './DismantleRemark'
 let self
 export default {
+  mixins: [ dismantleMixins ],
   name: 'OrderDismantleCabinet',
   props: {
     dismantleUrl: {
@@ -178,8 +181,17 @@ export default {
     self = this
   },
   mounted () {
-    this.highlightTr()
-    this.addLine()
+    this.highlightTr('dismantleWTable')
+    this.addLine('dismantleWTable')
+    this.handleDirection('dismantleWTable')
+    if (this.activeOrderProduct) {
+      if (this.activeOrderProduct['struct'] === undefined) {
+        this.fetchStruct()
+      }
+      if (this.activeOrderProduct['order_product_board_plate'] === undefined) {
+        this.fetchData()
+      }
+    }
   },
   watch: {
     reload: {
@@ -202,19 +214,12 @@ export default {
     }
   },
   updated () {
-    this.highlightTr()
-    this.addLine()
-    this.copy()
+    this.highlightTr('dismantleWTable')
+    this.addLine('dismantleWTable')
+    this.copy('dismantleWTable')
+    this.handleDirection('dismantleWTable')
   },
   methods: {
-    computeArea (e) {
-      let Data = this.activeOrderProduct['order_product_board_plate'][$(e.target).parents('tr').eq(0).find('input[name="index"]').val()]
-      let Area = Math.ceil(Data['width'] * Data['length'] / M_ONE) / M_TWO
-      if (Area < MIN_AREA) {
-        Area = MIN_AREA
-      }
-      Data['area'] = Area
-    },
     changeBoard (board) { // 更换板材颜色
       let Nature = board.replace(/(\d{1,2})(.*)/g, '$2')
       let ChangeLine = self.changeLine === '*' ? self.changeLine : parseInt(self.changeLine)
@@ -229,39 +234,6 @@ export default {
         } else {
           __.board = board
         }
-      })
-    },
-    copy () { // 复制一行内容
-      let self = this
-      $('#dismantleWTable tbody tr input[name="copy"]').off('change.copy').on('change.copy', function (i, v) {
-        let copy = $(this).val()
-        if (copy > 0) {
-          let Index = $(this).parents('tr').eq(0).find('input[name="index"]').val()
-          let Data = self.activeOrderProduct['order_product_board_plate'][Index]
-          let C = {}
-          for (let I = 0; I < copy; I++) {
-            C = cloneData(Data)
-            C.qrcode = ''
-            C.bd_file = ''
-            self.activeOrderProduct['order_product_board_plate'].splice(Index, 0, C)
-          }
-          self.maxNum = self.activeOrderProduct['order_product_board_plate'].length + 1
-          $(this).val(0)
-        }
-      })
-    },
-    addLine () { // 新建一行
-      let self = this
-      $('#dismantleWTable tbody tr:last').off('click.addLine').on('click.addLine', function (i, v) {
-        self.activeOrderProduct['order_product_board_plate'].push(cloneData(self.demoData))
-        self.maxNum = self.activeOrderProduct['order_product_board_plate'].length + 1
-      })
-    },
-    highlightTr () { // 高亮选中一行
-      $('#dismantleWTable').find('tbody tr').each(function (i, v) {
-        $(this).off('click.highlight').on('click.highlight', function (e) {
-          $(this).addClass('table-success').siblings().removeClass('table-success')
-        })
       })
     },
     fetchStruct () { // 获取柜体结构

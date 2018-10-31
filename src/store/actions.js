@@ -2,30 +2,20 @@
  * Created by chuangchuangzhang on 2018/2/2.
  */
 import service from '@/axios'
+import { FetchError } from '@/assets/js/custom'
 
 let Loading = {}
 export default {
   FETCH_APPS: ({commit}) => {
     return service.get('permission/menu/read').then(data => {
-      // let data = response.data
       if (data.code === 0) {
         commit('SET_APPS', { ...data })
       }
     })
   },
 
-  /* FETCH_USER: ({commit}) => {
-    return service.get('manage/myself/read').then(data => {
-      // let data = response.data
-      if (data.code === 0) {
-        commit('SET_USER', { ...data })
-      }
-    })
-  }, */
-
   FETCH_CONFIGS: ({commit}) => {
     return service.get('manage/configs/read').then(data => {
-      // let data = response.data
       if (data.code === 0) {
         commit('SET_CONFIGS', { ...data })
       }
@@ -53,8 +43,12 @@ export default {
    */
   FETCH_DATA: ({commit, dispatch, state}, { url, configs = {}, target }) => {
     return service.get(url, configs).then(data => {
-      commit('SET_DATA', { ...data, target })
-      return data
+      if (typeof data === 'object') {
+        commit('SET_DATA', { ...data, target })
+        return data
+      } else {
+        throw new FetchError('发生未知错误，请联系管理员!')
+      }
     })
   },
 
@@ -77,18 +71,29 @@ export default {
       Loading[Key] = true
     }
     return service.get(url, configs).then(data => {
-      // let data = response.data
-      // if (data.code === 0) {
-      commit('SET_SOURCE_DATA', { ...data, target })
       delete Loading[Key]
-      return data
-      // }
+      if (typeof data === 'object') {
+        commit('SET_SOURCE_DATA', { ...data, target })
+        return data
+      } else {
+        throw new FetchError('发生未知错误，请联系管理员!')
+      }
     })
   },
 
+  /**
+   * 获取表单的原始数据
+   * @param commit
+   * @param dispatch
+   * @param state
+   * @param url
+   * @param configs
+   * @param target
+   * @returns {PromiseLike<T | never> | Promise<T | never> | *}
+   * @constructor
+   */
   FETCH_FORM_SOURCE_DATA: ({ commit, dispatch, state }, { url, configs, target }) => {
     return service.get(url, configs).then(data => {
-      // let data = response.data
       if (data.code === 0) {
         commit('SET_FORM_SOURCE_DATA', { ...data, target })
       }

@@ -20,10 +20,14 @@
       </div>
       <board :board="activeOrderProduct['struct']['board']" v-model="activeOrderProduct['struct']['board']" @focusout-board="changeBoard($event)" v-if="activeOrderProduct && activeOrderProduct['struct']" ></board>
       <thick :thick="changeLine" v-model="changeLine" v-if="activeOrderProduct"></thick>
-      <div class="form-group col-md-4">
+      <div class="form-group col-md-2">
         <label>备注</label>
         <input type="text" class="form-control" name="remark" v-model="activeOrderProduct['remark']" placeholder="添加备注" v-if="activeOrderProduct">
         <input type="text" class="form-control" name="remark" v-model="orderProduct['product']['remark']" placeholder="添加备注" v-if="!activeOrderProduct">
+      </div>
+      <div class="form-group col-md-2" v-if="activeOrderProduct">
+        <label>设计图集</label>
+        <input type="text" class="form-control" name="design_atlas" v-model="activeOrderProduct['design_atlas']" readonly placeholder="设计图集">
       </div>
     </div>
     <table class="table-center table-form table table-bordered table-responsive text-nowrap" id="dismantleYTable" v-if="!loading && activeOrderProduct">
@@ -56,7 +60,7 @@
         <td is="dismantle-plate" :plate="item['plate_name']" v-model="item['plate_name']"></td>
         <td><input class="form-control input-sm" name="good" type="text" v-model="item['board']"/></td>
         <td><input class="form-control input-sm" name="length" type="text" v-model="item['length']" @change="computeArea($event)"/></td>
-        <td><input class="form-control input-sm" name="width" type="text" v-model="item['width']" @change="computeArea($event)" /></td>
+        <td><input class="form-control input-sm" name="width" type="text" v-model="item['width']" @focusout="computeArea($event)" /></td>
         <td><input class="form-control input-sm" name="area" type="text" value="" readonly="readonly" v-model="item['area']"/></td>
         <td is="dismantle-edge" :edge="item['edge']" v-model="item['edge']"></td>
         <td is="dismantle-slot" :slots="item['slot']" v-model="item['slot']"></td>
@@ -106,9 +110,7 @@
 </template>
 
 <script>
-import $ from 'jquery'
-import { cloneData } from '@/assets/js/custom'
-import { M_ONE, M_TWO, MIN_AREA } from '../../../assets/js/constants'
+import { dismantleMixins } from './mixins'
 import Board from './Board'
 import Thick from './Thick'
 import DismantleFacefb from './DismantleFacefb'
@@ -119,6 +121,7 @@ import DismantlePunch from './DismantlePunch'
 import DismantleRemark from './DismantleRemark'
 let self
 export default {
+  mixins: [ dismantleMixins ],
   name: 'OrderDismantleWardrobe',
   props: {
     dismantleUrl: {
@@ -184,8 +187,17 @@ export default {
     self = this
   },
   mounted () {
-    this.highlightTr()
-    this.addLine()
+    this.highlightTr('dismantleYTable')
+    this.addLine('dismantleYTable')
+    this.handleDirection('dismantleYTable')
+    if (this.activeOrderProduct) {
+      if (this.activeOrderProduct['struct'] === undefined) {
+        this.fetchStruct()
+      }
+      if (this.activeOrderProduct['order_product_board_plate'] === undefined) {
+        this.fetchData()
+      }
+    }
   },
   watch: {
     reload: {
@@ -208,19 +220,12 @@ export default {
     }
   },
   updated () {
-    this.highlightTr()
-    this.addLine()
-    this.copy()
+    this.highlightTr('dismantleYTable')
+    this.addLine('dismantleYTable')
+    this.copy('dismantleYTable')
+    this.handleDirection('dismantleYTable')
   },
   methods: {
-    computeArea (e) {
-      let Data = this.activeOrderProduct['order_product_board_plate'][$(e.target).parents('tr').eq(0).find('input[name="index"]').val()]
-      let Area = Math.ceil(Data['width'] * Data['length'] / M_ONE) / M_TWO
-      if (Area < MIN_AREA) {
-        Area = MIN_AREA
-      }
-      Data['area'] = Area
-    },
     changeBoard (board) { // 更换板材颜色
       let Nature = board.replace(/(\d{1,2})(.*)/g, '$2')
       let ChangeLine = self.changeLine === '*' ? self.changeLine : parseInt(self.changeLine)
@@ -235,39 +240,6 @@ export default {
         } else {
           __.board = board
         }
-      })
-    },
-    copy () { // 复制一行内容
-      let self = this
-      $('#dismantleYTable tbody tr input[name="copy"]').off('change.copy').on('change.copy', function (i, v) {
-        let copy = $(this).val()
-        if (copy > 0) {
-          let Index = $(this).parents('tr').eq(0).find('input[name="index"]').val()
-          let Data = self.activeOrderProduct['order_product_board_plate'][Index]
-          let C = {}
-          for (let I = 0; I < copy; I++) {
-            C = cloneData(Data)
-            C.qrcode = ''
-            C.bd_file = ''
-            self.activeOrderProduct['order_product_board_plate'].splice(Index, 0, C)
-          }
-          self.maxNum = self.activeOrderProduct['order_product_board_plate'].length + 1
-          $(this).val(0)
-        }
-      })
-    },
-    addLine () { // 新建一行
-      let self = this
-      $('#dismantleYTable tbody tr:last').off('click.addLine').on('click.addLine', function (i, v) {
-        self.activeOrderProduct['order_product_board_plate'].push(cloneData(self.demoData))
-        self.maxNum = self.activeOrderProduct['order_product_board_plate'].length + 1
-      })
-    },
-    highlightTr () { // 高亮选中一行
-      $('#dismantleYTable').find('tbody tr').each(function (i, v) {
-        $(this).off('click.highlight').on('click.highlight', function (e) {
-          $(this).addClass('table-success').siblings().removeClass('table-success')
-        })
       })
     },
     fetchStruct () { // 获取柜体结构
