@@ -107,11 +107,11 @@ export default {
     },
     save (E) {
       if (this.setData(E)) {
-        if (window.confirm('确定执行' + $(E).text() + '操作?')) {
-          this.submit(E)
-          return true
-        }
-        return false
+        // if (window.confirm('确定执行' + $(E).text() + '操作?')) {
+        this.submit(E)
+        return true
+        // }
+        // return false
       } else {
         alert('请先选中')
         return false
@@ -120,8 +120,9 @@ export default {
     async submit (E) {
       let postReturn = await service.post($(E).attr('href'), this.data)
       if (!postReturn.code) {
-        alert(postReturn.message)
+        // alert(postReturn.message)
         this.disposeReset()
+        this.disposeFocus()
         return true
       } else {
         alert(postReturn.message)

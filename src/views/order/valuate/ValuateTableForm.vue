@@ -124,7 +124,7 @@ export default {
       if (Data['sum_diff'] !== undefined) {
         Data['sum_diff'] = (UnitPrice * AreaDiff).toFixed(3)
         Data['virtual_area'] = Amount + AreaDiff
-        Data['virtual_sum'] = parseFloat(Data['virtual_sum']) + Data['sum_diff']
+        Data['virtual_sum'] = parseFloat(Data['virtual_sum']) + parseFloat(Data['sum_diff'])
       }
     },
     fetchData () { // 获取数据

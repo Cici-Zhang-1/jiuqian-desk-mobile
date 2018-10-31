@@ -13,7 +13,7 @@
             <div class="alert alert-danger" role="alert">{{ errorMessage }}</div>
           </div>
           <div class="modal-body" v-else>
-            <div v-for="(value, key, index) in modal.forms" :is="formGroupType(value.form_type_v)" :configs="value" :forms="modal.forms" :key="index" :force-readonly="readonly" :query="query"></div>
+            <div v-for="(value, key, index) in modal.forms" :is="formGroupType(value.form_type_v)" :configs="value" :forms="modal.forms" :key="id + 'Title' + index" :force-readonly="readonly" :query="query"></div>
             <div class="alert alert-danger fade" role="alert" :class="{show: alert}">{{ alertMessage }}</div>
           </div>
           <div class="modal-footer">
@@ -36,13 +36,12 @@ import FormGroupCheckbox from '@/components/forms/FormGroupCheckbox'
 import FormGroupTextarea from '@/components/forms/FormGroupTextarea'
 import FormGroupAutoComplete from '@/components/forms/FormGroupAutoComplete'
 import FormGroupRemote from '@/components/forms/FormGroupRemote'
-import FormGroupGoodsSpeci from '@/components/forms/FormGroupGoodsSpeci'
 import InputDatalist from '@/components/forms/InputDatalist'
 import InputHidden from '@/components/forms/InputHidden'
 import { trimLeft } from 'voca'
 import service from '@/axios'
 import $ from 'jquery'
-import Vue from 'vue'
+// import Vue from 'vue'
 
 export default {
   name: 'regular-modal',
@@ -162,9 +161,6 @@ export default {
           break
         case 'remote':
           type = 'form-group-remote'
-          break
-        case 'goods-speci':
-          type = 'form-group-goods-speci'
           break
         default:
           type = 'form-group-input'
@@ -299,7 +295,6 @@ export default {
     FormGroupTextarea,
     FormGroupAutoComplete,
     FormGroupRemote,
-    FormGroupGoodsSpeci,
     InputDatalist,
     InputHidden
   }

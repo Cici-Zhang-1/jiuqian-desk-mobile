@@ -174,35 +174,7 @@ export default {
     this.loadAreaData()
   },
   watch: {
-    query: {
-      handler: function (to, from) {
-        if (this.queryStr && this.query[this.queryStr] !== undefined) {
-          this.dealerId = this.query[this.queryStr]
-        }
-        if (this.params.length > 0) {
-          this.params.map(__ => {
-            if (this.query[__] !== undefined) {
-              this.paramsValue[__] = this.query[__]
-            }
-            return __
-          })
-        }
-      },
-      deep: true
-    },
-    /* 'configs.dv': {
-      handler: function (to, from) {
-        this.dealerId = to
-      },
-      deep: true
-    }, */
     'configs.url': {
-      handler: function (to, from) {
-        this.loadSourceData(true)
-      },
-      deep: true
-    },
-    'paramsValue': {
       handler: function (to, from) {
         this.loadSourceData(true)
       },
@@ -227,17 +199,45 @@ export default {
     initQuery () {
       if (this.queryStr) {
         if (this.$router.currentRoute.query[this.queryStr] !== undefined) {
-          this.dealerId = this.query[this.queryStr]
+          this.dealerId = this.$router.currentRoute.query[this.queryStr]
         }
+        this.watchQuery()
       }
       if (this.params.length > 0) {
         this.params.map(__ => {
           if (this.$router.currentRoute.query[__] !== undefined) {
-            this.paramsValue[__] = this.query[__]
+            this.paramsValue[__] = this.$router.currentRoute.query[__]
           }
           return __
         })
+        this.watchParams()
       }
+    },
+    watchQuery () {
+      this.$watch('query', function (to, from) {
+        if (this.query[this.queryStr] !== undefined && this.query[this.queryStr] !== this.dealerId) {
+          this.dealerId = this.query[this.queryStr]
+        }
+      }, {
+        deep: true
+      })
+    },
+    watchParams () {
+      this.$watch('query', function (to, from) {
+        let Flag = false
+        this.params.map(__ => {
+          if (this.query[__] !== undefined && this.query[__] !== this.paramsValue[__]) {
+            this.paramsValue[__] = this.query[__]
+            Flag = true
+          }
+          return __
+        })
+        if (Flag) {
+          this.loadSourceData(true)
+        }
+      }, {
+        deep: true
+      })
     },
     toggleDealerInfo () {
       $('#orderAddDealerInfo').toggleClass('d-none')

@@ -21,11 +21,7 @@ export default {
   },
   data () {
     return {
-      queryStr: '',
-      params: [],
-      paramsValue: {},
-      related: [],
-      relatedValue: {}
+      queryStr: ''
     }
   },
   computed: {
@@ -65,47 +61,32 @@ export default {
       return this.configs.placeholder
     }
   },
-  watch: {
-    query: {
-      handler: function (to, from) {
-        if (this.queryStr && this.query[this.queryStr] !== undefined) {
-          this.value = this.query[this.queryStr]
-        }
-        if (this.params.length > 0) {
-          this.params.map(__ => {
-            if (this.query[__] !== undefined) {
-              this.paramsValue[__] = this.query[__]
-            }
-            return __
-          })
-        }
-      },
-      deep: true
-    }
+  created () {
+    this.parseQuery()
   },
   methods: {
     parseQuery () {
       if (this.configs.query) {
-        [ this.queryStr = '', this.params = '', this.related = '' ] = this.configs.query.split('-')
-        this.params = this.params.split(',')
-        this.related = this.related.split(',')
+        this.queryStr = this.configs.query
         this.initQuery()
       }
     },
     initQuery () {
       if (this.queryStr) {
         if (this.$router.currentRoute.query[this.queryStr] !== undefined) {
-          this.dealerId = this.query[this.queryStr]
+          this.value = this.$router.currentRoute.query[this.queryStr]
         }
+        this.watchQuery()
       }
-      if (this.params.length > 0) {
-        this.params.map(__ => {
-          if (this.$router.currentRoute.query[__] !== undefined) {
-            this.paramsValue[__] = this.query[__]
-          }
-          return __
-        })
-      }
+    },
+    watchQuery () {
+      this.$watch('query', function (to, from) {
+        if (this.query[this.queryStr] !== undefined && this.query[this.queryStr] !== this.value) {
+          this.value = this.query[this.queryStr]
+        }
+      }, {
+        deep: true
+      })
     }
   }
 }

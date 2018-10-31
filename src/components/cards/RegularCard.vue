@@ -64,11 +64,12 @@ export default {
     }
   },
   created () {
-    if (this.$store.state.app.reload ||
+    /* if (this.$store.state.app.reload ||
       (!this.card.data.num && !parseInt(this.card.lazy_load)) ||
       (this.card.data.p !== undefined && this.page !== this.card.data.p)) { // 第一种情况是因为数据还没有加载，第二种情况是因为加载的page不同
       this.fetchData(this.pageSearchValues)
-    }
+    } */
+    !parseInt(this.card.lazy_load) && this.fetchData(this.pageSearchValues)
   },
   watch: {
     '$route': function (to, from) { // route变化时更新数据

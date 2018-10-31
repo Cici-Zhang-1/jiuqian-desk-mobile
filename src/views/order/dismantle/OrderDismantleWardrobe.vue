@@ -110,9 +110,7 @@
 </template>
 
 <script>
-import $ from 'jquery'
-import { cloneData } from '@/assets/js/custom'
-import { M_ONE, M_TWO, MIN_AREA } from '../../../assets/js/constants'
+import { dismantleMixins } from './mixins'
 import Board from './Board'
 import Thick from './Thick'
 import DismantleFacefb from './DismantleFacefb'
@@ -123,6 +121,7 @@ import DismantlePunch from './DismantlePunch'
 import DismantleRemark from './DismantleRemark'
 let self
 export default {
+  mixins: [ dismantleMixins ],
   name: 'OrderDismantleWardrobe',
   props: {
     dismantleUrl: {
@@ -188,8 +187,17 @@ export default {
     self = this
   },
   mounted () {
-    this.highlightTr()
-    this.addLine()
+    this.highlightTr('dismantleYTable')
+    this.addLine('dismantleYTable')
+    this.handleDirection('dismantleYTable')
+    if (this.activeOrderProduct) {
+      if (this.activeOrderProduct['struct'] === undefined) {
+        this.fetchStruct()
+      }
+      if (this.activeOrderProduct['order_product_board_plate'] === undefined) {
+        this.fetchData()
+      }
+    }
   },
   watch: {
     reload: {
@@ -212,19 +220,12 @@ export default {
     }
   },
   updated () {
-    this.highlightTr()
-    this.addLine()
-    this.copy()
+    this.highlightTr('dismantleYTable')
+    this.addLine('dismantleYTable')
+    this.copy('dismantleYTable')
+    this.handleDirection('dismantleYTable')
   },
   methods: {
-    computeArea (e) {
-      let Data = this.activeOrderProduct['order_product_board_plate'][$(e.target).parents('tr').eq(0).find('input[name="index"]').val()]
-      let Area = Math.ceil(Data['width'] * Data['length'] / M_ONE) / M_TWO
-      if (Area < MIN_AREA) {
-        Area = MIN_AREA
-      }
-      Data['area'] = Area
-    },
     changeBoard (board) { // 更换板材颜色
       let Nature = board.replace(/(\d{1,2})(.*)/g, '$2')
       let ChangeLine = self.changeLine === '*' ? self.changeLine : parseInt(self.changeLine)
@@ -239,39 +240,6 @@ export default {
         } else {
           __.board = board
         }
-      })
-    },
-    copy () { // 复制一行内容
-      let self = this
-      $('#dismantleYTable tbody tr input[name="copy"]').off('change.copy').on('change.copy', function (i, v) {
-        let copy = $(this).val()
-        if (copy > 0) {
-          let Index = $(this).parents('tr').eq(0).find('input[name="index"]').val()
-          let Data = self.activeOrderProduct['order_product_board_plate'][Index]
-          let C = {}
-          for (let I = 0; I < copy; I++) {
-            C = cloneData(Data)
-            C.qrcode = ''
-            C.bd_file = ''
-            self.activeOrderProduct['order_product_board_plate'].splice(Index, 0, C)
-          }
-          self.maxNum = self.activeOrderProduct['order_product_board_plate'].length + 1
-          $(this).val(0)
-        }
-      })
-    },
-    addLine () { // 新建一行
-      let self = this
-      $('#dismantleYTable tbody tr:last').off('click.addLine').on('click.addLine', function (i, v) {
-        self.activeOrderProduct['order_product_board_plate'].push(cloneData(self.demoData))
-        self.maxNum = self.activeOrderProduct['order_product_board_plate'].length + 1
-      })
-    },
-    highlightTr () { // 高亮选中一行
-      $('#dismantleYTable').find('tbody tr').each(function (i, v) {
-        $(this).off('click.highlight').on('click.highlight', function (e) {
-          $(this).addClass('table-success').siblings().removeClass('table-success')
-        })
       })
     },
     fetchStruct () { // 获取柜体结构

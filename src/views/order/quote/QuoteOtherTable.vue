@@ -14,7 +14,7 @@
       </tr>
     </thead>
     <tbody >
-      <tr v-for="(item, key, index) in table['order_product_other']" :key="index">
+      <tr v-for="(item, key, index) in table['order_product_board']" :key="index">
         <td>{{ key + 1 }}</td>
         <td v-if="show('other')">{{ item.other }}</td>
         <td v-if="show('speci')">{{ item.speci }}</td>
@@ -29,34 +29,10 @@
 </template>
 
 <script>
-import { highLightTable, generateLink } from '@/assets/js/custom'
-import $ from 'jquery'
+import { quoteTableMixins } from './mixins'
 export default {
-  name: 'QuoteOtherTable',
-  props: {
-    table: {
-      type: Object | Array,
-      required: true
-    },
-    tableThead: {
-      type: Object | Array,
-      required: true
-    }
-  },
-  mounted () {
-    highLightTable($('.table-highlight'))
-  },
-  updated () {
-    highLightTable($('.table-highlight'))
-  },
-  methods: {
-    show (Name) {
-      return this.tableThead[Name] !== undefined
-    },
-    orderProductLink () {
-      return generateLink(this.table.num, this.tableThead.num, this.table)
-    }
-  }
+  mixins: [ quoteTableMixins ],
+  name: 'QuoteOtherTable'
 }
 </script>
 

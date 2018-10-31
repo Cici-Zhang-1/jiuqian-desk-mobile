@@ -2,7 +2,7 @@
   <div class="row mt-3 j-page" :id="title">
     <div class="col-12 border-bottom rounded-bottom mb-2 border-primary text-center d-print-none"><h5>{{ label }}</h5></div>
     <div class="col-md-6 mb-2 mb-md-3 d-print-none" v-if="dismantleData"><small>{{ dismantleData['order_info']['num'] }}-{{ dismantleData['order_info']['dealer'] }}-{{ dismantleData['order_info']['owner'] }}</small></div>
-    <div is="order-dismantle-func" @save-tmp="saveTmp($event)" @save="save($event)" @clear="clear($event)" @remove="remove($event)" @add="add($event)" @repeat="repeat($event)"></div>
+    <div is="order-dismantle-func" @save-tmp="saveTmp($event)" @save="save($event)" @clear="clear($event)" @remove="remove($event)" @add="add($event)" @repeat="repeat($event)" @re_dismantle="reDismantle($event)"></div>
     <div class="col-12" v-if="!error && dismantleData">
       <div class="card border-0 mb-5">
         <div class="card-body p-0 card-body-h">
@@ -20,7 +20,7 @@
               <a class="nav-link" :class="{'diff-red': isDismantlable('K'), active: dismantleData['order_info']['code'] === 'K'}" data-toggle="tab" data-code="K" href="#dismantleK" role="tab" aria-controls="wood" :aria-selected="dismantleData['order_info']['code'] === 'K'">木框门</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" :class="{'diff-red': isDismantlable('P'), active: dismantleData['order_info']['code'] === 'P'}" data-toggle="tab" data-code="P" href="#dismantleP" role="tab" aria-controls="fitting" :aria-selected="dismantleData['order_info']['code'] === 'F'">配件</a>
+              <a class="nav-link" :class="{'diff-red': isDismantlable('P'), active: dismantleData['order_info']['code'] === 'P'}" data-toggle="tab" data-code="P" href="#dismantleP" role="tab" aria-controls="fitting" :aria-selected="dismantleData['order_info']['code'] === 'P'">配件</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" :class="{'diff-red': isDismantlable('G'), active: dismantleData['order_info']['code'] === 'G'}" data-toggle="tab" data-code="G" href="#dismantleG" role="tab" aria-controls="other" :aria-selected="dismantleData['order_info']['code'] === 'G'">外购</a>
@@ -91,6 +91,7 @@ export default {
   created () {
     self = this
     this.set_app_controller()
+    this.$store.commit('RESET_SOURCE_DATA', { target: this.dismantleUrl })
     this.fetchData(true)
   },
   beforeRouteEnter (to, from, next) {
@@ -106,6 +107,7 @@ export default {
     '$store.state.app.reload': {
       handler: function (to, from) {
         if (to) {
+          this.$store.commit('RESET_SOURCE_DATA', { target: this.dismantleUrl })
           this.fetchData(true)
           this.$store.commit('SET_APP_RELOAD', { reload: false })
         }
@@ -115,6 +117,7 @@ export default {
   },
   methods: {
     async saveTmp (e) { // Modal数据数据提交
+      let Code = $('#orderDismantleTab').find('a.active').data('code')
       let orderProduct = self.dismantleData[$('#orderDismantleTab').find('a.active').data('code')]['order_product'].filter(__ => {
         return __.v === self.dismantleData['order_info']['order_product_id']
       })[0]
@@ -124,6 +127,11 @@ export default {
         orderProduct = cloneData(orderProduct)
         if (!this.checkStatus(orderProduct)) {
           return false
+        }
+        if (Code === 'W' || Code === 'Y') {
+          if (!(self.checkBd(orderProduct))) {
+            return false
+          }
         }
         let postReturn = await service.post($(e).data('action'), { ...orderProduct, save: 'dismantling' })
         if (!postReturn.code) {
@@ -256,6 +264,17 @@ export default {
           } else {
             alert(postReturn.message)
           }
+        }
+      }
+    },
+    async reDismantle (e) {
+      if (confirm('您确定要重新拆单吗?')) {
+        let postReturn = await service.post($(e).data('action'), { ...this.$router.currentRoute.query })
+        if (!postReturn.code) {
+          alert('重新拆单成功!')
+          this.$store.commit('SET_APP_RELOAD', { reload: true })
+        } else {
+          alert(postReturn.message)
         }
       }
     },

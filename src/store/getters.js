@@ -100,8 +100,12 @@ export default {
    * @param state
    * @returns {function({uri: *})}
    */
-  getSourceData: (state) => ({ uri }) => {
-    return state.sourceData[uri] || {}
+  getSourceData: (state) => ({ uri, child = '' }) => {
+    if (child.length === 0) {
+      return state.sourceData[uri] || {}
+    } else {
+      return (state.sourceData[uri] && state.sourceData[uri][child]) || {}
+    }
   },
 
   /**

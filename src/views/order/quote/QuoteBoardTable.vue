@@ -23,11 +23,11 @@
 </template>
 
 <script>
-import { highLightTable, generateLink } from '@/assets/js/custom'
-import $ from 'jquery'
+import { quoteTableMixins } from './mixins'
 
 export default {
-  name: 'QuoteBoardTable',
+  mixins: [ quoteTableMixins ],
+  name: 'QuoteBoardTable'/* ,
   props: {
     table: {
       type: Object | Array,
@@ -51,7 +51,7 @@ export default {
     orderProductLink () {
       return generateLink(this.table.num, this.tableThead.num, this.table)
     }
-  }
+  } */
 }
 </script>
 

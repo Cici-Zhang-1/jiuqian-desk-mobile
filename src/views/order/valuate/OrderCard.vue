@@ -39,7 +39,6 @@
           </tbody>
         </table>
         <div is="valuate-table-form" :form="get_form('valuate_cabinet_form')" v-if="formPages" :reload="reload"></div>
-        <div is="valuate-table-form" :form="get_form('valuate_cabinet_form')" v-if="formPages" :reload="reload"></div>
         <div is="valuate-table-form" :form="get_form('valuate_wardrobe_form')" v-if="formPages" :reload="reload"></div>
         <div is="valuate-table-form" :form="get_form('valuate_door_form')" v-if="formPages" :reload="reload"></div>
         <div is="valuate-table-form" :form="get_form('valuate_wood_form')" v-if="formPages" :reload="reload"></div>

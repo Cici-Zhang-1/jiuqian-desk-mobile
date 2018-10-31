@@ -8,6 +8,7 @@
     <div class="dropdown-menu" aria-labelledby="orderDismantleRemoveFunc">
       <button class="dropdown-item mt-1 mb-1" data-action="/order/dismantle/remove" type="button" value="清除" @click="$emit('clear', $event.target)"><i class="fa fa-remove"></i>&nbsp;&nbsp;清除</button>
       <button class="dropdown-item mt-1 mb-1" data-action="/order/order_product/remove" type="button" value="作废" @click="$emit('remove', $event.target)"><i class="fa fa-trash-o"></i>&nbsp;&nbsp;作废</button>
+      <button class="dropdown-item mt-1 mb-1" data-action="/order/order/re_dismantle" type="button" value="重新拆单" @click="$emit('re_dismantle', $event.target)"><i class="fa fa-reply"></i>&nbsp;&nbsp;重新拆单</button>
     </div>
     <button class="btn btn-default" data-toggle="refresh" type="button" value="刷新" @click="refresh()"><i class="fa fa-refresh"></i>&nbsp;&nbsp;刷新</button>
     <button class="btn btn-light" data-action="/order/order_product/add" type="button" value="新建" @click="$emit('add', $event.target)"><i class="fa fa-plus"></i>&nbsp;&nbsp;新建</button>
