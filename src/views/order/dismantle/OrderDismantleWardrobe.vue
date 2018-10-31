@@ -205,6 +205,19 @@ export default {
         this.fetchData()
       }
     },
+    'activeOrderProduct.v': {
+      handler: function (to, from) {
+        if (to !== undefined && to !== from) {
+          if (this.activeOrderProduct['struct'] === undefined) {
+            this.fetchStruct()
+          }
+          if (this.activeOrderProduct['order_product_board_plate'] === undefined) {
+            this.fetchData()
+          }
+        }
+      },
+      deep: true
+    } /*
     activeOrderProduct: {
       handler: function (to, from) {
         if (to !== undefined) {
@@ -217,13 +230,14 @@ export default {
         }
       },
       deep: true
-    }
+    } */
   },
   updated () {
     this.highlightTr('dismantleYTable')
     this.addLine('dismantleYTable')
     this.copy('dismantleYTable')
     this.handleDirection('dismantleYTable')
+    this.disposeAppendLine('dismantleYTable')
   },
   methods: {
     changeBoard (board) { // 更换板材颜色
@@ -241,6 +255,7 @@ export default {
           __.board = board
         }
       })
+      this.demoData.board = board
     },
     fetchStruct () { // 获取柜体结构
       this.$store.dispatch('FETCH_WARDROBE_STRUCT', {

@@ -2,6 +2,7 @@
  * Created by chuangchuangzhang on 2018/2/2.
  */
 import Vue from 'vue'
+import { nameToId } from '@/assets/js/custom'
 export default {
 
   /**
@@ -188,5 +189,25 @@ export default {
 
   SET_VALUATE_DATA: (state, { contents, target }) => {
     Vue.set(target, 'valuate', contents)
+  },
+
+  SET_HIDE_ITEM: (state, { source, v }) => {
+    if (!(v instanceof Array)) {
+      v = [v]
+    }
+    if (!(source === false || source === undefined || source === null)) {
+      let __ = state.apps.filter(app => {
+        return app.url === state.route.path
+      })[0].cards.filter(card => {
+        return '#' + nameToId(card.name) === source
+      })[0]
+      __.data.content.map(___ => {
+        if (v.includes(___.v)) {
+          ___.hide = true
+          ___.checked = false
+        }
+        return ___
+      })
+    }
   }
 }

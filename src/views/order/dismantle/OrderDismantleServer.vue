@@ -187,6 +187,7 @@ export default {
     this.addLine('dismantleFTable')
     this.copy('dismantleFTable')
     this.handleDirection('dismantleFTable')
+    this.disposeAppendLine('dismantleFTable')
     if (this.amountFocus) {
       this.amountFocus = false
       $('#dismantleFTable').find('tbody tr').eq(this.activeOrderProduct['order_product_board_plate'].length - 1).find('input[name="amount"]').focus()

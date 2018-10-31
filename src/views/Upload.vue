@@ -93,7 +93,7 @@ export default {
       a.ListShowType = 1
       a.TitleSwitch = true
       a.ForceFileNum = 0
-      a.autoUpload = true
+      a.autoUpload = false
       a.adjustOrder = true
       a.deleteAllShow = true
       a.countData = true

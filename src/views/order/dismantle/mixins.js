@@ -2,6 +2,11 @@ import $ from 'jquery'
 import { M_ONE, M_TWO, MIN_AREA, MIN_M_AREA, MIN_K_AREA } from '@/assets/js/constants'
 import { cloneData } from '@/assets/js/custom'
 let dismantleMixins = {
+  data () {
+    return {
+      appendLine: false
+    }
+  },
   methods: {
     computeArea (e, Type = '') {
       let Data = this.activeOrderProduct['order_product_board_plate'][$(e.target).parents('tr').eq(0).find('input[name="index"]').val()]
@@ -51,7 +56,14 @@ let dismantleMixins = {
         self.activeOrderProduct['order_product_board_plate'].push(cloneData(self.demoData))
         self.maxNum = self.activeOrderProduct['order_product_board_plate'].length + 1
         $(this).find('input:focus').blur()
+        self.appendLine = true
       })
+    },
+    disposeAppendLine (Target) {
+      if (this.appendLine) {
+        $('#' + Target + ' tbody tr:eq(-2)').find('input:text:eq(0)').focus()
+        this.appendLine = false
+      }
     },
     newLine () {
       this.activeOrderProduct['order_product_board_plate'].push(cloneData(this.demoData))

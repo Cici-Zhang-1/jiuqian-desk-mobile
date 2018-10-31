@@ -158,6 +158,16 @@ export default {
         this.fetchData()
       }
     },
+    'activeOrderProduct.v': {
+      handler: function (to, from) {
+        if (to !== undefined && to !== from) {
+          if (this.activeOrderProduct['order_product_board_plate'] === undefined) {
+            this.fetchData()
+          }
+        }
+      },
+      deep: true
+    } /*
     activeOrderProduct: {
       handler: function (to, from) {
         if (to !== undefined) {
@@ -167,13 +177,14 @@ export default {
         }
       },
       deep: true
-    }
+    } */
   },
   updated () {
     this.highlightTr('dismantleKTable')
     this.addLine('dismantleKTable')
     this.copy('dismantleKTable')
     this.handleDirection('dismantleKTable')
+    this.disposeAppendLine('dismantleKTable')
   },
   methods: {
     changeBoard (board) { // 更换板材颜色

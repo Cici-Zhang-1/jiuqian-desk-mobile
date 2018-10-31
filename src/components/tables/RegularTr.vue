@@ -1,5 +1,5 @@
 <template>
-  <tr :class="{'table-success': trData.checked}" :id="id" @click="activeTr($event.currentTarget)" @dblclick="multipleActiveTr" v-if="quickSearch()">
+  <tr :class="{'table-success': trData.checked, 'd-none': trData.hide === true}" :id="id" @click="activeTr($event.currentTarget)" @dblclick="multipleActiveTr" v-if="quickSearch()">
     <td class="d-print-none d-sm-none d-md-block"><input type="checkbox" v-model="trData.checked" /> </td>
     <td v-for="(value, key, index) in tableThead" :name="key" :class="[ value.classes ]" :key="index" v-if="value.checked_name" v-html="generateTd(trData[key], value)"></td>
   </tr>
