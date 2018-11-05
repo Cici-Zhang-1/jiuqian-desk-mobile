@@ -44,7 +44,8 @@ export default {
         this.$store.dispatch('FETCH_SOURCE_DATA', {
           url: this.doorEdgeUrl,
           configs: {},
-          target: this.doorEdgeUrl
+          target: this.doorEdgeUrl,
+          local: true
         })
       }
     }

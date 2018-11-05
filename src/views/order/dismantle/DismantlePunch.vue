@@ -42,7 +42,8 @@ export default {
         this.$store.dispatch('FETCH_SOURCE_DATA', {
           url: this.punchUrl,
           configs: {},
-          target: this.punchUrl
+          target: this.punchUrl,
+          local: true
         })
       }
     }

@@ -3,15 +3,41 @@
  */
 import service from '@/axios'
 import { FetchError } from '@/assets/js/custom'
+import Vue from 'vue'
+import VueCookies from 'vue-cookies'
 
 let Loading = {}
 export default {
-  FETCH_APPS: ({commit}) => {
-    return service.get('permission/menu/read').then(data => {
-      if (data.code === 0) {
-        commit('SET_APPS', { ...data })
+  FETCH_APPS: ({commit}, { label = false, path = '' }) => {
+    let Key = VueCookies.get('uid') + 'apps'
+    let Data = Vue.localStorage.get(Key, false)
+    if (Data === false) {
+      return service.get('permission/menu/read').then(data => {
+        if (data.code === 0) {
+          commit('SET_APPS', { ...data })
+          if (label === true) {
+            commit('SET_APP_LABEL', {path: path})
+          }
+          Vue.localStorage.set(Key, JSON.stringify(data))
+        }
+      })
+    } else {
+      Data = JSON.parse(Data)
+      if (typeof Data === 'object') {
+        commit('SET_APPS', { ...Data })
+        if (label === true) {
+          commit('SET_APP_LABEL', {path: path})
+        }
       }
-    })
+    }
+    // return service.get('permission/menu/read').then(data => {
+    //   if (data.code === 0) {
+    //     commit('SET_APPS', { ...data })
+    //     if (label) {
+    //       commit('SET_APP_LABEL', {path: path})
+    //     }
+    //   }
+    // })
   },
 
   FETCH_CONFIGS: ({commit}) => {
@@ -60,25 +86,55 @@ export default {
    * @param url
    * @param configs
    * @param target
+   * @param local
    * @returns {*}
    * @constructor
    */
-  FETCH_SOURCE_DATA: ({ commit, dispatch, state }, { url, configs, target }) => {
+  FETCH_SOURCE_DATA: ({ commit, dispatch, state }, { url, configs, target, local = false }) => {
     let Key = JSON.stringify({ url, configs, target })
-    if (Loading[Key] !== undefined) {
-      return true
-    } else {
-      Loading[Key] = true
-    }
-    return service.get(url, configs).then(data => {
-      delete Loading[Key]
-      if (typeof data === 'object') {
-        commit('SET_SOURCE_DATA', { ...data, target })
-        return data
+    if (local) {
+      let Data = Vue.localStorage.get(Key, false)
+      if (Data === false) {
+        if (Loading[Key] !== undefined) {
+          return true
+        } else {
+          Loading[Key] = true
+        }
+        return service.get(url, configs).then(data => {
+          delete Loading[Key]
+          if (typeof data === 'object') {
+            commit('SET_SOURCE_DATA', { ...data, target })
+            Vue.localStorage.set(Key, JSON.stringify(data))
+            return data
+          } else {
+            throw new FetchError('发生未知错误，请联系管理员!')
+          }
+        })
       } else {
-        throw new FetchError('发生未知错误，请联系管理员!')
+        Data = JSON.parse(Data)
+        if (typeof Data === 'object') {
+          commit('SET_SOURCE_DATA', { ...Data, target })
+          return Data
+        } else {
+          throw new FetchError('发生未知错误，请联系管理员!')
+        }
       }
-    })
+    } else {
+      if (Loading[Key] !== undefined) {
+        return true
+      } else {
+        Loading[Key] = true
+      }
+      return service.get(url, configs).then(data => {
+        delete Loading[Key]
+        if (typeof data === 'object') {
+          commit('SET_SOURCE_DATA', { ...data, target })
+          return data
+        } else {
+          throw new FetchError('发生未知错误，请联系管理员!')
+        }
+      })
+    }
   },
 
   /**

@@ -35,7 +35,10 @@ const app = new Vue({
       } else {
         this.$store.commit('SET_USER', { contents: { truename: VueCookies.get('truename') } })
         if (JSON.stringify(store.state.apps) === '{}') { // 加载APP
-          store.dispatch('FETCH_APPS')
+          store.dispatch('FETCH_APPS', {
+            label: true,
+            path: this.$route.path
+          })
         }
       }
     }
@@ -53,7 +56,10 @@ router.onReady(() => {
         next('/sign/index/in')
       } else {
         if (JSON.stringify(store.state.apps) === '{}') {
-          store.dispatch('FETCH_APPS')
+          store.dispatch('FETCH_APPS', {
+            label: false,
+            path: ''
+          })
         }
         next()
       }

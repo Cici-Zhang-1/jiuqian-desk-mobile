@@ -17,7 +17,7 @@ export default {
   },
   data () {
     return {
-      edgeUrl: '/data/edge/read'
+      edgeUrl: '/data/edge/unique'
     }
   },
   computed: {
@@ -42,7 +42,8 @@ export default {
         this.$store.dispatch('FETCH_SOURCE_DATA', {
           url: this.edgeUrl,
           configs: {},
-          target: this.edgeUrl
+          target: this.edgeUrl,
+          local: true
         })
       }
     }

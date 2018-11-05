@@ -7,6 +7,7 @@
     <div class="collapse navbar-collapse" id="jNavbar" >
       <ul id="jMenu" is="Menubar" :apps="apps"></ul>
       <ul class="navbar-nav ml-auto">
+        <li class="nav-item"><a class="nav-link" href="javascript:void(0);" @click="clearCache()">清缓存</a></li>
         <li class="nav-item"><a class="nav-link" href="javascript:void(0);">{{ user.truename }}</a></li>
         <li class="nav-item"><a class="nav-link" href="/sign/out" @click.prevent="sign_out"><i class="fa fa-sign-out"></i>退出</a></li>
       </ul>
@@ -51,6 +52,9 @@ export default {
     },
     collapse: function () {
       $('.collapse').collapse('toggle')
+    },
+    clearCache: function () {
+      localStorage.clear()
     }
   },
   components: {

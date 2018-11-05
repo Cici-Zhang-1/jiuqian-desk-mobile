@@ -43,7 +43,8 @@ export default {
         this.$store.dispatch('FETCH_SOURCE_DATA', {
           url: this.facefbUrl,
           configs: {},
-          target: this.facefbUrl
+          target: this.facefbUrl,
+          local: true
         })
       }
     }

@@ -43,7 +43,8 @@ export default {
         this.$store.dispatch('FETCH_SOURCE_DATA', {
           url: this.plateUrl,
           configs: {},
-          target: this.plateUrl
+          target: this.plateUrl,
+          local: true
         })
       }
     }

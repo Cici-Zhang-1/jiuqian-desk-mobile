@@ -52,7 +52,8 @@ export default {
         this.$store.dispatch('FETCH_SOURCE_DATA', {
           url: this.fittingUrl,
           configs: {},
-          target: this.fittingUrl
+          target: this.fittingUrl,
+          local: true
         })
       }
     }

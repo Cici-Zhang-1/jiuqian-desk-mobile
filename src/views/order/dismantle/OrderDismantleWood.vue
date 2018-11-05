@@ -54,7 +54,7 @@
         <td is="wood-center" :center="item['center']" v-model="item['center']"></td>
         <td is="hinge-punch" :punch="item['punch']" v-model="item['punch']"></td>
         <td><input class="form-control input-sm" name="remark" type="text" v-model="item['remark']" /></td>
-        <td><input class="form-control input-sm" name="amount" type="number" v-model="item['amount']"/></td>
+        <td><input class="form-control input-sm" name="amount" type="text" v-model="item['amount']"/></td>
         <td><input class="form-control input-sm" name="copy" type="number" value="0"/></td>
         <td class="d-none"><input class="form-control input-sm" name="index" type="number" :value="key"/></td>
       </tr>

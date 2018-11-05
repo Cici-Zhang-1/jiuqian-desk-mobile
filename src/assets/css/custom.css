@@ -157,8 +157,11 @@ tr.table-success > td input,
 tr.table-success > td select{
   background-color: #dff0d8;
 }
+table .td-xxs {
+  width: 30px;
+}
 table .td-xs {
-  width: 50px;
+  width: 60px;
 }
 table .td-sm {
   width: 100px;

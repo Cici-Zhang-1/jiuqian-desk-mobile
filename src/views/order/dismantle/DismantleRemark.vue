@@ -43,7 +43,8 @@ export default {
         this.$store.dispatch('FETCH_SOURCE_DATA', {
           url: this.abnormityUrl,
           configs: {},
-          target: this.abnormityUrl
+          target: this.abnormityUrl,
+          local: true
         })
       }
     }

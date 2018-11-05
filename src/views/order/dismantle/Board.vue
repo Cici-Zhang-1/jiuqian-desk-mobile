@@ -45,7 +45,8 @@ export default {
         this.$store.dispatch('FETCH_SOURCE_DATA', {
           url: this.boardUrl,
           configs: {},
-          target: this.boardUrl
+          target: this.boardUrl,
+          local: true
         })
       }
     },

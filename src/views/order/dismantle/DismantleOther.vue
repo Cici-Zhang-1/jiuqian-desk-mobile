@@ -52,7 +52,8 @@ export default {
         this.$store.dispatch('FETCH_SOURCE_DATA', {
           url: this.otherUrl,
           configs: {},
-          target: this.otherUrl
+          target: this.otherUrl,
+          local: true
         })
       }
     }

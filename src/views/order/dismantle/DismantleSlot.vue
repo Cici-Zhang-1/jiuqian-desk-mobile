@@ -1,9 +1,9 @@
 <template>
   <td>
-    <select class="form-control input-sm" name="slot" v-model="dv" v-if="slotData && slotData.num" v-on:input="$emit('input', $event.target.value)">
-      <option value="">--请选择--</option>
-      <option v-for="(value, key, index) in slotData.content" :key="index" :value="value.v">{{ value.label || value.name || value.v }}</option>
-    </select>
+    <input class="form-control input-sm" name="slot" list="wySlot" type="text" v-model="dv" v-on:input="$emit('input', $event.target.value)"/>
+    <datalist id="wySlot" v-if="slotData && slotData.num">
+      <option v-for="(value, key, index) in slotData.content" :value="value.v" :key="index">{{ value.label || value.name || value.v }}</option>
+    </datalist>
   </td>
 </template>
 
@@ -43,7 +43,8 @@ export default {
         this.$store.dispatch('FETCH_SOURCE_DATA', {
           url: this.slotUrl,
           configs: {},
-          target: this.slotUrl
+          target: this.slotUrl,
+          local: true
         })
       }
     }

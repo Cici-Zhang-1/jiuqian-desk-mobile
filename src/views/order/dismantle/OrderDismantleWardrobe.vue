@@ -35,17 +35,17 @@
       <tr>
         <th class="td-xs" >#</th>
         <th class="td-md" >板块名称</th>
-        <th class="td-md">板材</th>
-        <th class="td-sm" >长</th>
-        <th class="td-sm" >宽</th>
-        <th class="td-sm" >面积</th>
+        <th>板材</th>
+        <th class="td-xs" >长</th>
+        <th class="td-xs" >宽</th>
+        <th class="td-xs" >面积</th>
         <th >封边</th>
-        <th >开槽</th>
-        <th >打孔</th>
-        <th >尺判</th>
-        <th class="td-md">备注</th>
-        <th class="td-xs" >复制</th>
-        <th class="td-xs" >块数</th>
+        <th class="td-md">开槽</th>
+        <th class="td-sm">打孔</th>
+        <th class="td-md">尺判</th>
+        <th>备注</th>
+        <th class="td-xxs" >复制</th>
+        <th class="td-xxs" >块数</th>
         <th >Qrcode</th>
         <th class="d-none">柜体名称</th>
         <th class="d-none">柜体编号</th>
@@ -67,7 +67,7 @@
         <td is="dismantle-punch" :punch="item['punch']" v-model="item['punch']"></td>
         <td><input class="form-control input-sm" name="decide_size" type="text" v-model="item['decide_size']" /></td>
         <td is="dismantle-remark" :remark="item['remark']" v-model="item['remark']"></td>
-        <td><input class="form-control input-sm" name="amount" type="number" v-model="item['amount']"/></td>
+        <td><input class="form-control input-sm" name="amount" type="text" v-model="item['amount']"/></td>
         <td><input class="form-control input-sm" name="copy" type="number" value="0"/></td>
         <td><input class="form-control input-sm" name="qrcode" type="text" v-model="item['qrcode']" /></td>
         <td class="d-none"><input class="form-control input-sm" name="cubicle_name" type="text" v-model="item['cubicle_name']"/></td>

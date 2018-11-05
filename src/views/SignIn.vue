@@ -52,7 +52,10 @@ export default {
       } else {
         this.$store.commit('SET_USER', { contents: { truename: VueCookies.get('truename') } })
         this.$store.commit('SET_SIGNIN', { signin: false })
-        this.$store.dispatch('FETCH_APPS')
+        this.$store.dispatch('FETCH_APPS', {
+          label: false,
+          path: ''
+        })
         this.$router.push('/')
       }
     },

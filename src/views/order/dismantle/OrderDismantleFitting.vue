@@ -45,9 +45,9 @@
             <td class="d-none"><input class="form-control input-sm" name="goods_speci_id" type="hidden" v-model="item['goods_speci_id']"/></td>
             <td><input class="form-control input-sm" name="fitting" type="text" v-model="item['fitting']" /></td>
             <td><input class="form-control input-sm" name="speci" type="text" v-model="item['speci']"/></td>
-            <td><input class="form-control input-sm" name="unit" type="text" v-model="item['unit']" readonly /></td>
+            <td><input class="form-control input-sm" name="unit" type="text" v-model="item['unit']" /></td>
             <td><input class="form-control input-sm" name="remark" type="text" v-model="item['remark']" /></td>
-            <td><input class="form-control input-sm" name="amount" type="number" v-model="item['amount']"/></td>
+            <td><input class="form-control input-sm" name="amount" type="text" v-model="item['amount']"/></td>
             <td><input class="form-control input-sm" name="copy" type="number" value="0"/></td>
             <td class="d-none"><input class="form-control input-sm" name="index" type="number" :value="key"/></td>
           </tr>
