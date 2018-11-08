@@ -5,18 +5,18 @@
       <tr>
         <th>#</th>
         <th v-if="show('board')">板材</th>
-        <th v-if="show('virtual_area')">面积</th>
+        <th v-if="show('area')">面积</th>
         <th v-if="show('unit_price')">单价</th>
-        <th v-if="show('virtual_sum')">金额</th>
+        <th v-if="show('sum')">金额</th>
       </tr>
     </thead>
     <tbody >
       <tr v-for="(item, key, index) in table['order_product_board']" :key="index">
         <td>{{ key + 1 }}</td>
         <td v-if="show('board')">{{ item.board }}</td>
-        <td v-if="show('virtual_area')">{{ item['virtual_area'] }}</td>
+        <td v-if="show('area')">{{ item['area'] }}</td>
         <td v-if="show('unit_price')">{{ item['unit_price'] }}</td>
-        <td v-if="show('virtual_sum')">{{ item['virtual_sum'] }}</td>
+        <td v-if="show('sum')">{{ item['sum'] }}</td>
       </tr>
     </tbody>
   </table>

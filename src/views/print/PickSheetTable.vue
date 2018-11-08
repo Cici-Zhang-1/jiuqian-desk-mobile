@@ -13,7 +13,7 @@
       </tr>
       <tr>
         <th>货到地区:</th>
-        <td>{{ tables.delivery_address }}</td>
+        <td>{{ tables.delivery_area }}{{ tables.delivery_address }}</td>
         <th>收货人:</th>
         <td>{{ tables.delivery_linker }}</td>
         <th>联系方式:</th>

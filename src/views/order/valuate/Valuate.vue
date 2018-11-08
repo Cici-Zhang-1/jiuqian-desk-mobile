@@ -3,7 +3,16 @@
     <div class="col-12 border-bottom rounded-bottom mb-2 border-primary text-center d-print-none"><h5>{{ label }}</h5></div>
     <div class="col-md-6 mb-2 mb-md-3 d-print-none"></div>
     <div is="valuate-func" @save-tmp="saveTmp($event)" @save="save($event)" @re_valuate="reValuate($event)"></div>
-    <div is="order-card" :card="get_card('valuate_add_table')" :formPages="formPages" v-if="cards" :reload="reload"></div>
+    <div is="order-card" :card="get_card('valuate_add_table')" :formPages="formPages" v-if="cards" :reload="reload" :valuateConfigs="valuateConfigs"></div>
+    <div class="col-12">
+      <div class="form-group row">
+        <label class="col-md-2 col-form-label float-right">总额:</label>
+        <div class="col-md-9">
+          <input class="form-control input-sm bg-hint" name="sum" type="number" v-model="sum" v-if="valuateConfigs['allow_discount']"/>
+          <input class="form-control input-sm bg-hint" name="sum" type="number" v-model="sum" readonly v-else/>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -23,7 +32,9 @@ export default {
       title: '',
       f: 'order',
       c: 'order_detail',
-      reload: false
+      reload: false,
+      valuateConfigs: [],
+      diff: 0
     }
   },
   computed: {
@@ -31,11 +42,35 @@ export default {
       cards: 'currentPageCards', // 当前页面应该展示的数据
       formPages: 'currentFormPages',
       label: 'currentLabel'
-    })
+    }),
+    formSum: {
+      get () {
+        let a = 0
+        this.formPages && this.formPages.map(__ => {
+          if (__.valuate && __.valuate.content) {
+            __.valuate.content.map(___ => {
+              a = a + ___.sum * 1
+              return ___
+            })
+          }
+          return __
+        })
+        return a
+      }
+    },
+    sum: {
+      get () {
+        return this.formSum + this.diff
+      },
+      set (newValue) {
+        this.diff = newValue - this.formSum
+      }
+    }
   },
   created () {
     self = this
     this.set_app_controller()
+    this.loadAllowDiscount()
   },
   beforeRouteEnter (to, from, next) {
     next(vm => {
@@ -51,6 +86,11 @@ export default {
         }
       },
       deep: true
+    },
+    'formSum': {
+      handler: function (to, from) {
+        this.diff = 0
+      }
     }
   },
   methods: {
@@ -75,7 +115,7 @@ export default {
         }
         return __
       })
-      let postReturn = await service.post($(e).data('action'), { ...formData, save: 'valuating', ...self.$router.currentRoute.query })
+      let postReturn = await service.post($(e).data('action'), { ...formData, sum: self.sum, save: 'valuating', ...self.$router.currentRoute.query })
       if (!postReturn.code) {
         if (postReturn.location !== '') {
           if (postReturn.confirm !== '') {
@@ -104,7 +144,7 @@ export default {
       if (!(self.checkSum(formData))) {
         return false
       }
-      let postReturn = await service.post($(e).data('action'), { ...formData, save: 'valuated', ...self.$router.currentRoute.query })
+      let postReturn = await service.post($(e).data('action'), { ...formData, sum: self.sum, save: 'valuated', ...self.$router.currentRoute.query })
       if (!postReturn.code) {
         if (postReturn.location !== '') {
           if (postReturn.confirm !== '') {
@@ -149,6 +189,21 @@ export default {
       } else {
         return true
       }
+    },
+    loadAllowDiscount () {
+      let self = this
+      service.get('data/configs/read', { params: { type: 'valuate' } }).then(function (data) {
+        if (data.code > 0) {
+
+        } else {
+          let a = {}
+          data.contents.content.map(__ => {
+            a[__.name] = parseInt(__.config) !== 0
+            return __
+          })
+          self.valuateConfigs = a
+        }
+      })
     }
   },
   components: {

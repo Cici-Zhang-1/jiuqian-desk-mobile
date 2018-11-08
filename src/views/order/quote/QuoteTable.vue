@@ -7,9 +7,10 @@
         <th v-if="show('create_datetime')">创建时间</th>
         <th v-if="show('request_outdate')">要求出厂</th>
         <th v-if="show('owner')">业主</th>
-        <th v-if="show('virtual_sum')">金额</th>
-        <th v-if="show('virtual_payed')">已支付</th>
-        <th v-if="show('dealer_virtual_balance')">客户余额</th>
+        <th v-if="show('virtual_sum')">应收</th>
+        <th v-if="show('sum')">实收</th>
+        <th v-if="show('payed')">已支付</th>
+        <th v-if="show('dealer_balance')">客户余额</th>
         <th v-if="show('dealer_remark')">客户备注</th>
       </tr>
       <tr>
@@ -19,8 +20,9 @@
         <td v-if="show('request_outdate')">{{ table.request_outdate }}</td>
         <td v-if="show('owner')">{{ table.owner }}</td>
         <td v-if="show('virtual_sum')">{{ table['virtual_sum'] }}</td>
-        <td v-if="show('virtual_payed')">{{ table['virtual_payed'] }}</td>
-        <td v-if="show('dealer_virtual_balance')">{{ table['dealer_virtual_balance'] }}</td>
+        <td v-if="show('sum')">{{ table['sum'] }}</td>
+        <td v-if="show('payed')">{{ table['payed'] }}</td>
+        <td v-if="show('dealer_balance')">{{ table['dealer_balance'] }}</td>
         <td v-if="show('dealer_remark')">{{ table.dealer_remark }}</td>
       </tr>
     </tbody>

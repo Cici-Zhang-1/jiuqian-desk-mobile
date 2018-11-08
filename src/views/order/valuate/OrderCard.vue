@@ -9,8 +9,8 @@
               <th >客户</th>
               <th >业主</th>
               <th >备注</th>
-              <th >金额</th>
-              <th >客户金额</th>
+              <th >实收</th>
+              <th v-if="show('virtual_sum')">应收</th>
               <th >橱</th>
               <th >衣</th>
               <th >门</th>
@@ -27,7 +27,7 @@
               <td>{{ item['owner'] }}</td>
               <td >{{ item['remark'] }}</td>
               <td >{{ item['sum'] }}</td>
-              <td >{{ item['virtual_sum'] }}</td>
+              <td v-if="show('virtual_sum')">{{ item['virtual_sum'] }}</td>
               <td >{{ item['cabinet'] }}</td>
               <td >{{ item['wardrobe'] }}</td>
               <td >{{ item['door'] }}</td>
@@ -38,13 +38,13 @@
             </tr>
           </tbody>
         </table>
-        <div is="valuate-table-form" :form="get_form('valuate_cabinet_form')" v-if="formPages" :reload="reload"></div>
-        <div is="valuate-table-form" :form="get_form('valuate_wardrobe_form')" v-if="formPages" :reload="reload"></div>
-        <div is="valuate-table-form" :form="get_form('valuate_door_form')" v-if="formPages" :reload="reload"></div>
-        <div is="valuate-table-form" :form="get_form('valuate_wood_form')" v-if="formPages" :reload="reload"></div>
-        <div is="valuate-table-form" :form="get_form('valuate_fitting_form')" v-if="formPages" :reload="reload"></div>
-        <div is="valuate-table-form" :form="get_form('valuate_other_form')" v-if="formPages" :reload="reload"></div>
-        <div is="valuate-table-form" :form="get_form('valuate_server_form')" v-if="formPages" :reload="reload"></div>
+        <div is="valuate-table-form" :form="get_form('valuate_cabinet_form')" v-if="formPages" :reload="reload" :allowDiscountItem="valuateConfigs['allow_discount_cabinet']"></div>
+        <div is="valuate-table-form" :form="get_form('valuate_wardrobe_form')" v-if="formPages" :reload="reload" :allowDiscountItem="valuateConfigs['allow_discount_wardrobe']"></div>
+        <div is="valuate-table-form" :form="get_form('valuate_door_form')" v-if="formPages" :reload="reload" :allowDiscountItem="valuateConfigs['allow_discount_door']"></div>
+        <div is="valuate-table-form" :form="get_form('valuate_wood_form')" v-if="formPages" :reload="reload" :allowDiscountItem="valuateConfigs['allow_discount_wood']"></div>
+        <div is="valuate-table-form" :form="get_form('valuate_fitting_form')" v-if="formPages" :reload="reload" :allowDiscountItem="valuateConfigs['allow_discount_fitting']"></div>
+        <div is="valuate-table-form" :form="get_form('valuate_other_form')" v-if="formPages" :reload="reload" :allowDiscountItem="valuateConfigs['allow_discount_other']"></div>
+        <div is="valuate-table-form" :form="get_form('valuate_server_form')" v-if="formPages" :reload="reload" :allowDiscountItem="valuateConfigs['allow_discount_server']"></div>
       </div>
     </div>
     <div class="col-12 mt-2" v-if="error">{{ errorMsg }}</div>
@@ -66,6 +66,9 @@ export default {
     },
     reload: {
       type: Boolean
+    },
+    valuateConfigs: {
+      type: Object | Array
     }
   },
   data () {
@@ -94,6 +97,9 @@ export default {
     }
   },
   methods: {
+    show (Name) {
+      return this.card.elements[Name] && this.card.elements[Name].checked_name
+    },
     orderProductLink (Num, Table) {
       return generateLink(Num, this.card.elements.num, Table)
     },

@@ -1,6 +1,6 @@
 <template>
   <table class="table table-striped table-bordered table-sm table-responsive-sm text-nowrap table-highlight">
-    <caption class="j-caption"><span v-html="orderProductLink()"></span>{{ table.product }}, 状态: {{ table['status_label'] }}, 入库件数: {{ table.pack }}, 库位: {{ table['warehouse'] }}</caption>
+    <caption class="j-caption"><span v-html="orderProductLink()"></span>{{ table.product }}, 状态: {{ table['status_label'] }}, 入库件数: {{ table.pack }}, 库位: {{ table['warehouse_num'] }}</caption>
     <thead>
       <tr>
         <th>#</th>
@@ -11,7 +11,7 @@
         <th v-if="show('purchase')">采购价</th>
         <th v-if="show('unit_price')">单价</th>
         <th v-if="show('sum')">金额</th>
-        <th v-if="show('virtual_sum')">报价金额</th>
+        <th v-if="show('virtual_sum')">应收</th>
       </tr>
     </thead>
     <tbody >

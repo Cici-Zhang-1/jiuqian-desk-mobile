@@ -9,8 +9,8 @@
         <th v-if="show('request_outdate')">要求出厂</th>
         <th v-if="show('end_datetime')">实际出厂</th>
         <th v-if="show('owner')">业主</th>
-        <th v-if="show('sum')">金额</th>
-        <th v-if="show('virtual_sum')">报价金额</th>
+        <th v-if="show('sum')">实收</th>
+        <th v-if="show('virtual_sum')">应收</th>
         <th v-if="show('payed')">已支付</th>
         <th v-if="show('remark')">备注</th>
         <th v-if="show('dealer_remark')">客户备注</th>

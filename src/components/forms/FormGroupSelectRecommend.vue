@@ -8,11 +8,10 @@
 </template>
 
 <script>
-import { nameToId, uuid } from '@/assets/js/custom'
-let timeCount
-let self
+import { formsMixins } from './mixins'
 
 export default {
+  mixins: [ formsMixins ],
   name: 'form-group-select-recommend',
   props: {
     configs: {
@@ -37,14 +36,11 @@ export default {
     }
   },
   computed: {
-    id () {
-      return nameToId(this.configs.name) + uuid()
-    },
-    recommend: {
-      get () {
-        return this.forms[this.configs.query].dv // 这里query定义的是相关表单变量
-      }
-    },
+    // recommend: {
+    //   get () {
+    //     return this.forms[this.configs.query].dv // 这里query定义的是相关表单变量
+    //   }
+    // },
     selectData: {
       get () {
         return this.$store.getters.getSourceData({ uri: this.configs.url })
@@ -57,33 +53,11 @@ export default {
       set (Value) {
         this.configs.dv = Value
       }
-    },
-    readonly () {
-      return this.configs.readonly_v === '1'
-    },
-    required () {
-      return this.configs.required_v === '1'
-    },
-    multiple () {
-      return this.configs.multiple_v === '1'
-    },
-    max () {
-      return this.configs.max === '' ? false : this.configs.max
-    },
-    min () {
-      return this.configs.min === '' ? false : this.configs.min
-    },
-    maxlength () {
-      return this.configs.maxlength !== '0' ? this.configs.maxlength : ''
-    },
-    pattern () {
-      return this.configs.pattern === '' ? false : this.configs.pattern
     }
   },
   created () {
     this.parseQuery()
     this.loadSourceData()
-    self = this
   },
   watch: {
     configs: {
@@ -91,7 +65,7 @@ export default {
         this.loadSourceData()
       },
       deep: true
-    },
+    }/* ,
     recommend: {
       handler: function (to, from) {
         clearTimeout(timeCount)
@@ -99,7 +73,7 @@ export default {
           self.loadSourceData(true)
         }, 1000)
       }
-    }
+    } */
   },
   methods: {
     parseQuery () {
@@ -181,12 +155,15 @@ export default {
     },
     loadSourceData (Update = false) {
       if (Update || typeof this.selectData === 'undefined' || JSON.stringify(this.selectData) === '{}') {
+        let params = this.paramsValue || {}
+        let related = this.relatedValue || {}
         this.$bar.start()
         this.$store.dispatch('FETCH_SOURCE_DATA', {
           url: this.configs.url,
           configs: {
             params: {
-              'recommend': this.recommend
+              ...params,
+              ...related
             }
           },
           target: this.configs.url

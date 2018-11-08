@@ -3,7 +3,7 @@
     <label>板材</label>
     <input class="form-control" name="board" type="text" v-model="dv" list="yBoard" placeholder="选择板材颜色" v-on:input="$emit('input', $event.target.value)" @focusout="$emit('focusout-board', $event.target.value)" @input="disposeBoard($event.target.value)"/>
     <datalist id="yBoard" v-if="boardData && boardData.num">
-      <option v-for="(value, key, index) in boardData.content" :value="value.v" :key="index" v-if="value.show">{{ value.label || value.name || value.v }}</option>
+      <option v-for="(value, key, index) in boardData.content" :value="value.v" :key="index">{{ value.label || value.name || value.v }}</option>
     </datalist>
   </div>
 </template>
@@ -20,7 +20,11 @@ export default {
   data () {
     return {
       boardUrl: '/product/board/read',
-      show: false
+      show: false,
+      boardData: {
+        num: 0,
+        content: []
+      }
     }
   },
   computed: {
@@ -30,7 +34,7 @@ export default {
       },
       set (value) {}
     },
-    boardData: {
+    fullBoard: {
       get () {
         return this.$store.getters.getSourceData({ uri: this.boardUrl })
       }
@@ -41,7 +45,7 @@ export default {
   },
   methods: {
     loadBoardData () {
-      if ((typeof this.boardData === 'undefined' || JSON.stringify(this.boardData) === '{}')) {
+      if ((typeof this.fullBoard === 'undefined' || JSON.stringify(this.fullBoard) === '{}')) {
         this.$store.dispatch('FETCH_SOURCE_DATA', {
           url: this.boardUrl,
           configs: {},
@@ -53,21 +57,17 @@ export default {
     disposeBoard (input) {
       let i = 0
       let max = 10
+      let a = []
       if (input && input.length > 0) {
-        this.boardData.content.map(__ => {
+        this.fullBoard.content.map(__ => {
           if (__.v.search(input) >= 0 && i++ < max) {
-            __.show = true
-          } else {
-            __.show = false
+            a.push(__)
           }
           return __
         })
-      } else {
-        this.boardData.content.map(__ => {
-          __.show = false
-          return __
-        })
       }
+      this.boardData.content = a
+      this.boardData.num = i
     }
   }
 }

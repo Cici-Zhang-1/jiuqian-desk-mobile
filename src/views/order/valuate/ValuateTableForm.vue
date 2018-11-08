@@ -35,11 +35,20 @@
       <td v-if="show('remark')">{{ item['remark'] }}</td>
       <td >{{ item.amount }}</td>
       <td v-if="show('area')">{{ item['area'] }}</td>
-      <td ><input class="form-control input-sm bg-hint" name="unit_price" type="number" v-model="item['unit_price']" @focusout="computeSum($event)"/></td>
+      <td >
+        <input class="form-control input-sm bg-hint" name="unit_price" type="number" v-model="item['unit_price']" @focusout="computeSum($event)" v-if="allowDiscountItem"/>
+        <input class="form-control input-sm bg-hint" name="unit_price" type="number" v-model="item['unit_price']" @focusout="computeSum($event)" readonly v-else/>
+      </td>
       <td v-if="show('open_hole')">{{ item['open_hole'] }}</td>
-      <td v-if="show('open_hole_unit_price')"><input class="form-control input-sm bg-hint" name="open_hole_unit_price" type="number" v-model="item['open_hole_unit_price']" @focusout="computeSum($event)"/></td>
+      <td v-if="show('open_hole_unit_price')">
+        <input class="form-control input-sm bg-hint" name="open_hole_unit_price" type="number" v-model="item['open_hole_unit_price']" @focusout="computeSum($event)" v-if="allowDiscountItem"/>
+        <input class="form-control input-sm bg-hint" name="open_hole_unit_price" type="number" v-model="item['open_hole_unit_price']" @focusout="computeSum($event)" readonly v-else/>
+      </td>
       <td v-if="show('invisibility')">{{ item['invisibility'] }}</td>
-      <td v-if="show('invisibility_unit_price')"><input class="form-control input-sm bg-hint" name="handle_unit_price" type="number" v-model="item['invisibility_unit_price']" @focusout="computeSum($event)"/></td>
+      <td v-if="show('invisibility_unit_price')">
+        <input class="form-control input-sm bg-hint" name="handle_unit_price" type="number" v-model="item['invisibility_unit_price']" @focusout="computeSum($event)" v-if="allowDiscountItem"/>
+        <input class="form-control input-sm bg-hint" name="handle_unit_price" type="number" v-model="item['invisibility_unit_price']" @focusout="computeSum($event)" readonly v-else/>
+      </td>
       <td ><input class="form-control input-sm bg-hint" name="sum" type="number" v-model="item['sum']" readonly /></td>
       <td v-if="show('area_diff')" ><input class="form-control input-sm bg-hint" name="area_diff" type="number" v-model="item['area_diff']" @focusout="computeSum($event)"/></td>
       <td v-if="show('sum_diff')" ><input class="form-control input-sm bg-hint" name="sum_diff" type="number" v-model="item['sum_diff']" @focusout="computeSum($event)"/></td>
@@ -61,6 +70,9 @@ export default {
       type: Object
     },
     reload: {
+      type: Boolean
+    },
+    allowDiscountItem: {
       type: Boolean
     }
   },
@@ -119,10 +131,10 @@ export default {
         Invisibility = parseFloat(Data['invisibility'])
         InvisibilityUnitPrice = parseFloat(Data['invisibility_unit_price'])
       }
-      Data['sum'] = (UnitPrice * Amount + OpenHole * OpenHoleUnitPrice + Invisibility * InvisibilityUnitPrice).toFixed(3)
+      Data['sum'] = Math.ceil(UnitPrice * Amount + OpenHole * OpenHoleUnitPrice + Invisibility * InvisibilityUnitPrice)
       Data['virtual_sum'] = Data['sum']
       if (Data['sum_diff'] !== undefined) {
-        Data['sum_diff'] = (UnitPrice * AreaDiff).toFixed(3)
+        Data['sum_diff'] = Math.ceil(UnitPrice * AreaDiff)
         Data['virtual_area'] = Amount + AreaDiff
         Data['virtual_sum'] = parseFloat(Data['virtual_sum']) + parseFloat(Data['sum_diff'])
       }

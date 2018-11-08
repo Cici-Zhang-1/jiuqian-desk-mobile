@@ -10,10 +10,11 @@
 </template>
 
 <script>
-import { nameToId, uuid } from '@/assets/js/custom'
 import $ from 'jquery'
+import { formsMixins } from './mixins'
 
 export default {
+  mixins: [ formsMixins ],
   name: 'form-group-select',
   props: {
     configs: {
@@ -42,9 +43,6 @@ export default {
     }
   },
   computed: {
-    id () {
-      return nameToId(this.configs.name) + uuid()
-    },
     selectData: {
       get () {
         return this.$store.getters.getSourceData({ uri: this.configs.url })
@@ -57,27 +55,6 @@ export default {
       set (Value) {
         this.configs.dv = Value
       }
-    },
-    readonly () {
-      return this.forceReadonly && this.configs.readonly_v === '1'
-    },
-    required () {
-      return this.configs.required_v === '1'
-    },
-    multiple () {
-      return this.configs.multiple_v === '1'
-    },
-    max () {
-      return this.configs.max === '' ? false : this.configs.max
-    },
-    min () {
-      return this.configs.min === '' ? false : this.configs.min
-    },
-    maxlength () {
-      return this.configs.maxlength !== '0' ? this.configs.maxlength : ''
-    },
-    pattern () {
-      return this.configs.pattern === '' ? false : this.configs.pattern
     }
   },
   created () {
