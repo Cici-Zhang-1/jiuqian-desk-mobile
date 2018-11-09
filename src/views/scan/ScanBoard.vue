@@ -69,6 +69,7 @@ export default {
     },
     show (e) {
       this.showAll = !!e
+      this.disposeFocus()
     },
     searchQrcode (e) {
       this.search = !this.search
@@ -77,6 +78,7 @@ export default {
       if (window.confirm('确认找回上次扫描?')) {
         this.last = !this.last
       }
+      this.disposeFocus()
       return true
     },
     disposeRefresh (E) { // 刷新
@@ -87,6 +89,7 @@ export default {
         }
       }
       this.disposeReset()
+      this.disposeFocus()
       return false
     },
     disposeReset () { // 重置

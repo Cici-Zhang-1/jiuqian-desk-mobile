@@ -7,7 +7,7 @@
         </div>
         <input type="hidden" name="thick" v-model="pageSearches['thick'].dv" />
         <input type="hidden" name="qrcode"  v-model="pageSearches['qrcode'].dv" />
-        <input type="search" class="form-control" name="keyword" id="scanBoardQrcode" v-model="keyword" placeholder="扫描板块二维码"/>
+        <input type="search" class="form-control" name="keyword" id="scanBoardQrcode" v-model="keyword" placeholder="扫描板块二维码" autofocus/>
         <div class="input-group-append">
           <button class="btn btn-outline-secondary" type="submit">Go!</button>
         </div>
