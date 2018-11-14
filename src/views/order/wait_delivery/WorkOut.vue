@@ -4,7 +4,7 @@
     <div class="col-md-3 mb-2 mb-md-3 d-print-none"></div>
     <div is="work-out-func" :funcs="funcs" @save="save($event)" v-if="funcs"></div>
     <div is="work-out-info"></div>
-    <div is="work-out-card" :card="get_card('work_out_table')" v-if="cards" ></div>
+    <div is="work-out-card" :card="get_card('work_out_table')" v-if="cards" @input-remark="disposeRemark($event)"></div>
   </div>
 </template>
 
@@ -22,7 +22,8 @@ export default {
     return {
       title: '',
       f: 'wait_delivery',
-      c: 'work_out'
+      c: 'work_out',
+      remark: ''
     }
   },
   computed: {
@@ -46,6 +47,9 @@ export default {
         return __.name === $Name
       })[0]
     },
+    disposeRemark (remark) {
+      this.remark = remark
+    },
     async save (e) {
       let formData = []
       this.cards.map(__ => {
@@ -63,7 +67,7 @@ export default {
         return __
       })
       this.$bar.start()
-      let postReturn = await service.post($(e).data('action'), { order_product: formData, ...this.$route.query })
+      let postReturn = await service.post($(e).data('action'), { order_product: formData, remark: this.remark, ...this.$route.query })
       this.$bar.finish()
       if (!postReturn.code) {
         if (postReturn.location !== '') {

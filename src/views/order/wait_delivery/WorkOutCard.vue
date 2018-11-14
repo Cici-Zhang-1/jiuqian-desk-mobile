@@ -3,6 +3,7 @@
     <div class="card border-0 mb-3">
       <div class="card-body p-0 card-body-h" v-if="!error">
         <div is="work-out-form" :form="card.data.content"></div>
+        <div><input class="form-control input-sm bg-hint" name="remark" type="text" placeholder="发货备注" @input="$emit('input-remark', $event.target.value)" maxlength="128"/></div>
       </div>
       <div class="col-12 mt-2" v-if="error">{{ errorMsg }}</div>
     </div>
@@ -21,7 +22,8 @@ export default {
   data () {
     return {
       errorMsg: 'No Data Available',
-      error: false
+      error: false,
+      remark: ''
     }
   },
   computed: {
