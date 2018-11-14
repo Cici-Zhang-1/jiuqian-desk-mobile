@@ -18,6 +18,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+            <button type="reset" class="btn btn-secondary" >重置</button>
             <button type="submit" class="btn btn-primary" :disabled="disabled" v-if="!error">保存</button>
           </div>
         </form>
@@ -194,6 +195,7 @@ export default {
             if (postReturn.code === 0) {
               this.$store.commit('SET_APP_RELOAD', { reload: true })
               $('#' + this.id).modal('hide')
+
             } else {
               this.alertMessage = postReturn.message
               this.alert = true
