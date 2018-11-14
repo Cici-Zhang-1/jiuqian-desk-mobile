@@ -60,10 +60,12 @@ import OrderDismantleWood from './OrderDismantleWood'
 import OrderDismantleFitting from './OrderDismantleFitting'
 import OrderDismantleOther from './OrderDismantleOther'
 import OrderDismantleServer from './OrderDismantleServer'
+import { pubMixins } from '@/views/mixins'
 
 let self
 
 export default {
+  mixins: [ pubMixins ],
   name: 'OrderDismantle',
   data () {
     return {

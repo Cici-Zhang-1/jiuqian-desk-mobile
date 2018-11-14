@@ -34,216 +34,216 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
-  import { baseUrl } from '@/axios/env'
-  import ScanBoardTable from './ScanBoardTable'
-  import Scanner from './Scanner'
-  import ScanNum from './ScanNum'
-  import ScanInfo from './ScanInfo'
-  import ScanBoardModal from './ScanBoardModal'
-  export default {
-    name: 'ScanBoardCard',
-    props: {
-      card: {
-        type: Object
-      },
-      reload: {
-        type: Boolean
-      },
-      search: {
-        type: Boolean
-      },
-      showAll: {
-        type: Boolean,
-        default: false
-      },
-      refresh: {
-        type: Boolean
-      },
-      last: {
-        type: Boolean
-      }
+import { mapGetters } from 'vuex'
+import { baseUrl } from '@/axios/env'
+import ScanBoardTable from './ScanBoardTable'
+import Scanner from './Scanner'
+import ScanNum from './ScanNum'
+import ScanInfo from './ScanInfo'
+import ScanBoardModal from './ScanBoardModal'
+export default {
+  name: 'ScanBoardCard',
+  props: {
+    card: {
+      type: Object
     },
-    data () {
-      return {
-        errorMsg: 'No Data Available',
-        error: false,
-        loading: false,
-        searching: false,
-        qrcode: '',
-        thick: '',
-        scanning: {},
-        abnormity: false,
-        nonExist: false,
-        newScan: false,
-        lastScan: false,
-        lastScanned: {}
-      }
+    reload: {
+      type: Boolean
     },
-    computed: {
-      ...mapGetters({
-        pageSearchValues: 'currentPageSearchValues'
-      }),
-      unCheck: { // 未扫描的板块
-        get () {
-          return (this.card.data && this.card.data.num && this.card.data.content.filter(__ => {
-            return !__.checked
-          }).length) || 0
-        }
-      }
+    search: {
+      type: Boolean
     },
-    watch: {
-      reload: {
-        handler: function (to, from) { // 对于
-          this.thick = this.pageSearchValues.thick
-        }
-      },
-      search: {
-        handler: function (to, from) {
-          if (this.searching) {
-            this.dispose()
-          } else {
-            this.fetchData()
-          }
-        }
-      },
-      refresh: {
-        handler: function (to, from) {
-          this.$store.commit('RESET_CARD', { card: this.card })
-          this.searching = false
-          this.scanning = {}
-          this.abnormity = false
-        }
-      },
-      last: {
-        handler: function (to, from) {
-          this.$store.commit('RESET_CARD', { card: this.card })
-          this.searching = false
-          this.scanning = {}
-          this.abnormity = false
-
-          this.lastScanned = this.$localStorage.get('last_scanned')
-          if (this.lastScanned !== undefined) {
-            this.lastScanned = JSON.parse(this.lastScanned)
-            this.lastScan = true
-            this.fetchData({qrcode: this.lastScanned[Object.keys(this.lastScanned)[0]].qrcode})
-          } else {
-            window.alert('没有找到上次扫描数据')
-          }
-        }
-      }
+    showAll: {
+      type: Boolean,
+      default: false
     },
-    methods: {
-      dispose () {
-        if (this.lastScan) {
-          let lastScannedKeys = Object.keys(this.lastScanned)
-          this.card.data && this.card.data.num && this.card.data.content.map(__ => {
-            if (lastScannedKeys.includes(__.v)) {
-              __.checked = true
-            }
-            return __
-          })
-          this.lastScan = false
-        } else {
-          this.setScanning()
-          if (!this.setNonExist()) {
-            if (!this.setAbnormity()) {
-              this.setQrcode()
-            }
-          }
-        }
-      },
-      setScanning () { // 正在扫描的qrcode
-        this.scanning = (this.card.data && this.card.data.num && this.card.data.content.filter(__ => {
-          return __.qrcode === this.pageSearchValues.qrcode
-        })[0]) || {}
-      },
-      setNonExist () {
-        if (JSON.stringify(this.scanning) === '{}') {
-          this.nonExist = !this.nonExist
-          return true
-        }
-        return false
-      },
-      setQrcode () {
-        this.qrcode = this.pageSearchValues.qrcode
-        this.playAudio()
-        this.setLastScanned()
-      },
-      setAbnormity () {
-        if (this.scanning.abnormity !== undefined && (this.scanning.abnormity === '1' || this.scanning.abnormity === 1)) {
-          this.abnormity = !this.abnormity
-          return true
-        }
-        return false
-      },
-      disposeSure (e) {
-        this.setQrcode()
-      },
-      fetchData (params = {}) { // 获取数据
-        this.$bar.start()
-        this.loading = true
-        this.error = false
-        this.$store.dispatch('FETCH_DATA', {
-          url: this.card.url,
-          configs: {
-            params: {
-              ...this.pageSearchValues,
-              ...this.$router.currentRoute.query,
-              ...params
-            }
-          },
-          target: this.card
-        }).then((res) => {
-          if (res.code > 0) {
-            this.errorMsg = res.message
-            this.error = true
-          } else {
-            this.searching = true
-            this.newScan = true
-            this.dispose()
-          }
-        }).catch(err => {
-          this.errorMsg = err.message
-          this.error = true
-        }).finally(() => {
-          this.loading = false
-          this.$bar.finish()
-        })
-      },
-      setLastScanned () {
-        let lastScanned = this.$localStorage.get('last_scanned')
-        if (lastScanned === undefined || this.newScan) {
-          lastScanned = {}
-          this.newScan = false
-        } else {
-          lastScanned = JSON.parse(lastScanned)
-        }
-        if (lastScanned[this.scanning['v']] === undefined) {
-          lastScanned[this.scanning['v']] = this.scanning
-        }
-        this.$localStorage.set('last_scanned', JSON.stringify(lastScanned))
-      },
-      audioLink () {
-        return baseUrl + '/style/audio/right.mp3'
-      },
-      playAudio () {
-        let audio = document.getElementById('scanBoardRightAudio')
-        audio.currentTime = 0
-        audio.play()
-      },
-      pauseAudio () {
-        let audio = document.getElementById('scanBoardRightAudio')
-        audio.currentTime = 0
-        audio.pause()
-      }
+    refresh: {
+      type: Boolean
     },
-    components: {
-      ScanBoardModal,
-      ScanBoardTable,
-      Scanner,
-      ScanNum,
-      ScanInfo
+    last: {
+      type: Boolean
     }
+  },
+  data () {
+    return {
+      errorMsg: 'No Data Available',
+      error: false,
+      loading: false,
+      searching: false,
+      qrcode: '',
+      thick: '',
+      scanning: {},
+      abnormity: false,
+      nonExist: false,
+      newScan: false,
+      lastScan: false,
+      lastScanned: {}
+    }
+  },
+  computed: {
+    ...mapGetters({
+      pageSearchValues: 'currentPageSearchValues'
+    }),
+    unCheck: { // 未扫描的板块
+      get () {
+        return (this.card.data && this.card.data.num && this.card.data.content.filter(__ => {
+          return !__.checked
+        }).length) || 0
+      }
+    }
+  },
+  watch: {
+    reload: {
+      handler: function (to, from) { // 对于
+        this.thick = this.pageSearchValues.thick
+      }
+    },
+    search: {
+      handler: function (to, from) {
+        if (this.searching) {
+          this.dispose()
+        } else {
+          this.fetchData()
+        }
+      }
+    },
+    refresh: {
+      handler: function (to, from) {
+        this.$store.commit('RESET_CARD', { card: this.card })
+        this.searching = false
+        this.scanning = {}
+        this.abnormity = false
+      }
+    },
+    last: {
+      handler: function (to, from) {
+        this.$store.commit('RESET_CARD', { card: this.card })
+        this.searching = false
+        this.scanning = {}
+        this.abnormity = false
+
+        this.lastScanned = this.$localStorage.get('last_scanned')
+        if (this.lastScanned !== undefined) {
+          this.lastScanned = JSON.parse(this.lastScanned)
+          this.lastScan = true
+          this.fetchData({qrcode: this.lastScanned[Object.keys(this.lastScanned)[0]].qrcode})
+        } else {
+          window.alert('没有找到上次扫描数据')
+        }
+      }
+    }
+  },
+  methods: {
+    dispose () {
+      if (this.lastScan) {
+        let lastScannedKeys = Object.keys(this.lastScanned)
+        this.card.data && this.card.data.num && this.card.data.content.map(__ => {
+          if (lastScannedKeys.includes(__.v)) {
+            __.checked = true
+          }
+          return __
+        })
+        this.lastScan = false
+      } else {
+        this.setScanning()
+        if (!this.setNonExist()) {
+          if (!this.setAbnormity()) {
+            this.setQrcode()
+          }
+        }
+      }
+    },
+    setScanning () { // 正在扫描的qrcode
+      this.scanning = (this.card.data && this.card.data.num && this.card.data.content.filter(__ => {
+        return __.qrcode === this.pageSearchValues.qrcode
+      })[0]) || {}
+    },
+    setNonExist () {
+      if (JSON.stringify(this.scanning) === '{}') {
+        this.nonExist = !this.nonExist
+        return true
+      }
+      return false
+    },
+    setQrcode () {
+      this.qrcode = this.pageSearchValues.qrcode
+      this.playAudio()
+      this.setLastScanned()
+    },
+    setAbnormity () {
+      if (this.scanning.abnormity !== undefined && (this.scanning.abnormity === '1' || this.scanning.abnormity === 1)) {
+        this.abnormity = !this.abnormity
+        return true
+      }
+      return false
+    },
+    disposeSure (e) {
+      this.setQrcode()
+    },
+    fetchData (params = {}) { // 获取数据
+      this.$bar.start()
+      this.loading = true
+      this.error = false
+      this.$store.dispatch('FETCH_DATA', {
+        url: this.card.url,
+        configs: {
+          params: {
+            ...this.pageSearchValues,
+            ...this.$router.currentRoute.query,
+            ...params
+          }
+        },
+        target: this.card
+      }).then((res) => {
+        if (res.code > 0) {
+          this.errorMsg = res.message
+          this.error = true
+        } else {
+          this.searching = true
+          this.newScan = true
+          this.dispose()
+        }
+      }).catch(err => {
+        this.errorMsg = err.message
+        this.error = true
+      }).finally(() => {
+        this.loading = false
+        this.$bar.finish()
+      })
+    },
+    setLastScanned () {
+      let lastScanned = this.$localStorage.get('last_scanned')
+      if (lastScanned === undefined || this.newScan) {
+        lastScanned = {}
+        this.newScan = false
+      } else {
+        lastScanned = JSON.parse(lastScanned)
+      }
+      if (lastScanned[this.scanning['v']] === undefined) {
+        lastScanned[this.scanning['v']] = this.scanning
+      }
+      this.$localStorage.set('last_scanned', JSON.stringify(lastScanned))
+    },
+    audioLink () {
+      return baseUrl + '/style/audio/right.mp3'
+    },
+    playAudio () {
+      let audio = document.getElementById('scanBoardRightAudio')
+      audio.currentTime = 0
+      audio.play()
+    },
+    pauseAudio () {
+      let audio = document.getElementById('scanBoardRightAudio')
+      audio.currentTime = 0
+      audio.pause()
+    }
+  },
+  components: {
+    ScanBoardModal,
+    ScanBoardTable,
+    Scanner,
+    ScanNum,
+    ScanInfo
   }
+}
 </script>

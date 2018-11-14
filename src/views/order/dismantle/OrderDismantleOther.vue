@@ -46,7 +46,7 @@
             <td><input class="form-control input-sm" name="other" type="text" v-model="item['other']"/></td>
             <td><input class="form-control input-sm" name="speci" type="text" v-model="item['speci']"/></td>
             <td><input class="form-control input-sm" name="unit" type="text" v-model="item['unit']" /></td>
-            <td><input class="form-control input-sm" name="remark" type="text" v-model="item['remark']" /></td>
+            <td><input class="form-control input-sm" name="remark" type="text" v-model="item['remark']" autocomplete="off" /></td>
             <td><input class="form-control input-sm" name="amount" type="text" v-model="item['amount']"/></td>
             <td><input class="form-control input-sm" name="copy" type="number" value="0"/></td>
             <td class="d-none"><input class="form-control input-sm" name="index" type="number" :value="key"/></td>

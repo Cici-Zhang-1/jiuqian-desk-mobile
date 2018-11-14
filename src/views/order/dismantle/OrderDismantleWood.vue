@@ -32,7 +32,7 @@
         <th >门芯</th>
         <th >板材</th>
         <th class="td-sm" >宽</th>
-        <th class="td-sm" >长</th>
+        <th class="td-sm" >高</th>
         <th class="td-sm" >面积</th>
         <th >中横</th>
         <th >铰链孔</th>

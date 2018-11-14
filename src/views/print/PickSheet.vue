@@ -17,8 +17,9 @@
 <script>
 import PickSheetTable from './PickSheetTable'
 import service from '@/axios'
-
+import { pubMixins } from '@/views/mixins'
 export default {
+  mixins: [ pubMixins ],
   name: 'PickSheet',
   data () {
     return {
@@ -37,8 +38,8 @@ export default {
           alert(data.message)
         } else {
           window.print()
-          self.$bar.finish()
         }
+        self.$bar.finish()
       })
     },
     fetchData () {

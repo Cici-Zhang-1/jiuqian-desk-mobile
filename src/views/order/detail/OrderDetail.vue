@@ -25,8 +25,10 @@ import OrderProductServerCard from './OrderProductServerCard'
 import OrderProductUnqrcodeCard from './OrderProductUnqrcodeCard'
 import Func from '@/components/forms/Func'
 import { nameToId } from '@/assets/js/custom'
+import { pubMixins } from '@/views/mixins'
 
 export default {
+  mixins: [ pubMixins ],
   name: 'OrderDetail',
   data () {
     return {

@@ -23,8 +23,10 @@ import QuoteOtherCard from './QuoteOtherCard'
 import QuoteServerCard from './QuoteServerCard'
 import Func from '@/components/forms/Func'
 import { nameToId } from '@/assets/js/custom'
+import { pubMixins } from '@/views/mixins'
 
 export default {
+  mixins: [ pubMixins ],
   name: 'OrderDetail',
   data () {
     return {

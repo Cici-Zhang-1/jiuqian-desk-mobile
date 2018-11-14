@@ -5,7 +5,7 @@
         <tr>
           <th>编号</th>
           <th>宽</th>
-          <th>长</th>
+          <th>高</th>
           <th>数量</th>
           <th>铰链孔方向</th>
           <th>封边拉手</th>

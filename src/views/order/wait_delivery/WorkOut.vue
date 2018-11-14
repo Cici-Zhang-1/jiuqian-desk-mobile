@@ -16,7 +16,9 @@ import service from '@/axios'
 import WorkOutFunc from './WorkOutFunc'
 import WorkOutInfo from './WorkOutInfo'
 import WorkOutCard from './WorkOutCard'
+import { pubMixins } from '@/views/mixins'
 export default {
+  mixins: [ pubMixins ],
   name: 'WorkOut',
   data () {
     return {

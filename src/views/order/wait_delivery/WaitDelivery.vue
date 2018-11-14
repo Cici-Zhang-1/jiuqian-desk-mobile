@@ -35,8 +35,10 @@ import $ from 'jquery'
 import WaitDeliveryPageSearch from './WaitDeliveryPageSearch'
 import WaitDeliveryFunc from './WaitDeliveryFunc'
 import WaitDeliveryCard from './WaitDeliveryCard'
+import { pubMixins } from '@/views/mixins'
 
 export default {
+  mixins: [ pubMixins ],
   name: 'WaitDelivery',
   data () {
     return {

@@ -7,9 +7,9 @@
           <th>名称</th>
           <th>门芯</th>
           <th>板材</th>
-          <th>成型长</th>
+          <th>成型高</th>
           <th>成型宽</th>
-          <th>物料长</th>
+          <th>物料高</th>
           <th>物料宽</th>
           <th>数量</th>
           <th>中横</th>
@@ -40,7 +40,7 @@
           <th >编号</th>
           <th >板件名称</th>
           <th >板材</th>
-          <th >长</th>
+          <th >高</th>
           <th >宽</th>
           <th >数量</th>
         </tr>
