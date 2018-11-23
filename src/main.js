@@ -48,19 +48,12 @@ const app = new Vue({
   components: { App },
   methods: {
     async versionUpdate () {
-      let getReturn = await service.get('/data/configs/read', { params: { type: 'system' } })
+      let getReturn = await service.get('/data/configs/item', { params: { key: 'version' } })
       if (!getReturn.code) {
-        let version = ''
         let oldVersion = this.$localStorage.get('version', '')
-        getReturn.contents.content.map(__ => {
-          if (__.name === 'version') {
-            version = __.config
-          }
-          return __
-        })
-        if (version !== oldVersion) {
+        if (getReturn.contents.config !== oldVersion) {
           localStorage.clear()
-          this.$localStorage.set('version', version)
+          this.$localStorage.set('version', getReturn.contents.config)
         }
       }
     }
