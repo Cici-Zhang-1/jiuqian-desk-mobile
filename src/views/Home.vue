@@ -8,6 +8,7 @@
 import CountCard from '@/components/cards/CountCard'
 import ListCard from '@/components/cards/ListCard'
 import { mapGetters } from 'vuex'
+
 export default {
   name: 'Home',
   data () {

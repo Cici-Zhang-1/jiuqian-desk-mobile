@@ -2,25 +2,25 @@
   <div class="row mt-3 j-page" :id="title">
     <div class="col-12 border-bottom rounded-bottom mb-2 border-primary text-center d-print-none"><h5>{{ label }}</h5></div>
     <div class="col-md-6 mb-2 mb-md-3 d-print-none" v-if="postSaleData"><small>{{ postSaleData['order_info']['num'] }}-{{ postSaleData['order_info']['dealer'] }}-{{ postSaleData['order_info']['owner'] }}</small></div>
-    <div is="post-sale-func" @save="save($event)" ></div>
+    <div is="post-sale-func" @save="save($event)" @add="add($event)" ></div>
     <div class="col-12" v-if="!error && postSaleData">
       <div class="card border-0 mb-5">
         <div class="card-body p-0 card-body-h">
           <ul class="nav nav-tabs" id="postSaleTab" role="tablist">
-            <li class="nav-item">
+            <li class="nav-item" v-if="get_form_page('post_sale_fitting')">
               <a class="nav-link" :class="{'diff-red': isPostSalable('P'), active: postSaleData['order_info']['code'] === 'P'}" data-toggle="tab" data-code="P" href="#postSaleP" role="tab" aria-controls="fitting" :aria-selected="postSaleData['order_info']['code'] === 'P'">配件</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" v-if="get_form_page('post_sale_other')">
               <a class="nav-link" :class="{'diff-red': isPostSalable('G'), active: postSaleData['order_info']['code'] === 'G'}" data-toggle="tab" data-code="G" href="#postSaleG" role="tab" aria-controls="other" :aria-selected="postSaleData['order_info']['code'] === 'G'">外购</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" v-if="get_form_page('post_sale_server')">
               <a class="nav-link" :class="{'diff-red': isPostSalable('F'), active: postSaleData['order_info']['code'] === 'F'}" data-toggle="tab" data-code="F" href="#postSaleF" role="tab" aria-controls="server" :aria-selected="postSaleData['order_info']['code'] === 'F'">服务</a>
             </li>
           </ul>
           <div class="tab-content" id="postSaleTabContent">
-            <div is="post-sale-fitting" :class="{active: postSaleData['order_info']['code'] === 'P', show: postSaleData['order_info']['code'] === 'P'}" :postSaleUrl="postSaleUrl"></div>
-            <div is="post-sale-other" :class="{active: postSaleData['order_info']['code'] === 'G', show: postSaleData['order_info']['code'] === 'G'}" :postSaleUrl="postSaleUrl"></div>
-            <div is="post-sale-server" :class="{active: postSaleData['order_info']['code'] === 'F', show: postSaleData['order_info']['code'] === 'F'}" :postSaleUrl="postSaleUrl"></div>
+            <div is="post-sale-fitting" :class="{active: postSaleData['order_info']['code'] === 'P', show: postSaleData['order_info']['code'] === 'P'}" :postSaleUrl="postSaleUrl" v-if="get_form_page('post_sale_fitting')"></div>
+            <div is="post-sale-other" :class="{active: postSaleData['order_info']['code'] === 'G', show: postSaleData['order_info']['code'] === 'G'}" :postSaleUrl="postSaleUrl" v-if="get_form_page('post_sale_other')"></div>
+            <div is="post-sale-server" :class="{active: postSaleData['order_info']['code'] === 'F', show: postSaleData['order_info']['code'] === 'F'}" :postSaleUrl="postSaleUrl" v-if="get_form_page('post_sale_server')"></div>
           </div>
         </div>
       </div>
@@ -59,7 +59,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      label: 'currentLabel'
+      label: 'currentLabel',
+      formPages: 'currentFormPages'
     }),
     postSaleData: {
       get () {
@@ -92,6 +93,12 @@ export default {
     }
   },
   methods: {
+    get_form_page (Name) {
+      let A = this.formPages.filter(__ => {
+        return __.name === Name
+      })
+      return A.length > 0
+    },
     async save (e) {
       let Code = $('#postSaleTab').find('a.active').data('code')
       let orderProduct = self.postSaleData[Code]['order_product'].filter(__ => {
@@ -117,6 +124,32 @@ export default {
           }
         } else {
           alert(postReturn.message)
+        }
+      }
+    },
+    async add (e) {
+      let product = self.postSaleData['F']['product']
+      if (product === undefined) {
+        alert('请先选择需要要创建的产品!')
+      } else {
+        if (confirm('您确定要创建送装吗?')) {
+          let postReturn = await service.post($(e).data('action'), { order_id: self.postSaleData['order_info']['order_id'], product_id: product['v'], set: 1, product: '送装', remark: product['remark'] })
+          if (!postReturn.code) {
+            if (postReturn.location !== '') {
+              if (postReturn.confirm !== '') {
+                if (window.confirm(postReturn.confirm)) {
+                  this.$router.push(postReturn.location)
+                }
+              } else {
+                this.$router.push(postReturn.location)
+              }
+            } else {
+              alert('创建成功!')
+              this.$store.commit('SET_APP_RELOAD', { reload: true })
+            }
+          } else {
+            alert(postReturn.message)
+          }
         }
       }
     },

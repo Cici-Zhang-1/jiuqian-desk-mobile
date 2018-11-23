@@ -12,6 +12,7 @@ import 'bootstrap/dist/js/bootstrap.min'
 import Progressbar from './components/bars/Progressbar.vue'
 import VueCookies from 'vue-cookies'
 import VueLocalStorage from 'vue-localstorage'
+import service from '@/axios'
 
 // global progress bar
 const bar = Vue.prototype.$bar = new Vue(Progressbar).$mount()
@@ -42,8 +43,28 @@ const app = new Vue({
         }
       }
     }
+    this.versionUpdate()
   },
   components: { App },
+  methods: {
+    async versionUpdate () {
+      let getReturn = await service.get('/data/configs/read', { params: { type: 'system' } })
+      if (!getReturn.code) {
+        let version = ''
+        let oldVersion = this.$localStorage.get('version', '')
+        getReturn.contents.content.map(__ => {
+          if (__.name === 'version') {
+            version = __.config
+          }
+          return __
+        })
+        if (version !== oldVersion) {
+          localStorage.clear()
+          this.$localStorage.set('version', version)
+        }
+      }
+    }
+  },
   template: '<App/>'
 })
 

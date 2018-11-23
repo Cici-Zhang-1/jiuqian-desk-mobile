@@ -2,7 +2,7 @@
   <div class="modal fade text-md-left" :id="id" tabindex="-1" role="dialog" :aria-labelledby="id + 'Title'" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
-        <form role="form" @submit.prevent="modalSubmit">
+        <form role="form" @submit.prevent="modalSubmit" :id="id + 'Form'">
           <div class="modal-header">
             <h5 class="modal-title" :id="id + 'Title'">{{ modal.label }}</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -18,7 +18,6 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
-            <button type="reset" class="btn btn-secondary" >重置</button>
             <button type="submit" class="btn btn-primary" :disabled="disabled" v-if="!error">保存</button>
           </div>
         </form>
@@ -195,7 +194,6 @@ export default {
             if (postReturn.code === 0) {
               this.$store.commit('SET_APP_RELOAD', { reload: true })
               $('#' + this.id).modal('hide')
-
             } else {
               this.alertMessage = postReturn.message
               this.alert = true

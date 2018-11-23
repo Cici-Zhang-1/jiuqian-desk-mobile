@@ -1,6 +1,6 @@
 <template>
   <div class="paging print-page">
-    <h4 style="text-align: center; font-weight: bold;">九千定制家具厂</h4>
+    <h4 style="text-align: center; font-weight: bold;">九千定制家具厂({{tables.num}})</h4>
     <table class="basic-info text-nowrap">
       <tbody>
       <tr>
@@ -26,6 +26,9 @@
         <td>{{ tables.owner }}</td>
         <th>备注:</th>
         <td>{{ tables['dealer_remark'] }}</td>
+      </tr>
+      <tr>
+        <td>{{ tables.remark }}</td>
       </tr>
       </tbody>
     </table>
