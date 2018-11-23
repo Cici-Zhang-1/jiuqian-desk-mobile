@@ -11,7 +11,7 @@
       <div class="form-group col-md-2">
         <label>产品名称</label>
         <input type="text" class="form-control" readonly="readonly" name="product" v-model="activeOrderProduct['product']" placeholder="请添加产品名称" v-if="activeOrderProduct">
-        <input type="text" class="form-control" name="product" v-model="orderProduct['product']['name']" placeholder="请添加产品名称" v-if="!activeOrderProduct">
+        <input type="text" class="form-control" readonly="readonly" name="product" v-model="orderProduct['product']['name']" placeholder="请添加产品名称" v-if="!activeOrderProduct">
       </div>
       <div class="form-group col-md-1">
         <label>套数</label>
@@ -19,7 +19,7 @@
       </div>
       <div class="form-group col-md-7">
         <label>备注</label>
-        <input type="text" class="form-control" readonly="readonly" name="remark" v-model="activeOrderProduct['remark']" placeholder="添加备注" v-if="activeOrderProduct">
+        <input type="text" class="form-control" name="remark" v-model="activeOrderProduct['remark']" placeholder="添加备注" v-if="activeOrderProduct">
         <input type="text" class="form-control" name="remark" v-model="orderProduct['product']['remark']" placeholder="添加备注" v-if="!activeOrderProduct">
       </div>
     </div>
