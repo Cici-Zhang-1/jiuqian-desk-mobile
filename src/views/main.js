@@ -28,6 +28,9 @@ const app = new Vue({
   store,
   router,
   VueCookies,
+  created () {
+    this.versionUpdate()
+  },
   beforeMount () {
     if (!store.state.signin) { // 不是登录页
       if (!(VueCookies.get('uid') && VueCookies.get('truename'))) {
@@ -43,17 +46,18 @@ const app = new Vue({
         }
       }
     }
-    this.versionUpdate()
   },
   components: { App },
   methods: {
     async versionUpdate () {
       let getReturn = await service.get('/data/configs/item', { params: { key: 'version' } })
       if (!getReturn.code) {
+        let version = getReturn.contents.config.toString()
         let oldVersion = this.$localStorage.get('version', '')
-        if (getReturn.contents.config !== oldVersion) {
+        oldVersion = oldVersion.toString()
+        if (version !== oldVersion) {
           localStorage.clear()
-          this.$localStorage.set('version', getReturn.contents.config)
+          this.$localStorage.set('version', version)
         }
       }
     }
