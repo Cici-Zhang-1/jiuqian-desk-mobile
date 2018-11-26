@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import { nameToId, uuid } from '@/assets/js/custom'
 import $ from 'jquery'
 import { formsMixins } from './mixins'
 
@@ -43,6 +44,9 @@ export default {
     }
   },
   computed: {
+    id () {
+      return nameToId(this.configs.name) + uuid()
+    },
     selectData: {
       get () {
         return this.$store.getters.getSourceData({ uri: this.configs.url })

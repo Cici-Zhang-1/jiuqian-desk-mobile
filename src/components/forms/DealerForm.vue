@@ -3,7 +3,7 @@
     <div class="form-group row">
       <label for="orderAddDealer" class="col-md-2 col-form-label">客户<small class="j-pc-none text-danger">*</small></label>
       <div class="col-md-9">
-        <input type="hidden" name="dealer_id" v-model="dealerId" required />
+        <input type="hidden" name="dealer_id" v-model="formValue" required />
         <input class="non-dv" type="hidden" name="shop_id" required v-model="shopId"/>
         <input class="form-control non-dv" name="dealer" id="orderAddDealer" v-model="dealer" type="text" required maxlength="512" placeholder="请选择客户"/>
       </div>
@@ -92,25 +92,14 @@
 <script>
 import $ from 'jquery'
 import '@/assets/js/autocomplete'
+import { formsMixins } from './mixins'
 let formatItem = function (row) {
   return row.name
 }
 let self
 export default {
+  mixins: [ formsMixins ],
   name: 'DealerForm',
-  props: {
-    configs: {
-      type: [Array, Object],
-      required: true
-    },
-    forms: {
-      type: [Array, Object],
-      required: true
-    },
-    query: {
-      type: [Array, Object]
-    }
-  },
   data () {
     return {
       shopId: '',
@@ -127,12 +116,7 @@ export default {
       payerPhone: '',
       logisticsUri: '/data/logistics/read',
       outMethodUri: '/data/out_method/read',
-      areaUri: '/data/area/read',
-      queryStr: '',
-      params: [],
-      paramsValue: {},
-      related: [],
-      relatedValue: {}
+      areaUri: '/data/area/read'
     }
   },
   computed: {
@@ -141,7 +125,7 @@ export default {
         return this.$store.getters.getSourceData({ uri: this.configs.url })
       }
     },
-    dealerId: {
+    formValue: {
       get () {
         return this.configs.dv
       },
@@ -199,7 +183,7 @@ export default {
     initQuery () {
       if (this.queryStr) {
         if (this.$router.currentRoute.query[this.queryStr] !== undefined) {
-          this.dealerId = this.$router.currentRoute.query[this.queryStr]
+          this.formValue = this.$router.currentRoute.query[this.queryStr]
         }
         this.watchQuery()
       }
@@ -215,8 +199,8 @@ export default {
     },
     watchQuery () {
       this.$watch('query', function (to, from) {
-        if (this.query[this.queryStr] !== undefined && this.query[this.queryStr] !== this.dealerId) {
-          this.dealerId = this.query[this.queryStr]
+        if (this.query[this.queryStr] !== undefined && this.query[this.queryStr] !== this.formValue) {
+          this.formValue = this.query[this.queryStr]
         }
       }, {
         deep: true
@@ -255,7 +239,7 @@ export default {
         }).on('selected.xdsoft', function (e, row) {
           self.dealer = row.name
           self.shopId = row.shop_id
-          self.dealerId = row.dealer_id
+          self.formValue = row.dealer_id
         })
       }
     },
@@ -274,7 +258,8 @@ export default {
       if ((Reload || typeof this.logisticsData === 'undefined' || JSON.stringify(this.logisticsData) === '{}')) {
         this.$store.dispatch('FETCH_SOURCE_DATA', {
           url: this.logisticsUri,
-          target: this.logisticsUri
+          target: this.logisticsUri,
+          local: true
         })
       }
     },
@@ -282,7 +267,8 @@ export default {
       if ((Reload || typeof this.outMethodData === 'undefined' || JSON.stringify(this.outMethodData) === '{}')) {
         this.$store.dispatch('FETCH_SOURCE_DATA', {
           url: this.outMethodUri,
-          target: this.outMethodUri
+          target: this.outMethodUri,
+          local: true
         })
       }
     },
@@ -290,7 +276,8 @@ export default {
       if ((Reload || typeof this.areaData === 'undefined' || JSON.stringify(this.areaData) === '{}')) {
         this.$store.dispatch('FETCH_SOURCE_DATA', {
           url: this.areaUri,
-          target: this.areaUri
+          target: this.areaUri,
+          local: true
         })
       }
     }

@@ -1,12 +1,35 @@
 import $ from 'jquery'
 import service from '@/axios'
-import { nameToId, uuid, dataToStr } from '@/assets/js/custom'
+import { dataToStr } from '@/assets/js/custom'
 import { baseUrl } from '@/axios/env'
 let formsMixins = {
-  computed: {
-    id () {
-      return nameToId(this.configs.name) + uuid()
+  props: {
+    configs: {
+      type: [Array, Object],
+      required: true
     },
+    forms: {
+      type: [Array, Object],
+      required: true
+    },
+    forceReadonly: {
+      type: [Boolean],
+      required: true
+    },
+    query: {
+      type: [Array, Object]
+    }
+  },
+  data () {
+    return {
+      queryStr: '',
+      params: [],
+      paramsValue: {},
+      related: [],
+      relatedValue: {}
+    }
+  },
+  computed: {
     readonly () {
       return this.forceReadonly && this.configs.readonly_v === '1'
     },
@@ -27,11 +50,105 @@ let formsMixins = {
     },
     pattern () {
       return this.configs.pattern === '' ? false : this.configs.pattern
+    },
+    placeholder () {
+      return this.configs.placeholder
+    },
+    local () {
+      return this.configs['local_v'] && this.configs['local_v'] === '1'
     }
   },
   methods: {
     generateId (key) {
       return this.id + key
+    },
+    parseQuery () {
+      if (this.configs.query) {
+        [ this.queryStr = '', this.params = '', this.related = '' ] = this.configs.query.split('-')
+        // Query
+        // Params 获取Data时的相关参数
+        // Related 相关表单，变动则改动
+        this.params = this.params.split(',')
+        this.related = this.related.split(',')
+        this.initQuery()
+      }
+    },
+    initQuery () {
+      if (this.queryStr) {
+        if (this.$router.currentRoute.query[this.queryStr] !== undefined) {
+          this.formValue = this.$router.currentRoute.query[this.queryStr]
+          this.multipleDv()
+        }
+        this.watchQuery()
+      }
+      if (this.params.length > 0) {
+        this.params.map(__ => {
+          if (this.$router.currentRoute.query[__] !== undefined) {
+            this.paramsValue[__] = this.$router.currentRoute.query[__]
+          } else {
+            this.paramsValue[__] = ''
+          }
+          return __
+        })
+        this.watchParams()
+      }
+      if (this.related.length > 0) {
+        this.related.map(__ => {
+          if (this.forms[__] !== undefined) {
+            this.relatedValue[__] = this.forms[__].dv
+          }
+          return __
+        })
+        this.watchForms()
+      }
+    },
+    watchQuery () {
+      this.$watch('query', function (to, from) {
+        if (this.query[this.queryStr] !== undefined && this.query[this.queryStr] !== this.formValue) {
+          this.formValue = this.query[this.queryStr]
+          this.multipleDv()
+        }
+      }, {
+        deep: true
+      })
+    },
+    watchParams () {
+      this.$watch('query', function (to, from) {
+        let Flag = false
+        this.params.map(__ => {
+          if (this.query[__] !== undefined && this.query[__] !== this.paramsValue[__]) {
+            this.paramsValue[__] = this.query[__]
+            Flag = true
+          }
+          return __
+        })
+        if (Flag) {
+          this.loadSourceData(true)
+        }
+      }, {
+        deep: true
+      })
+    },
+    watchForms () {
+      this.related.map(__ => {
+        this.$watch(function () {
+          return this.forms[__].dv
+        }, function (to, from) {
+          if (this.forms[__].dv !== this.relatedValue[__]) {
+            this.relatedValue[__] = this.forms[__].dv
+            this.loadSourceData(true)
+          }
+        })
+        return __
+      }, {
+        deep: true
+      })
+    },
+    multipleDv () {
+      if (this.multiple && !(this.formValue instanceof Array)) {
+        this.formValue = this.formValue ? [ this.formValue ] : []
+      }
+      return this.formValue
     }
   }
 }
@@ -204,11 +321,11 @@ let btnMixins = {
       }
       return true
     },
-    disposeUri () {
-      if (this.func.toggle_name === 'child') {
-        return '#' + this.func.url
+    disposeUri (func = '') {
+      if (func.toggle_name === 'child') {
+        return '#' + func.url
       } else {
-        return baseUrl + this.func.url
+        return baseUrl + func.url
       }
     }
   }

@@ -1,33 +1,21 @@
 <template>
-  <div v-if="radioData.length || radioData.num" >
+  <div v-if="radioData && (radioData.length || radioData.num)" >
+    <label>{{ configs.label }}<span v-if="required">*</span></label>
     <div v-for="(value, key, index) in radioData.content" :key="index" class="form-check">
-      <input class="form-check-input" type="radio" :name="configs.name" :id="id" v-model="radioValue" :value="value.v" :readonly="readonly" :required="required" :multiple="multiple" :max="max" :min="min" :maxlength="maxlength" :pattern="pattern"  />
-      <label class="form-check-label" :for="id">{{ value.label || value.name || value.v }}</label>
+      <input class="form-check-input" type="radio" :name="configs.name" :id="generateId(key)" v-model="formValue" :value="value.v" :disabled="readonly" :required="required" />
+      <label class="form-check-label" :for="generateId(key)">{{ value.label || value.name || value.v }}</label>
     </div>
   </div>
 </template>
 
 <script>
-import { nameToId, uuid } from '@/assets/js/custom'
+import { formsMixins } from './mixins'
 
 export default {
+  mixins: [ formsMixins ],
   name: 'form-group-radio',
-  props: {
-    configs: {
-      type: [Array, Object],
-      required: true
-    }
-  },
   computed: {
-    id () {
-      return nameToId(this.configs.name) + uuid()
-    },
-    radioData: {
-      get () {
-        return this.$store.getters.getSourceData({ uri: this.configs.url })
-      }
-    },
-    radioValue: {
+    formValue: {
       get () {
         return this.configs.dv
       },
@@ -35,45 +23,39 @@ export default {
         this.configs.dv = value
       }
     },
-    readonly () {
-      return this.configs.readonly_v === '1'
-    },
-    required () {
-      return this.configs.required_v === '1'
-    },
-    multiple () {
-      return this.configs.multiple_v === '1'
-    },
-    max () {
-      return this.configs.max === '' ? false : this.configs.max
-    },
-    min () {
-      return this.configs.min === '' ? false : this.configs.min
-    },
-    maxlength () {
-      return this.configs.maxlength !== '0' ? this.configs.maxlength : ''
-    },
-    pattern () {
-      return this.configs.pattern === '' ? false : this.configs.pattern
+    radioData: {
+      get () {
+        return this.$store.getters.getSourceData({ uri: this.configs.url })
+      }
     }
   },
   created () {
-    this.loadSourceData()
+    this.parseQuery()
+    this.loadSourceData(true)
   },
   watch: {
-    configs: {
+    'configs.url': {
       handler: function (to, from) {
-        this.loadSourceData()
+        this.loadSourceData(true)
       },
       deep: true
     }
   },
   methods: {
-    loadSourceData () {
-      if (typeof this.radioData === 'undefined' || JSON.stringify(this.radioData) === '{}') {
+    generateId (key) {
+      return this.id + key
+    },
+    loadSourceData (Reload = false) {
+      if ((Reload || typeof this.radioData === 'undefined' || JSON.stringify(this.radioData) === '{}') && this.configs.url !== '') {
+        let params = this.paramsValue || {}
+        let related = this.relatedValue || {}
         this.$store.dispatch('FETCH_SOURCE_DATA', {
           url: this.configs.url,
-          target: this.configs.url
+          configs: {
+            params: { ...params, ...related }
+          },
+          target: this.configs.url,
+          local: this.local
         })
       }
     }

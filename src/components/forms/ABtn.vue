@@ -1,5 +1,5 @@
 <template>
-  <a class="btn btn-outline-dark mb-2 mr-1 mb-md-3" role="button" :key="id" :href="disposeUri()" @click="aBtnClick" :target="func.toggle_v === 'blank' ? '_blank' : '_self'" :data-toggle="func.toggle_v" :data-target="func.target" :data-multiple=!!parseInt(func.multiple_v) :data-single=!!parseInt(func.single_v) :data-source="func.source" :data-query="func.query" :data-hide=!!parseInt(func.hide)><i :class="func.img"></i>{{ func.label }}</a>
+  <a class="btn btn-outline-dark mb-2 mr-1 mb-md-3" role="button" :key="id" :href="disposeUri(func)" @click="aBtnClick" :target="func.toggle_v === 'blank' ? '_blank' : '_self'" :data-toggle="func.toggle_v" :data-target="func.target" :data-multiple=!!parseInt(func.multiple_v) :data-single=!!parseInt(func.single_v) :data-source="func.source" :data-query="func.query" :data-hide=!!parseInt(func.hide)><i :class="func.img"></i>{{ func.label }}</a>
 </template>
 
 <script>

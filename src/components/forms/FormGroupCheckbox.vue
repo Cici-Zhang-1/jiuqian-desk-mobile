@@ -2,7 +2,7 @@
   <div v-if="checkData && (checkData.length || checkData.num)">
     <label>{{ configs.label }}<span v-if="required">*</span></label>
     <div v-for="(value, key, index) in checkData.content" :key='index' class="custom-control custom-checkbox">
-      <input type="checkbox" :name="configs.name" class="custom-control-input" :id="generateId(key)" v-model="checkValue" :value="value.v" :disabled="readonly" :multiple="multiple" :max="max" :min="min" :maxlength="maxlength" :pattern="pattern" @change="checkChange"/>
+      <input type="checkbox" :name="configs.name" class="custom-control-input" :id="generateId(key)" v-model="formValue" :value="value.v" :disabled="readonly" :multiple="multiple" :max="max" :min="min" :maxlength="maxlength" :pattern="pattern" @change="checkChange"/>
       <label class="custom-control-label" :for="generateId(key)" >{{ value.class_alien || '' }}{{ value.label || value.name || value.v }}</label>
     </div>
   </div>
@@ -11,41 +11,17 @@
 <script>
 import { nameToId, uuid } from '@/assets/js/custom'
 import $ from 'jquery'
+import { formsMixins } from './mixins'
 let self
 
 export default {
+  mixins: [ formsMixins ],
   name: 'form-group-checkbox',
-  props: {
-    configs: {
-      type: [Array, Object],
-      required: true
-    },
-    forms: {
-      type: [Array, Object],
-      required: true
-    },
-    forceReadonly: {
-      type: [Boolean],
-      required: true
-    },
-    query: {
-      type: [Array, Object]
-    }
-  },
-  data () {
-    return {
-      queryStr: '',
-      params: [],
-      paramsValue: {},
-      related: [],
-      relatedValue: {}
-    }
-  },
   computed: {
     id () {
       return nameToId(this.configs.name) + uuid()
     },
-    checkValue: {
+    formValue: {
       get () {
         return this.configs.dv
       },
@@ -62,27 +38,6 @@ export default {
       get () {
         return this.configs.query && this.forms[this.configs.query] && this.forms[this.configs.query].dv // 这里query定义的是相关表单变量
       }
-    },
-    readonly () {
-      return this.forceReadonly && this.configs.readonly_v === '1'
-    },
-    required () {
-      return this.configs.required_v === '1'
-    },
-    multiple () {
-      return this.configs.multiple_v === '1'
-    },
-    max () {
-      return this.configs.max === '' ? false : this.configs.max
-    },
-    min () {
-      return this.configs.min === '' ? false : this.configs.min
-    },
-    maxlength () {
-      return this.configs.maxlength !== '0' ? this.configs.maxlength : ''
-    },
-    pattern () {
-      return this.configs.pattern === '' ? false : this.configs.pattern
     }
   },
   created () {
@@ -116,7 +71,7 @@ export default {
     initQuery () {
       if (this.queryStr) {
         if (this.$router.currentRoute.query[this.queryStr] !== undefined) {
-          this.checkValue = this.$router.currentRoute.query[this.queryStr]
+          this.formValue = this.$router.currentRoute.query[this.queryStr]
           this.multipleDv()
         }
         this.watchQuery()
@@ -144,8 +99,8 @@ export default {
     },
     watchQuery () {
       this.$watch('query', function (to, from) {
-        if (this.query[this.queryStr] !== undefined && this.query[this.queryStr] !== this.checkValue) {
-          this.checkValue = this.query[this.queryStr]
+        if (this.query[this.queryStr] !== undefined && this.query[this.queryStr] !== this.formValue) {
+          this.formValue = this.query[this.queryStr]
           this.multipleDv()
         }
       }, {
@@ -185,19 +140,19 @@ export default {
       })
     },
     multipleDv () {
-      if (!(this.checkValue instanceof Array)) {
-        this.checkValue = this.checkValue ? [ this.checkValue ] : []
+      if (this.multiple && !(this.formValue instanceof Array)) {
+        this.formValue = this.formValue ? [ this.formValue ] : []
       }
-      return this.checkValue
+      return this.formValue
     },
     generateId (key) {
       return this.id + key
     },
     dynamicCheck (dynamic) {
-      if (this.checkValue.indexOf(dynamic) < 0) {
+      if (this.formValue.indexOf(dynamic) < 0) {
         this.checkData.content.filter(__ => {
           return __.v === dynamic
-        }).length > 0 && this.checkValue.push(dynamic)
+        }).length > 0 && this.formValue.push(dynamic)
       }
     },
     checkChange (e) {
@@ -210,17 +165,17 @@ export default {
       let Parent = Current['parent'] !== undefined
       Parent && this.checkData.content.forEach(function (v, i) {
         if (v.parent === Val) {
-          let P = $.inArray(v.v, self.checkValue)
+          let P = $.inArray(v.v, self.formValue)
           if (P >= 0 && !Status) {
-            self.checkValue.splice(P, 1)
+            self.formValue.splice(P, 1)
           } else if (P < 0 && Status) {
-            self.checkValue.push(v.v)
+            self.formValue.push(v.v)
           }
         }
       })
     },
     loadSourceData (Reload = false) {
-      if ((Reload || typeof this.selectData === 'undefined' || JSON.stringify(this.selectData) === '{}') && this.configs.url !== '') {
+      if ((Reload || typeof this.checkData === 'undefined' || JSON.stringify(this.checkData) === '{}') && this.configs.url !== '') {
         let params = this.paramsValue || {}
         let related = this.relatedValue || {}
         this.$store.dispatch('FETCH_SOURCE_DATA', {
@@ -228,7 +183,8 @@ export default {
           configs: {
             params: { ...params, ...related }
           },
-          target: this.configs.url
+          target: this.configs.url,
+          local: this.local
         })
       }
     }
