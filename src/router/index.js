@@ -16,13 +16,28 @@ import PostSale from '@/views/order/post_sale/PostSale'
 import OrderQuote from '@/views/order/quote/Quote'
 import Valuate from '@/views/order/valuate/Valuate'
 import WaitDelivery from '@/views/order/wait_delivery/WaitDelivery'
-import WorkOut from '@/views/order/wait_delivery/WorkOut'
-import ScanBoard from '@/views/scan/ScanBoard'
-import PrintOrderProductBoardPlate from '@/views/print/PrintOrderProductBoardPlate'
-import PrintOrderProductBoardDoor from '@/views/print/PrintOrderProductBoardDoor'
-import PrintOrderProductBoardWood from '@/views/print/PrintOrderProductBoardWood'
-import PrintOrderProductFitting from '@/views/print/PrintOrderProductFitting'
-import PrintOrderProductOther from '@/views/print/PrintOrderProductOther'
+// import WorkOut from '@/views/order/wait_delivery/WorkOut'
+// import ScanBoard from '@/views/scan/ScanBoard'
+// import PrintOrderProductBoardPlate from '@/views/print/PrintOrderProductBoardPlate'
+// import PrintOrderProductBoardDoor from '@/views/print/PrintOrderProductBoardDoor'
+// import PrintOrderProductBoardWood from '@/views/print/PrintOrderProductBoardWood'
+// import PrintOrderProductFitting from '@/views/print/PrintOrderProductFitting'
+// import PrintOrderProductOther from '@/views/print/PrintOrderProductOther'
+// const PickSheet = () => import(/* webpackChunkName: "print" */ '@/views/print/PickSheet')
+// const UnqrcodeLabel = () => import('@/views/label/UnqrcodeLabel')
+// const OrderDetail = () => import(/* webpackChunkName: "order" */ '@/views/order/detail/OrderDetail')
+// const OrderDismantle = () => import(/* webpackChunkName: "order" */ '@/views/order/dismantle/OrderDismantle')
+// const PostSale = () => import(/* webpackChunkName: "order" */ '@/views/order/post_sale/PostSale')
+// const OrderQuote = () => import(/* webpackChunkName: "order" */ '@/views/order/quote/Quote')
+// const Valuate = () => import(/* webpackChunkName: "order" */ '@/views/order/valuate/Valuate')
+// const WaitDelivery = () => import(/* webpackChunkName: "order" */ '@/views/order/wait_delivery/WaitDelivery')
+const WorkOut = () => import(/* webpackChunkName: "order" */ '@/views/order/wait_delivery/WorkOut')
+const ScanBoard = () => import('@/views/scan/ScanBoard')
+const PrintOrderProductBoardPlate = () => import(/* webpackChunkName: "print" */ '@/views/print/PrintOrderProductBoardPlate')
+const PrintOrderProductBoardDoor = () => import(/* webpackChunkName: "print" */ '@/views/print/PrintOrderProductBoardDoor')
+const PrintOrderProductBoardWood = () => import(/* webpackChunkName: "print" */ '@/views/print/PrintOrderProductBoardWood')
+const PrintOrderProductFitting = () => import(/* webpackChunkName: "print" */ '@/views/print/PrintOrderProductFitting')
+const PrintOrderProductOther = () => import(/* webpackChunkName: "print" */ '@/views/print/PrintOrderProductOther')
 
 Vue.use(Router)
 
