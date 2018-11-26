@@ -91,12 +91,6 @@ import DismantleFitting from './DismantleFitting'
 export default {
   mixins: [ dismantleMixins ],
   name: 'OrderDismantleFitting',
-  props: {
-    dismantleUrl: {
-      type: String,
-      required: true
-    }
-  },
   data () {
     return {
       demoData: {
@@ -119,13 +113,6 @@ export default {
     orderProduct: {
       get () {
         return this.$store.getters.getDismantleData({ uri: this.dismantleUrl, child: 'P' })
-      },
-      set (Value) {
-      }
-    },
-    orderInfo: {
-      get () {
-        return this.$store.getters.getDismantleData({ uri: this.dismantleUrl, child: 'order_info' })
       },
       set (Value) {
       }
@@ -153,11 +140,6 @@ export default {
     }
   },
   watch: {
-    reload: {
-      handler: function (to, from) {
-        this.fetchData()
-      }
-    },
     'activeOrderProduct.v': {
       handler: function (to, from) {
         if (to !== undefined && to !== from) {
@@ -167,17 +149,7 @@ export default {
         }
       },
       deep: true
-    }/* ,
-    activeOrderProduct: {
-      handler: function (to, from) {
-        if (to !== undefined) {
-          if (to['order_product_board_plate'] === undefined) {
-            this.fetchData()
-          }
-        }
-      },
-      deep: true
-    } */
+    }
   },
   updated () {
     this.highlightTr('dismantlePTable')

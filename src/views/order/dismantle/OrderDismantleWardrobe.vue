@@ -123,12 +123,6 @@ let self
 export default {
   mixins: [ dismantleMixins ],
   name: 'OrderDismantleWardrobe',
-  props: {
-    dismantleUrl: {
-      type: String,
-      required: true
-    }
-  },
   data () {
     return {
       M_ONE: 10000,
@@ -170,13 +164,6 @@ export default {
       set (Value) {
       }
     },
-    orderInfo: {
-      get () {
-        return this.$store.getters.getDismantleData({ uri: this.dismantleUrl, child: 'order_info' })
-      },
-      set (Value) {
-      }
-    },
     activeOrderProduct: {
       get () {
         return this.$store.getters.getActiveDismantleData({ uri: this.dismantleUrl, child: 'Y' })
@@ -200,11 +187,6 @@ export default {
     }
   },
   watch: {
-    reload: {
-      handler: function (to, from) {
-        this.fetchData()
-      }
-    },
     'activeOrderProduct.v': {
       handler: function (to, from) {
         if (to !== undefined && to !== from) {
@@ -217,20 +199,7 @@ export default {
         }
       },
       deep: true
-    } /*
-    activeOrderProduct: {
-      handler: function (to, from) {
-        if (to !== undefined) {
-          if (to['struct'] === undefined) {
-            this.fetchStruct()
-          }
-          if (to['order_product_board_plate'] === undefined) {
-            this.fetchData()
-          }
-        }
-      },
-      deep: true
-    } */
+    }
   },
   updated () {
     this.highlightTr('dismantleYTable')

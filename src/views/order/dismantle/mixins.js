@@ -2,9 +2,31 @@ import $ from 'jquery'
 import { M_ONE, M_TWO, MIN_AREA, MIN_M_AREA, MIN_K_AREA } from '@/assets/js/constants'
 import { cloneData } from '@/assets/js/custom'
 let dismantleMixins = {
+  props: {
+    dismantleUrl: {
+      type: String,
+      required: true
+    }
+  },
   data () {
     return {
       appendLine: false
+    }
+  },
+  computed: {
+    orderInfo: {
+      get () {
+        return this.$store.getters.getDismantleData({ uri: this.dismantleUrl, child: 'order_info' })
+      },
+      set (Value) {
+      }
+    }
+  },
+  watch: {
+    reload: {
+      handler: function (to, from) {
+        this.fetchData()
+      }
     }
   },
   methods: {

@@ -4,9 +4,10 @@
 
 <script>
 import { nameToId, uuid } from '@/assets/js/custom'
-import $ from 'jquery'
+import { btnMixins } from './mixins'
 
 export default {
+  mixins: [ btnMixins ],
   name: 'btn',
   props: {
     func: {
@@ -42,58 +43,6 @@ export default {
           this.func_simplify(event.currentTarget)
           break
       }
-    },
-    func_refresh () {
-      this.$store.commit('SET_APP_RELOAD', { reload: true })
-    },
-    func_simplify (E) {
-      this.parse_params(E)
-      if ((this.showColumn.length > 0 || this.hideColumn.length > 0) && this.target !== '') {
-        let Elements = this.$store.getters.currentPageCardElements({source: this.target})
-        if (!$(E).data('simplified')) {
-          if (this.showColumn.length > 0) {
-            this.showColumn.map(__ => {
-              Elements[__]['classes'] = ''
-              return __
-            })
-          }
-          if (this.hideColumn.length > 0) {
-            this.hideColumn.map(__ => {
-              Elements[__]['classes'] = 'd-none'
-              return __
-            })
-          }
-          $(E).data('simplified', true)
-        } else {
-          if (this.showColumn.length > 0) {
-            this.showColumn.map(__ => {
-              Elements[__]['classes'] = 'd-none'
-              return __
-            })
-          }
-          if (this.hideColumn.length > 0) {
-            this.hideColumn.map(__ => {
-              Elements[__]['classes'] = ''
-              return __
-            })
-          }
-          $(E).data('simplified', false)
-        }
-      }
-      return true
-    },
-    parse_params (E) {
-      this.data = {}
-      let [ Query = '', Keys = '', Search = '', Column = '' ] = $(E).data('query').split('-')
-      this.query = Query.split(',')
-      this.keys = Keys.split(',')
-      this.search = Search.split(',')
-      let [HideColumn = '', ShowColumn = ''] = Column.split('/')
-      this.hideColumn = HideColumn.split(',')
-      this.showColumn = ShowColumn.split(',')
-      this.target = $(E).data('target') || ''
-      this.multiple = $(E).data('multiple') || false
-      this.single = $(E).data('single') || false
     }
   }
 }

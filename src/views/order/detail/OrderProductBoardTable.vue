@@ -42,31 +42,7 @@ import { detailTableMixins } from './mixins'
 
 export default {
   mixins: [ detailTableMixins ],
-  name: 'OrderProductBoardTable'/* ,
-  props: {
-    table: {
-      type: Object | Array,
-      required: true
-    },
-    tableThead: {
-      type: Object | Array,
-      required: true
-    }
-  },
-  mounted () {
-    highLightTable($('.table-highlight'))
-  },
-  updated () {
-    highLightTable($('.table-highlight'))
-  },
-  methods: {
-    show (Name) {
-      return this.tableThead[Name] !== undefined
-    },
-    orderProductLink () {
-      return generateLink(this.table.num, this.tableThead.num, this.table)
-    }
-  } */
+  name: 'OrderProductBoardTable'
 }
 </script>
 

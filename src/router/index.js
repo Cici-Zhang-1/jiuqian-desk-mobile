@@ -7,7 +7,7 @@ import Add from '@/views/Add'
 import Remove from '@/views/Remove'
 import Myself from '@/views/Myself'
 import SignIn from '@/views/SignIn'
-import Upload from '@/views/Upload'
+// import Upload from '@/views/Upload'
 import PickSheet from '@/views/print/PickSheet'
 import UnqrcodeLabel from '@/views/label/UnqrcodeLabel'
 import OrderDetail from '@/views/order/detail/OrderDetail'
@@ -23,6 +23,7 @@ import WaitDelivery from '@/views/order/wait_delivery/WaitDelivery'
 // import PrintOrderProductBoardWood from '@/views/print/PrintOrderProductBoardWood'
 // import PrintOrderProductFitting from '@/views/print/PrintOrderProductFitting'
 // import PrintOrderProductOther from '@/views/print/PrintOrderProductOther'
+const Upload = () => import('@/views/Upload')
 // const PickSheet = () => import(/* webpackChunkName: "print" */ '@/views/print/PickSheet')
 // const UnqrcodeLabel = () => import('@/views/label/UnqrcodeLabel')
 // const OrderDetail = () => import(/* webpackChunkName: "order" */ '@/views/order/detail/OrderDetail')
