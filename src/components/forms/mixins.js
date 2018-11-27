@@ -9,12 +9,10 @@ let formsMixins = {
       required: true
     },
     forms: {
-      type: [Array, Object],
-      required: true
+      type: [Array, Object]
     },
     forceReadonly: {
-      type: [Boolean],
-      required: true
+      type: [Boolean]
     },
     query: {
       type: [Array, Object]
@@ -131,24 +129,33 @@ let formsMixins = {
     },
     watchForms () {
       this.related.map(__ => {
-        this.$watch(function () {
-          return this.forms[__].dv
-        }, function (to, from) {
-          if (this.forms[__].dv !== this.relatedValue[__]) {
-            this.relatedValue[__] = this.forms[__].dv
-            this.loadSourceData(true)
-          }
-        })
+        if (this.forms[__] !== undefined) {
+          this.$watch(function () {
+            return this.forms[__].dv
+          }, function (to, from) {
+            if (this.forms[__].dv !== this.relatedValue[__]) {
+              this.relatedValue[__] = this.forms[__].dv
+              this.loadSourceData(true)
+            }
+          })
+        }
         return __
       }, {
         deep: true
       })
     },
-    multipleDv () {
-      if (this.multiple && !(this.formValue instanceof Array)) {
-        this.formValue = this.formValue ? [ this.formValue ] : []
+    multipleDv (value = false) {
+      if (value !== false) {
+        if (this.multiple && !(value instanceof Array)) {
+          value = value ? [ value ] : []
+        }
+        return value
+      } else {
+        if (this.multiple && !(this.formValue instanceof Array)) {
+          this.formValue = this.formValue ? [ this.formValue ] : []
+        }
+        return this.formValue
       }
-      return this.formValue
     }
   }
 }
@@ -252,7 +259,9 @@ let btnMixins = {
       if (confirm('确定执行' + $(E).text() + '操作?')) {
         let postReturn = await service.post($(E).attr('href'), this.data)
         if (!postReturn.code) {
-          alert(postReturn.message)
+          if (postReturn.message !== '') {
+            alert(postReturn.message)
+          }
           this.$store.commit('SET_APP_RELOAD', { reload: true })
           return true
         } else {

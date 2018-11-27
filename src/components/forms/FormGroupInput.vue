@@ -27,31 +27,6 @@ export default {
   },
   created () {
     this.parseQuery()
-  },
-  methods: {
-    parseQuery () {
-      if (this.configs.query) {
-        this.queryStr = this.configs.query
-        this.initQuery()
-      }
-    },
-    initQuery () {
-      if (this.queryStr) {
-        if (this.$router.currentRoute.query[this.queryStr] !== undefined) {
-          this.formValue = this.$router.currentRoute.query[this.queryStr]
-        }
-        this.watchQuery()
-      }
-    },
-    watchQuery () {
-      this.$watch('query', function (to, from) {
-        if (this.query[this.queryStr] !== undefined && this.query[this.queryStr] !== this.formValue) {
-          this.formValue = this.query[this.queryStr]
-        }
-      }, {
-        deep: true
-      })
-    }
   }
 }
 </script>

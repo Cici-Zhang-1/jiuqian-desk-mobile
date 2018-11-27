@@ -34,7 +34,9 @@
       <td v-if="show('unit')">{{ item['unit'] }}</td>
       <td v-if="show('remark')">{{ item['remark'] }}</td>
       <td >{{ item.amount }}</td>
-      <td v-if="show('area')">{{ item['area'] }}</td>
+      <td v-if="show('area')">
+        <input class="form-control input-sm bg-hint" name="area" type="text" v-model="item['area']" @focusout="computeSum($event)" v-if="allowDiscountItem"/>
+        <input class="form-control input-sm bg-hint" name="area" type="text" v-model="item['area']" @focusout="computeSum($event)" readonly v-else/></td>
       <td >
         <input class="form-control input-sm bg-hint" name="unit_price" type="number" v-model="item['unit_price']" @focusout="computeSum($event)" v-if="allowDiscountItem"/>
         <input class="form-control input-sm bg-hint" name="unit_price" type="number" v-model="item['unit_price']" @focusout="computeSum($event)" readonly v-else/>

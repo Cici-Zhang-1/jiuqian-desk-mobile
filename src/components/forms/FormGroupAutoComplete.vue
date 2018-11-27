@@ -72,57 +72,6 @@ export default {
     }
   },
   methods: {
-    parseQuery () {
-      if (this.configs.query) {
-        [ this.queryStr = '', this.params = '', this.related = '' ] = this.configs.query.split('-')
-        this.params = this.params.split(',')
-        this.related = this.related.split(',')
-        this.initQuery()
-      }
-    },
-    initQuery () {
-      if (this.queryStr) {
-        if (this.$router.currentRoute.query[this.queryStr] !== undefined) {
-          this.formValue = this.$router.currentRoute.query[this.queryStr]
-        }
-        this.watchQuery()
-      }
-      if (this.params.length > 0) {
-        this.params.map(__ => {
-          if (this.$router.currentRoute.query[__] !== undefined) {
-            this.paramsValue[__] = this.$router.currentRoute.query[__]
-          }
-          return __
-        })
-        this.watchParams()
-      }
-    },
-    watchQuery () {
-      this.$watch('query', function (to, from) {
-        if (this.query[this.queryStr] !== undefined && this.query[this.queryStr] !== this.formValue) {
-          this.formValue = this.query[this.queryStr]
-        }
-      }, {
-        deep: true
-      })
-    },
-    watchParams () {
-      this.$watch('query', function (to, from) {
-        let Flag = false
-        this.params.map(__ => {
-          if (this.query[__] !== undefined && this.query[__] !== this.paramsValue[__]) {
-            this.paramsValue[__] = this.query[__]
-            Flag = true
-          }
-          return __
-        })
-        if (Flag) {
-          this.loadSourceData(true)
-        }
-      }, {
-        deep: true
-      })
-    },
     init () {
       if (this.autoCompleteData && this.autoCompleteData.content) {
         this.setAutoCompleteText()

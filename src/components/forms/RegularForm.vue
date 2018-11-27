@@ -1,7 +1,7 @@
 <template>
   <div class="col-12">
     <form role="form" @submit.prevent="formSubmit" :id="id" :action="form.url">
-      <div v-for="(value, key, index) in form.page_forms" :is="formGroupType(value.form_type_v)" :forms="form.page_forms" :data-query="disposeQuery(value)" :configs="value" :key="index"></div>
+      <div v-for="(value, key, index) in form.page_forms" :is="formGroupType(value.form_type_v)" :forms="form.page_forms" :data-query="disposeQuery(value)" :configs="value" :force-readonly="false" :key="index"></div>
       <div class="alert alert-danger fade" role="alert"></div>
       <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>保存</button>
     </form>
