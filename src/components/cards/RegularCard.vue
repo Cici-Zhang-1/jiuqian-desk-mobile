@@ -21,10 +21,11 @@ import { mapGetters } from 'vuex'
 import RegularTable from '@/components/tables/RegularTable'
 import RegularListGroup from '@/components/lists/RegularListGroup'
 import CheckLists from '@/components/forms/CheckLists'
-import Echarts from '@/components/echarts/Echarts'
+// import Echarts from '@/components/echarts/Echarts'
 import Images from '@/components/images/Images'
 import Pagination from '@/components/others/Pagination'
 import { nameToId, uuid } from '@/assets/js/custom'
+const Echarts = () => import('@/components/echarts/Echarts')
 
 export default {
   name: 'RegularCard',

@@ -109,6 +109,7 @@ export default {
     },
     computeSum (e) {
       let Amount = 0
+      let VirtualAmount = 0
       let AreaDiff = 0
       let UnitPrice = 0
       let OpenHole = 0
@@ -121,6 +122,11 @@ export default {
         Amount = parseFloat(Data['amount'])
       } else {
         Amount = parseFloat(Data['area'])
+      }
+      if (Data['virtual_area'] !== undefined) {
+        VirtualAmount = parseFloat(Data['virtual_area'])
+      } else {
+        VirtualAmount = Amount
       }
       if (Data['area_diff'] !== undefined) {
         AreaDiff = parseFloat(Data['area_diff'])
@@ -137,7 +143,7 @@ export default {
       Data['virtual_sum'] = Data['sum']
       if (Data['sum_diff'] !== undefined) {
         Data['sum_diff'] = Math.ceil(UnitPrice * AreaDiff)
-        Data['virtual_area'] = Amount + AreaDiff
+        Data['virtual_area'] = VirtualAmount + AreaDiff
         Data['virtual_sum'] = parseFloat(Data['virtual_sum']) + parseFloat(Data['sum_diff'])
       }
     },

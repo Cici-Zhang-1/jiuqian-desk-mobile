@@ -5,15 +5,31 @@
 </template>
 
 <script>
-import $ from 'jquery'
-let echarts = require('echarts/lib/echarts')
-require('echarts/lib/chart/bar')
-require('echarts/lib/chart/line')
-require('echarts/lib/component/toolbox')
-require('echarts/lib/component/tooltip')
-require('echarts/lib/component/legend')
-require('echarts/lib/component/axis')
-require('echarts/lib/component/title')
+import echarts from 'echarts'
+// const echarts = () => import('echarts/lib/echarts')
+// const bar = () => import('echarts/lib/chart/bar')
+// const line = () => import('echarts/lib/chart/line')
+// const toolbox = () => import('echarts/lib/component/toolbox')
+// const tooltip = () => import('echarts/lib/component/tooltip')
+// const legend = () => import('echarts/lib/component/legend')
+// const axis = () => import('echarts/lib/component/axis')
+// const title = () => import('echarts/lib/component/title')
+// import * as echarts from 'echarts/lib/echarts'
+// import 'echarts/lib/chart/bar'
+// import 'echarts/lib/chart/line'
+// import 'echarts/lib/component/toolbox'
+// import 'echarts/lib/component/tooltip'
+// import 'echarts/lib/component/legend'
+// import 'echarts/lib/component/axis'
+// import 'echarts/lib/component/title'
+// let echarts = require('echarts/lib/echarts')
+// require('echarts/lib/chart/bar')
+// require('echarts/lib/chart/line')
+// require('echarts/lib/component/toolbox')
+// require('echarts/lib/component/tooltip')
+// require('echarts/lib/component/legend')
+// require('echarts/lib/component/axis')
+// require('echarts/lib/component/title')
 
 export default {
   name: 'Echarts',
@@ -47,7 +63,8 @@ export default {
       let seriesO = {}
       if ((this.chartsData instanceof Array && this.chartsData.length !== 0) || JSON.stringify(this.chartsData) !== '{}') {
         for (let i in this.chartsData) { // xAxis
-          if ($.inArray(i, this.xAxis) < 0) {
+          // if ($.inArray(i, this.xAxis) < 0) {
+          if (!this.xAxis.includes(i)) {
             this.xAxis.push(i)
           }
           for (let j in this.chartsData[i]) {
@@ -66,7 +83,8 @@ export default {
                   data: {}
                 }
               }
-              if ($.inArray(k, this.legend) < 0) {
+              // if ($.inArray(k, this.legend) < 0) {
+              if (!this.legend.includes(k)) {
                 this.legend.push(k)
               }
               seriesO[k].data[i] = this.chartsData[i][j][k]
