@@ -34,7 +34,10 @@
       <td v-if="show('unit')">{{ item['unit'] }}</td>
       <td v-if="show('remark')">{{ item['remark'] }}</td>
       <td >{{ item.amount }}</td>
-      <td v-if="show('area')">{{ item['area'] }}</td>
+      <td v-if="show('area')">
+        <input class="form-control input-sm bg-hint" name="area" type="number" v-model="item['area']" @focusout="minArea($event)" v-if="allowDiscountItem"/>
+        <input class="form-control input-sm bg-hint" name="area" type="number" v-model="item['area']" readonly v-else/>
+      </td>
       <td >
         <input class="form-control input-sm bg-hint" name="unit_price" type="number" v-model="item['unit_price']" @focusout="computeSum($event)" v-if="allowDiscountItem"/>
         <input class="form-control input-sm bg-hint" name="unit_price" type="number" v-model="item['unit_price']" @focusout="computeSum($event)" readonly v-else/>
@@ -137,6 +140,16 @@ export default {
         Data['sum_diff'] = Math.ceil(UnitPrice * AreaDiff)
         Data['virtual_area'] = Amount + AreaDiff
         Data['virtual_sum'] = parseFloat(Data['virtual_sum']) + parseFloat(Data['sum_diff'])
+      }
+    },
+    minArea (e) { // 修改面积最小不能低于原始面积
+      let Amount = 0
+      let VirtualAmount = 0
+      let Data = this.valuateData['content'][$(e.target).parents('tr').eq(0).find('input[name="index"]').val()]
+      Amount = parseFloat(Data['area'])
+      VirtualAmount = parseFloat(Data['virtual_area'])
+      if (VirtualAmount > Amount) {
+        Data['area'] = Data['virtual_area']
       }
     },
     fetchData () { // 获取数据
