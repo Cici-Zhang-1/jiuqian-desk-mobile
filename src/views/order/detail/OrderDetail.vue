@@ -47,6 +47,7 @@ export default {
   },
   created () {
     this.set_app_controller()
+    console.log(this.$router.query)
   },
   beforeRouteEnter (to, from, next) {
     next(vm => {
