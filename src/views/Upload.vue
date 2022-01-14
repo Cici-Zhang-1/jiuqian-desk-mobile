@@ -75,11 +75,11 @@ export default {
 
     function challsFlashUpdate () {
       var a = {}
-      a.title = '上传BD/PIC文件'
+      a.title = '上传BD/MPR/PIC文件'
       a.FormName = 'uploadForm'
       a.url = baseUrl + '/order/upload/add'
       a.parameter = 'post'
-      a.typefile = '*.bmp;*.gif;*.png;*.jpg;*.jpeg;*.bd;*.xls;*.xlsx;*.saw;'
+      a.typefile = '*.bmp;*.gif;*.png;*.jpg;*.jpeg;*.bd;*.xls;*.xlsx;*.saw;*.mpr;'
       a.UpSize = 0
       a.fileNum = 0
       a.size = 2

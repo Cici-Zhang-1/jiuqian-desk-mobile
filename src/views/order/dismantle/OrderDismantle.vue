@@ -203,12 +203,12 @@ export default {
     },
     checkBd (orderProduct) { // 检查Bd文件
       let NonQrocde = orderProduct['order_product_board_plate'].filter(__ => {
-        return (__.qrcode !== null && __.qrcode !== '') && (__.bd_file === null || __.bd_file === '')
+        return (__.qrcode !== null && __.qrcode !== '') && (__.bd_file === null || __.bd_file === '') && (__.mpr_file === null || __.mpr_file === '')
       }).map(__ => {
         return __.qrcode
       }).join(',') || ''
       if (NonQrocde !== '') {
-        return confirm(NonQrocde + '没有上传BD文件, 是否继续提交?')
+        return confirm(NonQrocde + '没有上传BD或MPR文件, 是否继续提交?')
       }
       return true
     },

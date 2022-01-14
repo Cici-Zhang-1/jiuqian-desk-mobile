@@ -7,7 +7,8 @@ let pubUrl
 
 if (process.env.NODE_ENV === 'development') {
   host = 'http://localhost:8080'
-  baseUrl = 'http://localhost/jiuqian-mobile'
+  // host = 'http://localhost:8080'
+  baseUrl = 'http://localhost/jiuqian-online-back'
   // baseUrl = 'http://localhost/jiuqian-produce'
   pubUrl = 'http://localhost/pub_365huijia'
 } else if (process.env.NODE_ENV === 'production') {
@@ -23,9 +24,12 @@ if (process.env.NODE_ENV === 'development') {
   // host = 'https://www.365huijia.com'
   // baseUrl = 'https://www.365huijia.com'
   // pubUrl = 'http://pub.365huijia.com'
-    host = 'https://jqdz.online'
-    baseUrl = 'https://jqdz.online'
-    pubUrl = 'http://pub.jqdz.online'
+  // host = 'https://www.jqdz.online'
+  // baseUrl = 'https://www.jqdz.online'
+  // pubUrl = 'http://pub.jqdz.online'
+  host = 'http://localhost/jiuqian-online-back'
+  baseUrl = 'http://localhost/jiuqian-online-back'
+  pubUrl = 'http://localhost/jiuqian-online-pub'
 } else if (process.env.NODE_ENV === 'middle') {
   host = 'http://localhost/jiuqian-mobile'
   baseUrl = 'http://localhost/jiuqian-mobile'

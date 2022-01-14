@@ -52,6 +52,7 @@
           <th class="d-none">柜体编号</th>
           <th class="d-none">板块编号</th>
           <th class="d-none">BD文件</th>
+          <th class="d-none">MPR文件</th>
           <th class="d-none">Index</th>
         </tr>
       </thead>
@@ -71,10 +72,13 @@
           <td><input class="form-control input-sm" name="amount" type="text" v-model="item['amount']"/></td>
           <td><input class="form-control input-sm" name="copy" type="number" value="0"/></td>
           <td><input class="form-control input-sm" name="qrcode" type="text" v-model="item['qrcode']" /></td>
+          <td><input class="form-control input-sm" name="barcode" type="text" v-model="item['barcode']" /></td>
           <td class="d-none"><input class="form-control input-sm" name="cubicle_name" type="text" v-model="item['cubicle_name']"/></td>
           <td class="d-none"><input class="form-control input-sm" name="cubicle_num" type="text" v-model="item['cubicle_num']"/></td>
           <td class="d-none"><input class="form-control input-sm" name="plate_num" type="text" v-model="item['plate_num']"/></td>
           <td class="d-none"><input class="form-control input-sm" name="bd_file" type="text" v-model="item['bd_file']"/></td>
+          <td class="d-none"><input class="form-control input-sm" name="mpr_file" type="text" v-model="item['mpr_file']"/></td>
+          <td class="d-none"><input class="form-control input-sm" name="another_mpr_file" type="text" v-model="item['another_mpr_file']"/></td>
           <td class="d-none"><input class="form-control input-sm" name="index" type="number" :value="key"/></td>
         </tr>
         <tr>
@@ -98,10 +102,13 @@
           <td><input class="form-control input-sm" name="num" type="number" value="1"/></td>
           <td><input class="form-control input-sm" name="copy" type="number" value="0"/></td>
           <td><input class="form-control input-sm" name="qrcode" data-unique="true" type="text" /></td>
+          <td><input class="form-control input-sm" name="barcode" data-unique="true" type="text" /></td>
           <td class="d-none"><input class="form-control input-sm" name="cubicle_name" type="text" value=""/></td>
           <td class="d-none"><input class="form-control input-sm" name="cubicle_num" type="text" value=""/></td>
           <td class="d-none"><input class="form-control input-sm" name="plate_num" type="text" value=""/></td>
           <td class="d-none"><input class="form-control input-sm" name="bd_file" data-unique="true" type="text" value=""/></td>
+          <td class="d-none"><input class="form-control input-sm" name="mpr_file" data-unique="true" type="text" value=""/></td>
+          <td class="d-none"><input class="form-control input-sm" name="another_mpr_file" data-unique="true" type="text" value=""/></td>
           <td class="d-none"><input class="form-control input-sm" name="index" type="number" value=""/></td>
         </tr>
       </tbody>
@@ -146,10 +153,13 @@ export default {
         remark: '',
         amount: 1,
         qrcode: '',
+        barcode: '',
         cubicle_name: '',
         cubicle_num: '',
         plate_num: '',
-        bd_file: ''
+        bd_file: '',
+        mpr_file: '',
+        another_mpr_file: ''
       },
       loading: false,
       maxNum: 1,

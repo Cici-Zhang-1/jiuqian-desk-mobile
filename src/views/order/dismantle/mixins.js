@@ -42,6 +42,7 @@ let dismantleMixins = {
             if (C.qrcode !== null && C.qrcode !== undefined) {
               C.qrcode = ''
               C.bd_file = ''
+              C.mpr_file = ''
             }
             self.activeOrderProduct['order_product_board_plate'].splice(Index, 0, C)
           }
