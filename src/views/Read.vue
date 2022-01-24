@@ -1,8 +1,12 @@
 <template>
   <div class="row mt-3 j-page" :id="title">
     <div class="col-12 border-bottom rounded-bottom mb-2 border-primary text-center d-print-none"><h5>{{ label }}</h5></div>
-    <div is="page-search" :pageSearches="pageSearches" v-if="pageSearches"></div>
-    <div is="func" :funcs="funcs" v-if="funcs"></div>
+    <div class="col-12 j-fixed-bottom d-print-none">
+      <div class="row">
+        <div is="page-search" :pageSearches="pageSearches" v-if="pageSearches"></div>
+        <div is="func" :funcs="funcs" v-if="funcs"></div>
+      </div>
+    </div>
     <div is="regular-card" v-for="(card, index) in cards" :card="card" :key="index" v-if="cards.length"></div>
     <div is="regular-form" v-for="(form, key, index) in formPages" :form="form" :key="index" v-if="formPages.length"></div>
   </div>

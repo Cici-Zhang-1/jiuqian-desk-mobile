@@ -3,7 +3,6 @@
  */
 let baseUrl
 let host
-console.log(process.env.NODE_ENV)
 if (process.env.NODE_ENV === 'development') {
   // host = 'http://localhost/jiuqian.online.back'
   host = 'http://localhost:8080'

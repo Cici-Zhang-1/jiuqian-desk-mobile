@@ -6,6 +6,7 @@
     <div is="order-card" :card="get_card('order_detail_order_table')" v-if="cards" :reload="reload"></div>
     <div is="order-product-board-card" :card="get_card('order_detail_order_product_board_cabinet_table')" v-if="cards" :reload="reload"></div>
     <div is="order-product-board-card" :card="get_card('order_detail_order_product_board_wardrobe_table')" v-if="cards" :reload="reload"></div>
+    <div is="order-product-board-card" :card="get_card('order_detail_order_product_board_doorw_table')" v-if="cards" :reload="reload"></div>
     <div is="order-product-board-card" :card="get_card('order_detail_order_product_board_door_table')" v-if="cards" :reload="reload"></div>
     <div is="order-product-board-card" :card="get_card('order_detail_order_product_board_wood_table')" v-if="cards" :reload="reload"></div>
     <div is="order-product-fitting-card" :card="get_card('order_detail_order_product_fitting_table')" v-if="cards" :reload="reload"></div>

@@ -17,11 +17,9 @@ const getJSON = function (uri, data = {}) {
       data: { ...data },
       dataType: 'JSONP',
       success: function (data) {
-        console.log('bbb')
         resolve(data)
       },
       error: function (XMLHttpRequest, textStatus, errorThrown) {
-        console.log(XMLHttpRequest)
         reject(new Error(textStatus))
       }
     })

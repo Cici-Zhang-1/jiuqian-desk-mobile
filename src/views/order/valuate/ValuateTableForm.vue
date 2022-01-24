@@ -65,6 +65,7 @@
 
 <script>
 import $ from 'jquery'
+import { M_TWO } from '@/assets/js/constants'
 
 export default {
   name: 'ValuateTableForm',
@@ -140,10 +141,10 @@ export default {
         Invisibility = parseFloat(Data['invisibility'])
         InvisibilityUnitPrice = parseFloat(Data['invisibility_unit_price'])
       }
-      Data['sum'] = Math.ceil(UnitPrice * Amount + OpenHole * OpenHoleUnitPrice + Invisibility * InvisibilityUnitPrice)
+      Data['sum'] = Math.ceil((UnitPrice * Amount + OpenHole * OpenHoleUnitPrice + Invisibility * InvisibilityUnitPrice) * M_TWO) / M_TWO
       Data['virtual_sum'] = Data['sum']
       if (Data['sum_diff'] !== undefined) {
-        Data['sum_diff'] = Math.ceil(UnitPrice * AreaDiff)
+        Data['sum_diff'] = Math.ceil(UnitPrice * AreaDiff * M_TWO) / M_TWO
         Data['virtual_area'] = VirtualAmount + AreaDiff
         Data['virtual_sum'] = parseFloat(Data['virtual_sum']) + parseFloat(Data['sum_diff'])
       }

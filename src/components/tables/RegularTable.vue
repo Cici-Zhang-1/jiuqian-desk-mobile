@@ -6,7 +6,7 @@
         <th v-for="(value, key, index) in tableThead" :class="[ value.classes ]" :key="index" v-if="value.checked_name">{{ value.label }}</th>
       </tr>
     </thead>
-    <tbody >
+    <tbody>
       <tr @click="inactiveTr" is="regular-tr" v-for="(value, key, index) in table" :trData="value" :tableThead="tableThead" :key="index" :search="search"></tr>
     </tbody>
   </table>

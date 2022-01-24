@@ -13,6 +13,7 @@
               <th v-if="show('virtual_sum')">应收</th>
               <th >橱</th>
               <th >衣</th>
+              <th >板</th>
               <th >门</th>
               <th >木</th>
               <th >配</th>
@@ -30,6 +31,7 @@
               <td v-if="show('virtual_sum')">{{ item['virtual_sum'] }}</td>
               <td >{{ item['cabinet'] }}</td>
               <td >{{ item['wardrobe'] }}</td>
+              <td >{{ item['doorw'] }}</td>
               <td >{{ item['door'] }}</td>
               <td >{{ item['wood'] }}</td>
               <td >{{ item['fitting'] }}</td>
@@ -40,6 +42,7 @@
         </table>
         <div is="valuate-table-form" :form="get_form('valuate_cabinet_form')" v-if="formPages" :reload="reload" :allowDiscountItem="valuateConfigs['allow_discount_cabinet']"></div>
         <div is="valuate-table-form" :form="get_form('valuate_wardrobe_form')" v-if="formPages" :reload="reload" :allowDiscountItem="valuateConfigs['allow_discount_wardrobe']"></div>
+        <div is="valuate-table-form" :form="get_form('valuate_doorw_form')" v-if="formPages" :reload="reload" :allowDiscountItem="valuateConfigs['allow_discount_doorw']"></div>
         <div is="valuate-table-form" :form="get_form('valuate_door_form')" v-if="formPages" :reload="reload" :allowDiscountItem="valuateConfigs['allow_discount_door']"></div>
         <div is="valuate-table-form" :form="get_form('valuate_wood_form')" v-if="formPages" :reload="reload" :allowDiscountItem="valuateConfigs['allow_discount_wood']"></div>
         <div is="valuate-table-form" :form="get_form('valuate_fitting_form')" v-if="formPages" :reload="reload" :allowDiscountItem="valuateConfigs['allow_discount_fitting']"></div>

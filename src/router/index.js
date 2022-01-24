@@ -5,24 +5,24 @@ import Read from '@/views/Read'
 import Edit from '@/views/Edit'
 import Add from '@/views/Add'
 import Remove from '@/views/Remove'
-import Myself from '@/views/Myself'
-import SignIn from '@/views/SignIn'
-import Upload from '@/views/Upload'
-import PickSheet from '@/views/print/PickSheet'
-import UnqrcodeLabel from '@/views/label/UnqrcodeLabel'
-import OrderDetail from '@/views/order/detail/OrderDetail'
-import OrderDismantle from '@/views/order/dismantle/OrderDismantle'
-import PostSale from '@/views/order/post_sale/PostSale'
-import OrderQuote from '@/views/order/quote/Quote'
-import Valuate from '@/views/order/valuate/Valuate'
-import WaitDelivery from '@/views/order/wait_delivery/WaitDelivery'
-import WorkOut from '@/views/order/wait_delivery/WorkOut'
-import ScanBoard from '@/views/scan/ScanBoard'
-import PrintOrderProductBoardPlate from '@/views/print/PrintOrderProductBoardPlate'
-import PrintOrderProductBoardDoor from '@/views/print/PrintOrderProductBoardDoor'
-import PrintOrderProductBoardWood from '@/views/print/PrintOrderProductBoardWood'
-import PrintOrderProductFitting from '@/views/print/PrintOrderProductFitting'
-import PrintOrderProductOther from '@/views/print/PrintOrderProductOther'
+// import Myself from '@/views/Myself'
+// import SignIn from '@/views/SignIn'
+// import Upload from '@/views/Upload'
+// import PickSheet from '@/views/print/PickSheet'
+// import UnqrcodeLabel from '@/views/label/UnqrcodeLabel'
+// import OrderDetail from '@/views/order/detail/OrderDetail'
+// import OrderDismantle from '@/views/order/dismantle/OrderDismantle'
+// import PostSale from '@/views/order/post_sale/PostSale'
+// import OrderQuote from '@/views/order/quote/Quote'
+// import Valuate from '@/views/order/valuate/Valuate'
+// import WaitDelivery from '@/views/order/wait_delivery/WaitDelivery'
+// import WorkOut from '@/views/order/wait_delivery/WorkOut'
+// import ScanBoard from '@/views/scan/ScanBoard'
+// import PrintOrderProductBoardPlate from '@/views/print/PrintOrderProductBoardPlate'
+// import PrintOrderProductBoardDoor from '@/views/print/PrintOrderProductBoardDoor'
+// import PrintOrderProductBoardWood from '@/views/print/PrintOrderProductBoardWood'
+// import PrintOrderProductFitting from '@/views/print/PrintOrderProductFitting'
+// import PrintOrderProductOther from '@/views/print/PrintOrderProductOther'
 
 Vue.use(Router)
 
@@ -49,12 +49,12 @@ export default new Router({
     {
       name: 'Upload',
       path: '/upload',
-      component: Upload
+      component: () => import(/* webpackChunkName: "upload" */ '@/views/Upload')
     },
     {
       name: 'SignIn',
       path: '/sign/index/in',
-      component: SignIn
+      component: () => import(/* webpackChunkName: "signin" */ '@/views/SignIn')
     },
     {
       name: 'Read',
@@ -84,82 +84,82 @@ export default new Router({
     {
       name: 'OrderDetail',
       path: '/order/order_detail',
-      component: OrderDetail
+      component: () => import(/* webpackChunkName: "order_detail" */ '@/views/order/detail/OrderDetail')
     },
     {
       name: 'OrderDismantle',
       path: '/order/dismantle',
-      component: OrderDismantle
+      component: () => import(/* webpackChunkName: "order_dismantle" */ '@/views/order/dismantle/OrderDismantle')
     },
     {
       name: 'PostSale',
       path: '/order/post_sale',
-      component: PostSale
+      component: () => import(/* webpackChunkName: "post_sale" */ '@/views/order/post_sale/PostSale')
     },
     {
       name: 'OrderQuote',
       path: '/order/quote',
-      component: OrderQuote
+      component: () => import(/* webpackChunkName: "quote" */ '@/views/order/quote/Quote')
     },
     {
       name: 'Valuate',
       path: '/order/valuate',
-      component: Valuate
+      component: () => import(/* webpackChunkName: "valuate" */ '@/views/order/valuate/Valuate')
     },
     {
       name: 'WaitDelivery',
       path: '/order/wait_delivery',
-      component: WaitDelivery
+      component: () => import(/* webpackChunkName: "wait_delivery" */ '@/views/order/wait_delivery/WaitDelivery')
     },
     {
       name: 'WorkOut',
       path: '/wait_delivery/work_out',
-      component: WorkOut
+      component: () => import(/* webpackChunkName: "work_out" */ '@/views/order/wait_delivery/WorkOut')
     },
     {
       name: 'PrintOrderProductBoardPlate',
       path: '/print/print_order_product_board_plate',
-      component: PrintOrderProductBoardPlate
+      component: () => import(/* webpackChunkName: "print_order_product_board_plate" */ '@/views/print/PrintOrderProductBoardPlate')
     },
     {
       name: 'PrintOrderProductBoardDoor',
       path: '/print/print_order_product_board_door',
-      component: PrintOrderProductBoardDoor
+      component: () => import(/* webpackChunkName: "print_order_product_board_door" */ '@/views/print/PrintOrderProductBoardDoor')
     },
     {
       name: 'PrintOrderProductBoardWood',
       path: '/print/print_order_product_board_wood',
-      component: PrintOrderProductBoardWood
+      component: () => import(/* webpackChunkName: "print_order_product_board_wood" */ '@/views/print/PrintOrderProductBoardWood')
     },
     {
       name: 'PrintOrderProductFitting',
       path: '/print/print_order_product_fitting',
-      component: PrintOrderProductFitting
+      component: () => import(/* webpackChunkName: "print_order_product_fitting" */ '@/views/print/PrintOrderProductFitting')
     },
     {
       name: 'PrintOrderProductOther',
       path: '/print/print_order_product_other',
-      component: PrintOrderProductOther
+      component: () => import(/* webpackChunkName: "print_order_product_other" */ '@/views/print/PrintOrderProductOther')
     },
     {
       name: 'PickSheet',
       path: '/warehouse/pick_sheet_print',
-      component: PickSheet
+      component: () => import(/* webpackChunkName: "pick_sheet" */ '@/views/print/PickSheet')
     },
     {
       name: 'ScanBoard',
       path: '/order/scan_board',
-      component: ScanBoard
+      component: () => import(/* webpackChunkName: "scan_board" */ '@/views/scan/ScanBoard')
     },
     {
       name: 'UnqrcodeLabel',
       path: '/warehouse/unqrcode_label',
-      component: UnqrcodeLabel
+      component: () => import(/* webpackChunkName: "unqrcode_label" */ '@/views/label/UnqrcodeLabel')
     },
     {
       name: 'Myself',
       path: '/myself',
-      component: Myself
+      component: () => import(/* webpackChunkName: "myself" */ '@/views/Myself')
     }
   ]
 })

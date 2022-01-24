@@ -6,6 +6,7 @@
     <div is="quote-card" :card="get_card('quote_basic_info_table')" v-if="cards" :reload="reload"></div>
     <div is="quote-board-card" :card="get_card('quote_cabinet_table')" v-if="cards" :reload="reload"></div>
     <div is="quote-board-card" :card="get_card('quote_wardrobe_table')" v-if="cards" :reload="reload"></div>
+    <div is="quote-board-card" :card="get_card('quote_doorw_table')" v-if="cards" :reload="reload"></div>
     <div is="quote-board-card" :card="get_card('quote_door_table')" v-if="cards" :reload="reload"></div>
     <div is="quote-board-card" :card="get_card('quote_wood_table')" v-if="cards" :reload="reload"></div>
     <div is="quote-fitting-card" :card="get_card('quote_fitting_table')" v-if="cards" :reload="reload"></div>

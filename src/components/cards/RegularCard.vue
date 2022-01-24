@@ -1,6 +1,6 @@
 <template>
   <div class="col-12">
-    <div class="card mb-5" v-if="!error">
+    <div class="card j-mb-10" v-if="!error">
       <div class="card-body p-0 card-body-h">
         <regular-table v-if="card.card_type_name === 'table'" :table="card.data.content" :tableThead="card.elements" :search="search"/>
         <regular-list-group v-else-if="card.card_type_name === 'list'" :lists="card.data.content"/>

@@ -186,7 +186,16 @@ export default {
   SET_DISMANTLE_ORDER_PRODUCT_BOARD_PLATE: (state, { contents, target }) => {
     Vue.set(target, 'order_product_board_plate', contents.content)
   },
-
+  /**
+   * 添加抓取的服务内容
+   * @param state
+   * @param contents
+   * @param target
+   * @constructor
+   */
+  SET_DISMANTLE_CRAW: (state, { contents, target }) => {
+    Vue.set(target, 'order_product_board_plate', target['order_product_board_plate'].concat(contents.content))
+  },
   SET_VALUATE_DATA: (state, { contents, target }) => {
     Vue.set(target, 'valuate', contents)
   },

@@ -2,8 +2,10 @@
   <div class="row mt-3 j-page" :id="title">
     <div class="col-12 border-bottom rounded-bottom mb-2 border-primary text-center d-print-none"><h5>{{ label }}</h5></div>
     <div is="scan-board-page-search" :pageSearches="disposeThick(pageSearches)" v-if="pageSearches" @search="searchQrcode($event)" :qrcodeFocus="focus"></div>
-    <div is="scan-board-func" @show="show($event)" @save="save($event)" @refresh="disposeRefresh($event)" @last="disposeLast($event)"></div>
-    <div is="scan-board-card" :card="get_card('scan_board_table')" v-if="cards" :reload="reload" :search="search" :showAll="showAll" :refresh="refresh" :last="last" @focus-qrcode="disposeFocus()"></div>
+    <div is="scan-board-func" @show="show($event)" @save="save($event)" @refresh="disposeRefresh($event)" @last="disposeLast($event)" @bug="disposeBug($event)">
+      <a class="d-none" id="autoSave" href="/order/scan_board/edit" data-toggle="save" data-target="#scanBoardTable" data-multiple="true">自动保存</a>
+    </div>
+    <div is="scan-board-card" :card="get_card('scan_board_table')" v-if="cards" :reload="reload" :search="search" :showAll="showAll" :refresh="refresh" :last="last" :bug="bug" @focus-qrcode="disposeFocus()"></div>
   </div>
 </template>
 
@@ -30,8 +32,10 @@ export default {
       refresh: false,
       focus: false,
       last: false,
+      bug: false,
       data: {},
-      thick: ''
+      thick: '',
+      autoSaveId: undefined
     }
   },
   computed: {
@@ -88,6 +92,13 @@ export default {
     },
     searchQrcode (e) {
       this.search = !this.search
+      if (typeof this.autoSaveId === 'number') {
+        clearTimeout(this.autoSaveId)
+      }
+      this.autoSaveId = setTimeout(() => {
+        // this.save(document.getElementById('autoSave'))
+        this.autoSave(document.getElementById('autoSave'))
+      }, 10000)
     },
     disposeLast (E) {
       if (window.confirm('确认找回上次扫描?')) {
@@ -95,6 +106,9 @@ export default {
       }
       this.disposeFocus()
       return true
+    },
+    disposeBug (E) {
+      this.bug = !this.bug
     },
     disposeRefresh (E) { // 刷新
       if (this.setData(E)) {
@@ -133,6 +147,12 @@ export default {
       } else {
         alert('请先选中')
         return false
+      }
+    },
+    async autoSave (E) {
+      if (this.setData(E)) {
+        let postReturn = await service.post($(E).attr('href'), this.data)
+        return !postReturn.code
       }
     },
     async submit (E) {

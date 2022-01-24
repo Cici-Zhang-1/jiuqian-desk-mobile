@@ -62,7 +62,7 @@ export default {
     },
     sum: {
       get () {
-        return this.formSum + this.diff
+        return Math.ceil(this.formSum + this.diff)
       },
       set (newValue) {
         this.diff = newValue - this.formSum

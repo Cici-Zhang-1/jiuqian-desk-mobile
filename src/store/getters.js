@@ -139,6 +139,14 @@ export default {
     } */
   },
 
+  /**
+   * 获取所有订单产品
+   * @param state
+   * @returns {function({uri: *, children: *})}
+   */
+  getAllOrderProduct: (state) => ({ uri, children }) => {
+    return (state.sourceData[uri] && children.map(__ => state.sourceData[uri][__]['order_product'] || []).flat()) || undefined
+  },
   currentLabel (state) {
     return state.app.label
   },

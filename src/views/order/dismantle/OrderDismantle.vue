@@ -14,6 +14,9 @@
               <a class="nav-link" :class="{active: dismantleData['order_info']['code'] === 'Y', 'diff-red': isDismantlable('Y')}" data-toggle="tab" data-code="Y" href="#dismantleY" role="tab" aria-controls="wardrobe" :aria-selected="dismantleData['order_info']['code'] === 'Y'">衣柜</a>
             </li>
             <li class="nav-item">
+              <a class="nav-link" :class="{active: dismantleData['order_info']['code'] === 'D', 'diff-red': isDismantlable('D')}" data-toggle="tab" data-code="D" href="#dismantleD" role="tab" aria-controls="doorw" :aria-selected="dismantleData['order_info']['code'] === 'D'">柜门</a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link" :class="{'diff-red': isDismantlable('M'), active: dismantleData['order_info']['code'] === 'M'}" data-toggle="tab" data-code="M" href="#dismantleM" role="tab" aria-controls="door" :aria-selected="dismantleData['order_info']['code'] === 'M'">门板</a>
             </li>
             <li class="nav-item">
@@ -32,6 +35,7 @@
           <div class="tab-content" id="orderDismantleTabContent">
             <div is="order-dismantle-cabinet" :class="{active: dismantleData['order_info']['code'] === 'W', show: dismantleData['order_info']['code'] === 'W'}" :dismantleUrl="dismantleUrl"></div>
             <div is="order-dismantle-wardrobe" :class="{active: dismantleData['order_info']['code'] === 'Y', show: dismantleData['order_info']['code'] === 'Y'}" :dismantleUrl="dismantleUrl"></div>
+            <div is="order-dismantle-doorw" :class="{active: dismantleData['order_info']['code'] === 'D', show: dismantleData['order_info']['code'] === 'D'}" :dismantleUrl="dismantleUrl"></div>
             <div is="order-dismantle-door" :class="{active: dismantleData['order_info']['code'] === 'M', show: dismantleData['order_info']['code'] === 'M'}" :dismantleUrl="dismantleUrl"></div>
             <div is="order-dismantle-wood" :class="{active: dismantleData['order_info']['code'] === 'K', show: dismantleData['order_info']['code'] === 'K'}" :dismantleUrl="dismantleUrl"></div>
             <div is="order-dismantle-fitting" :class="{active: dismantleData['order_info']['code'] === 'P', show: dismantleData['order_info']['code'] === 'P'}" :dismantleUrl="dismantleUrl"></div>
@@ -55,6 +59,7 @@ import service from '@/axios'
 import OrderDismantleFunc from './OrderDismantleFunc'
 import OrderDismantleCabinet from './OrderDismantleCabinet'
 import OrderDismantleWardrobe from './OrderDismantleWardrobe'
+import OrderDismantleDoorw from './OrderDismantleDoorw'
 import OrderDismantleDoor from './OrderDismantleDoor'
 import OrderDismantleWood from './OrderDismantleWood'
 import OrderDismantleFitting from './OrderDismantleFitting'
@@ -378,6 +383,7 @@ export default {
     OrderDismantleFunc,
     OrderDismantleCabinet,
     OrderDismantleWardrobe,
+    OrderDismantleDoorw,
     OrderDismantleDoor,
     OrderDismantleWood,
     OrderDismantleFitting,

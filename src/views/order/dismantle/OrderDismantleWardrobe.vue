@@ -20,29 +20,31 @@
       </div>
       <board :board="activeOrderProduct['struct']['board']" v-model="activeOrderProduct['struct']['board']" @focusout-board="changeBoard($event)" v-if="activeOrderProduct && activeOrderProduct['struct']" ></board>
       <thick :thick="changeLine" v-model="changeLine" v-if="activeOrderProduct"></thick>
-      <div class="form-group col-md-2">
+      <div class="form-group col-md-3">
         <label>备注</label>
         <input type="text" class="form-control" name="remark" v-model="activeOrderProduct['remark']" placeholder="添加备注" v-if="activeOrderProduct">
         <input type="text" class="form-control" name="remark" v-model="orderProduct['product']['remark']" placeholder="添加备注" v-if="!activeOrderProduct">
       </div>
-      <div class="form-group col-md-2" v-if="activeOrderProduct">
-        <label>设计图集</label>
-        <input type="text" class="form-control" name="design_atlas" v-model="activeOrderProduct['design_atlas']" readonly placeholder="设计图集">
+      <div class="form-group col-md-1" v-if="activeOrderProduct && d.order_product">
+        <button class="btn btn-light btn-sm" type="button" @click="moveTo"><i class="fa fa-plane"></i>移动</button>
+        <select class="form-control" name="doorw_order_product_id" v-model="doorw_order_product_id">
+          <option value="0">选择柜门</option>
+          <option v-for="(item, key, index) in d.order_product" :key="index" :value="item.v">{{ item.num }}-{{ item.product }}-{{ item.status_label }}</option>
+        </select>
       </div>
     </div>
     <table class="table-center table-form table table-bordered table-responsive text-nowrap" id="dismantleYTable" v-if="!loading && activeOrderProduct">
       <thead>
       <tr>
+        <th class="td-xxs" >#</th>
         <th class="td-xs" >#</th>
         <th class="td-md" >板块名称</th>
         <th>板材</th>
         <th class="td-xs" >长</th>
         <th class="td-xs" >宽</th>
-        <th class="td-xs" >面积</th>
         <th >封边</th>
         <th class="td-md">开槽</th>
         <th class="td-sm">打孔</th>
-        <th class="td-md">尺判</th>
         <th>备注</th>
         <th class="td-xxs" >复制</th>
         <th class="td-xxs" >块数</th>
@@ -52,21 +54,22 @@
         <th class="d-none">板块编号</th>
         <th class="d-none">BD文件</th>
         <th class="d-none">MPR文件</th>
+        <th class="d-none">尺判</th>
+        <th class="d-none" >面积</th>
         <th class="d-none">Index</th>
       </tr>
       </thead>
       <tbody>
       <tr v-for="(item, key, index) in activeOrderProduct['order_product_board_plate']" :key="index">
+        <td><input class="form-control input-sm" name="v" type="checkbox" :value="item['v']" v-model="checkedLine"/></td>
         <td>{{ key + 1 }}</td>
         <td is="dismantle-plate" :plate="item['plate_name']" v-model="item['plate_name']"></td>
         <td><input class="form-control input-sm" name="good" type="text" v-model="item['board']"/></td>
         <td><input class="form-control input-sm" name="length" type="text" v-model="item['length']" @change="computeArea($event)"/></td>
         <td><input class="form-control input-sm" name="width" type="text" v-model="item['width']" @focusout="computeArea($event)" /></td>
-        <td><input class="form-control input-sm" name="area" type="text" value="" readonly="readonly" v-model="item['area']"/></td>
         <td is="dismantle-edge" :edge="item['edge']" v-model="item['edge']"></td>
         <td is="dismantle-slot" :slots="item['slot']" v-model="item['slot']"></td>
         <td is="dismantle-punch" :punch="item['punch']" v-model="item['punch']"></td>
-        <td><input class="form-control input-sm" name="decide_size" type="text" v-model="item['decide_size']" /></td>
         <td is="dismantle-remark" :remark="item['remark']" v-model="item['remark']"></td>
         <td><input class="form-control input-sm" name="amount" type="text" v-model="item['amount']"/></td>
         <td><input class="form-control input-sm" name="copy" type="number" value="0"/></td>
@@ -78,15 +81,17 @@
         <td class="d-none"><input class="form-control input-sm" name="bd_file" type="text" v-model="item['bd_file']"/></td>
         <td class="d-none"><input class="form-control input-sm" name="mpr_file" type="text" v-model="item['mpr_file']"/></td>
         <td class="d-none"><input class="form-control input-sm" name="another_mpr_file" type="text" v-model="item['another_mpr_file']"/></td>
+        <td class="d-none"><input class="form-control input-sm" name="decide_size" type="text" v-model="item['decide_size']" /></td>
+        <td class="d-none"><input class="form-control input-sm" name="area" type="text" value="" readonly="readonly" v-model="item['area']"/></td>
         <td class="d-none"><input class="form-control input-sm" name="index" type="number" :value="key"/></td>
       </tr>
       <tr>
+        <td></td>
         <td>{{ maxNum }}</td>
         <td><input class="form-control input-sm" name="plate_name" type="text"/></td>
         <td><input class="form-control input-sm" name="good" type="text" /></td>
         <td><input class="form-control input-sm" name="length" type="text" /></td>
         <td><input class="form-control input-sm" name="width" type="text" /></td>
-        <td><input class="form-control input-sm" name="area" type="text" value="" readonly="readonly"/></td>
         <td><select class="form-control input-sm" name="edge">
           <option value="">--请选择--</option>
         </select></td>
@@ -96,7 +101,6 @@
         <td><select class="form-control input-sm" name="punch">
           <option value="">--请选择--</option>
         </select></td>
-        <td><input class="form-control input-sm" name="decide_size" type="text" /></td>
         <td><input class="form-control input-sm" name="remark" type="text" value=""/></td>
         <td><input class="form-control input-sm" name="num" type="number" value="1"/></td>
         <td><input class="form-control input-sm" name="copy" type="number" value="0"/></td>
@@ -108,6 +112,8 @@
         <td class="d-none"><input class="form-control input-sm" name="bd_file" data-unique="true" type="text" value=""/></td>
         <td class="d-none"><input class="form-control input-sm" name="mpr_file" data-unique="true" type="text" value=""/></td>
         <td class="d-none"><input class="form-control input-sm" name="another_mpr_file" data-unique="true" type="text" value=""/></td>
+        <td class="d-none"><input class="form-control input-sm" name="decide_size" type="text" /></td>
+        <td class="d-none"><input class="form-control input-sm" name="area" type="text" value="" readonly="readonly"/></td>
         <td class="d-none"><input class="form-control input-sm" name="index" type="number" value=""/></td>
       </tr>
       </tbody>
@@ -126,6 +132,7 @@ import DismantleEdge from './DismantleEdge'
 import DismantleSlot from './DismantleSlot'
 import DismantlePunch from './DismantlePunch'
 import DismantleRemark from './DismantleRemark'
+import service from '@/axios'
 let self
 export default {
   mixins: [ dismantleMixins ],
@@ -146,6 +153,8 @@ export default {
       MIN_B_AREA: 0.01,
       orderProductId: 0,
       changeLine: '*',
+      doorw_order_product_id: 0,
+      checkedLine: [],
       demoData: {
         plate_name: '',
         board: '',
@@ -183,6 +192,13 @@ export default {
     orderInfo: {
       get () {
         return this.$store.getters.getDismantleData({ uri: this.dismantleUrl, child: 'order_info' })
+      },
+      set (Value) {
+      }
+    },
+    d: {
+      get () {
+        return this.$store.getters.getDismantleData({ uri: this.dismantleUrl, child: 'D' })
       },
       set (Value) {
       }
@@ -287,6 +303,20 @@ export default {
       }).then(res => {
         self.loading = false
       })
+    },
+    async moveTo () {
+      if (this.doorw_order_product_id > 0 && this.checkedLine.length > 0) {
+        this.loading = true
+        let postReturn = await service.post('/order/order_product_board_plate/move_to', { order_product_id: this.doorw_order_product_id, v: this.checkedLine })
+        this.loading = false
+        if (postReturn.code > 0) {
+          window.alert(postReturn.message)
+        } else {
+          await this.fetchData()
+        }
+      } else {
+
+      }
     }
   },
   components: {

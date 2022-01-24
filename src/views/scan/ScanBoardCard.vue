@@ -41,6 +41,7 @@ import Scanner from './Scanner'
 import ScanNum from './ScanNum'
 import ScanInfo from './ScanInfo'
 import ScanBoardModal from './ScanBoardModal'
+import service from '@/axios'
 export default {
   name: 'ScanBoardCard',
   props: {
@@ -61,6 +62,9 @@ export default {
       type: Boolean
     },
     last: {
+      type: Boolean
+    },
+    bug: {
       type: Boolean
     }
   },
@@ -131,6 +135,11 @@ export default {
           window.alert('没有找到上次扫描数据')
         }
       }
+    },
+    bug: {
+      handler: function (to, from) {
+        this.reportBug()
+      }
     }
   },
   methods: {
@@ -179,6 +188,10 @@ export default {
     },
     disposeSure (e) {
       this.setQrcode()
+    },
+    async reportBug () {
+      let postReturn = await service.post('/order/order_product_board_plate/bug', this.scanning)
+      return !postReturn.code
     },
     fetchData (params = {}) { // 获取数据
       this.$bar.start()

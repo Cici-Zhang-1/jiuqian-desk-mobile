@@ -17,10 +17,17 @@
         <label>套数</label>
         <input type="number" class="form-control" v-model="orderProduct['product']['set']" min="1" max="20" placeholder="套数">
       </div>
-      <div class="form-group col-md-7">
+      <div class="form-group col-md-6">
         <label>备注</label>
         <input type="text" class="form-control" name="remark" v-model="activeOrderProduct['remark']" placeholder="添加备注" v-if="activeOrderProduct">
         <input type="text" class="form-control" name="remark" v-model="orderProduct['product']['remark']" placeholder="添加备注" v-if="!activeOrderProduct">
+      </div>
+      <div class="form-group col-md-1" v-if="activeOrderProduct && allOrderProduct">
+        <button class="btn btn-light btn-sm" type="button" @click="craw"><i class="fa fa-crop"></i>抓取</button>
+        <select class="form-control" name="all_order_product_id" v-model="all_order_product_id">
+          <option value="0">选择订单</option>
+          <option v-for="(item, key, index) in allOrderProduct" :key="index" :value="item.v">{{ item.num }}-{{ item.product }}-{{ item.status_label }}</option>
+        </select>
       </div>
     </div>
     <div class="row">
@@ -88,6 +95,7 @@
 import { dismantleMixins } from './mixins'
 import $ from 'jquery'
 import DismantleServer from './DismantleServer'
+import service from '@/axios'
 export default {
   mixins: [ dismantleMixins ],
   name: 'OrderDismantleServer',
@@ -107,6 +115,7 @@ export default {
         remark: '',
         amount: ''
       },
+      all_order_product_id: 0,
       loading: false,
       maxNum: 1,
       reDismantleUrl: '/order/dismantle/re_dismantle',
@@ -133,6 +142,13 @@ export default {
     activeOrderProduct: {
       get () {
         return this.$store.getters.getActiveDismantleData({ uri: this.dismantleUrl, child: 'F' })
+      }
+    },
+    allOrderProduct: {
+      get () {
+        return this.$store.getters.getAllOrderProduct({ uri: this.dismantleUrl, children: ['W', 'Y', 'D'] })
+      },
+      set (Value) {
       }
     },
     serverData: {
@@ -234,6 +250,16 @@ export default {
           configs: {},
           target: this.serverUrl
         })
+      }
+    },
+    async craw () {
+      this.loading = true
+      let postReturn = await service.post('/order/order_product_board_plate/craw', { order_product_id: this.all_order_product_id, order_id: this.orderInfo.order_id })
+      this.loading = false
+      if (postReturn.code > 0) {
+        window.alert(postReturn.message)
+      } else {
+        this.$store.commit('SET_DISMANTLE_CRAW', { ...postReturn, target: this.activeOrderProduct })
       }
     }
   },
