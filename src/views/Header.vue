@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-expand-md navbar-light bg-light d-print-none j-navbar j-fixed-top">
-    <a class="navbar-brand" href="/#/home" >{{ configs.title }}</a>
+    <a class="navbar-brand" href="/#/home" >{{ configs.title }}{{ configs.version }}</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#jNavbar" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>

@@ -6,15 +6,15 @@
           <tbody >
           <tr>
             <td>编号</td>
-            <td>{{ card.data['order_product']['order_product_num'] }}</td>
+            <td>{{ card.data['order']['num'] }}</td>
             <td>要求出厂</td>
-            <td>{{ card.data['order_product']['request_outdate'] }}</td>
+            <td>{{ card.data['order']['request_outdate'] }}</td>
           </tr>
           <tr>
             <td>客户</td>
-            <td>{{ card.data['order_product']['dealer'] }}</td>
+            <td>{{ card.data['order']['dealer'] }}</td>
             <td>业主</td>
-            <td>{{ card.data['order_product']['owner'] }}</td>
+            <td>{{ card.data['order']['owner'] }}</td>
           </tr>
           </tbody>
         </table>

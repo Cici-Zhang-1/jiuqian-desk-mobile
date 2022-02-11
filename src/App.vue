@@ -24,7 +24,7 @@ export default {
     })
   },
   created () {
-    document.title = this.configs.title
+    document.title = this.configs.title + this.configs.version
   },
   components: {
     Header

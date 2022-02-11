@@ -52,6 +52,13 @@ export default {
     state.configs = contents
   },
 
+  SET_VERSION: (state, { version }) => {
+    state.configs.version = version
+  },
+
+  SET_TITLE: (state, { title }) => {
+    state.configs.title = title
+  },
   /**
    * 设置获取的数据
    * @param state
@@ -71,10 +78,6 @@ export default {
    */
   SET_SOURCE_DATA: (state, { contents, target }) => {
     Vue.set(state.sourceData, target, contents)
-  },
-
-  RESET_SOURCE_DATA: (state, { target }) => {
-    Vue.delete(state.sourceData, target)
   },
 
   SET_FORM_SOURCE_DATA: (state, { contents, target }) => {
@@ -170,34 +173,6 @@ export default {
     } else {
 
     }
-  },
-
-  /**
-   * 设置拆单数据结构
-   * @param state
-   * @param contents
-   * @param target
-   * @constructor
-   */
-  SET_DISMANTLE_STRUCT: (state, { contents, target }) => {
-    Vue.set(target, 'struct', contents)
-  },
-
-  SET_DISMANTLE_ORDER_PRODUCT_BOARD_PLATE: (state, { contents, target }) => {
-    Vue.set(target, 'order_product_board_plate', contents.content)
-  },
-  /**
-   * 添加抓取的服务内容
-   * @param state
-   * @param contents
-   * @param target
-   * @constructor
-   */
-  SET_DISMANTLE_CRAW: (state, { contents, target }) => {
-    Vue.set(target, 'order_product_board_plate', target['order_product_board_plate'].concat(contents.content))
-  },
-  SET_VALUATE_DATA: (state, { contents, target }) => {
-    Vue.set(target, 'valuate', contents)
   },
 
   SET_HIDE_ITEM: (state, { source, v }) => {

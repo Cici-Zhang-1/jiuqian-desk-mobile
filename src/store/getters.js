@@ -80,10 +80,6 @@ export default {
     return state.app[key]
   },
 
-  getStateByKey: (state) => (key) => {
-    return state[key]
-  },
-
   getConfigs: (state) => {
     return state.configs
   },
@@ -108,45 +104,6 @@ export default {
     }
   },
 
-  /**
-   * 获取拆单信息
-   * @param state
-   * @returns {function({uri: *, child: *}): (*|undefined)}
-   */
-  getDismantleData: (state) => ({ uri, child }) => {
-    return (state.sourceData[uri] && state.sourceData[uri][child]) || undefined
-  },
-
-  getActiveDismantleData: (state) => ({ uri, child }) => {
-    let Data
-    if (state.sourceData[uri] !== undefined) {
-      let OrderProductId = state.sourceData[uri]['order_info']['order_product_id']
-      if (OrderProductId > 0) {
-        for (let i in state.sourceData[uri][child]['order_product']) {
-          if (state.sourceData[uri][child]['order_product'][i]['v'] === OrderProductId) {
-            Data = state.sourceData[uri][child]['order_product'][i]
-            break
-          }
-        }
-      }
-    }
-    return Data
-    /* let Data = (state.sourceData[uri] && state.sourceData[uri][child]) || undefined
-    if (Data === undefined) {
-      return Data
-    } else {
-
-    } */
-  },
-
-  /**
-   * 获取所有订单产品
-   * @param state
-   * @returns {function({uri: *, children: *})}
-   */
-  getAllOrderProduct: (state) => ({ uri, children }) => {
-    return (state.sourceData[uri] && children.map(__ => state.sourceData[uri][__]['order_product'] || []).flat()) || undefined
-  },
   currentLabel (state) {
     return state.app.label
   },

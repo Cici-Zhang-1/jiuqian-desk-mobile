@@ -30,6 +30,7 @@ const app = new Vue({
   VueCookies,
   created () {
     this.versionUpdate()
+    this.titleUpdate()
   },
   beforeMount () {
     if (!store.state.signin) { // 不是登录页
@@ -50,14 +51,29 @@ const app = new Vue({
   components: { App },
   methods: {
     async versionUpdate () {
+      let oldVersion = this.$localStorage.get('version', '')
+      oldVersion = oldVersion.toString()
+      this.$store.commit('SET_VERSION', { version: oldVersion })
       let getReturn = await service.get('/data/configs/item', { params: { key: 'version' } })
       if (!getReturn.code) {
         let version = getReturn.contents.config.toString()
-        let oldVersion = this.$localStorage.get('version', '')
-        oldVersion = oldVersion.toString()
         if (version !== oldVersion) {
-          localStorage.clear()
+          // localStorage.clear()
           this.$localStorage.set('version', version)
+          this.$store.commit('SET_VERSION', { version: version })
+        }
+      }
+    },
+    async titleUpdate () {
+      let oldTitle = this.$localStorage.get('title', '')
+      this.$store.commit('SET_TITLE', { title: oldTitle })
+      let getReturn = await service.get('/data/configs/item', { params: { key: 'title' } })
+      if (!getReturn.code) {
+        let title = getReturn.contents.config.toString()
+        if (title !== oldTitle) {
+          // localStorage.clear()
+          this.$localStorage.set('title', title)
+          this.$store.commit('SET_TITLE', { title: title })
         }
       }
     }
