@@ -20,7 +20,7 @@ export default new Vuex.Store({
       truename: '张'
     },
     configs: {
-      title: '九千定制管理系统2.0',
+      title: '九千定制管理系统2.1',
       host: host
     },
     collapse: false,
