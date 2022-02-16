@@ -12,8 +12,10 @@ if (process.env.NODE_ENV === 'development') {
   // baseUrl = 'https://www.365huijia.com'
   // host = 'https://www.jqdz.online'
   // baseUrl = 'https://www.jqdz.online'
-  host = 'http://localhost/jiuqian-online-back'
-  baseUrl = 'http://localhost/jiuqian-online-back'
+  // host = 'http://localhost/jiuqian-online-back'
+  // baseUrl = 'http://localhost/jiuqian-online-back'
+  host = window.location.protocol + '//' + window.location.host
+  baseUrl = window.location.protocol + '//' + window.location.host
 }
 
 export {

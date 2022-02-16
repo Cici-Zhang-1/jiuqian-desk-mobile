@@ -35,6 +35,7 @@ import { dataToStr } from '@/assets/js/custom'
 //   }
 // }
 // 创建axios实例
+// console.log(window.location.host)
 const service = axios.create({
   baseURL: baseUrl, // api的base_url
   withCredentials: true,

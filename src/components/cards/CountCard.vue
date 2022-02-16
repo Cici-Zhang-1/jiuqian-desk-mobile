@@ -2,7 +2,7 @@
   <div class="col-md-4 mb-2">
     <div class="card text-center">
       <div class="card-header" @click="fetchData()">{{ home.label }}</div>
-      <div class="card-body text-white bg-danger">
+      <div class="card-body text-white" :class="[randomBgColor()]">
         <h1>{{ count }}</h1>
       </div>
     </div>
@@ -48,6 +48,18 @@ export default {
       } else {
         this.count = '--'
       }
+    },
+    randomBgColor () {
+      const colors = [
+        'bg-danger',
+        'bg-info',
+        'bg-warning',
+        'bg-success',
+        'bg-primary',
+        'bg-secondary',
+        'bg-dark'
+      ]
+      return colors[Math.floor((Math.random() * 10) + 1) % colors.length]
     }
   }
 }

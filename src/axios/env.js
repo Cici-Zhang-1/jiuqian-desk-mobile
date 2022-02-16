@@ -4,7 +4,6 @@
 let baseUrl
 let host
 let pubUrl
-
 if (process.env.NODE_ENV === 'development') {
   host = 'http://localhost:8080'
   // host = 'http://localhost:8080'
@@ -26,10 +25,12 @@ if (process.env.NODE_ENV === 'development') {
   // pubUrl = 'http://pub.365huijia.com'
   // host = 'https://www.jqdz.online'
   // baseUrl = 'https://www.jqdz.online'
-  // pubUrl = 'http://pub.jqdz.online'
-  host = 'http://localhost/jiuqian-online-back'
-  baseUrl = 'http://localhost/jiuqian-online-back'
-  pubUrl = 'http://localhost/jiuqian-online-pub'
+  pubUrl = 'http://pub.jqdz.online'
+  // host = 'http://localhost/jiuqian-online-back'
+  // baseUrl = 'http://localhost/jiuqian-online-back'
+  // pubUrl = 'http://localhost/jiuqian-online-pub'
+  host = window.location.protocol + '//' + window.location.host
+  baseUrl = window.location.protocol + '//' + window.location.host
 } else if (process.env.NODE_ENV === 'middle') {
   host = 'http://localhost/jiuqian-mobile'
   baseUrl = 'http://localhost/jiuqian-mobile'
