@@ -42,6 +42,9 @@ export default {
         case 'list':
           Type = 'list-card'
           break
+        case 'chart':
+          Type = 'chart-card'
+          break
       }
       return Type
     }
