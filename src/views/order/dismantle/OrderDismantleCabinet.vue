@@ -66,7 +66,7 @@
           <td>{{ key + 1 }}</td>
           <td is="dismantle-plate" :plate="item['plate_name']" v-model="item['plate_name']"></td>
           <td><input class="form-control input-sm" name="good" type="text" v-model="item['board']"/></td>
-          <td><input class="form-control input-sm" name="length" type="text" v-model="item['length']" @change="computeArea($event)"/></td>
+          <td><input class="form-control input-sm" name="length" type="text" v-model="item['length']" @focusout="computeArea($event)"/></td>
           <td><input class="form-control input-sm" name="width" type="text" v-model="item['width']" @change="computeArea($event)" /></td>
           <td is="dismantle-edge" :edge="item['edge']" v-model="item['edge']"></td>
           <td is="dismantle-slot" :slots="item['slot']" v-model="item['slot']"></td>

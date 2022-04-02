@@ -7,6 +7,8 @@
 <script type="module">
 import CountCard from '@/components/cards/CountCard'
 import ListCard from '@/components/cards/ListCard'
+import ChartCard from '@/components/cards/ChartCard'
+import HistogramCard from '@/components/cards/HistogramCard'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -45,13 +47,18 @@ export default {
         case 'chart':
           Type = 'chart-card'
           break
+        case 'histogram':
+          Type = 'histogram-card'
+          break
       }
       return Type
     }
   },
   components: {
     CountCard,
-    ListCard
+    ListCard,
+    ChartCard,
+    HistogramCard
   }
 }
 </script>

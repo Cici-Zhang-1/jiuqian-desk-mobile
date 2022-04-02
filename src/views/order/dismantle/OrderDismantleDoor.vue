@@ -48,7 +48,7 @@
       <tr v-for="(item, key, index) in activeOrderProduct['order_product_board_plate']" :key="index">
         <td>{{ key + 1 }}</td>
         <td><input class="form-control input-sm" name="good" type="text" v-model="item['board']"/></td>
-        <td><input class="form-control input-sm" name="width" type="text" v-model="item['width']" @change="computeArea($event, 'M')" /></td>
+        <td><input class="form-control input-sm" name="width" type="text" v-model="item['width']" @focusout="computeArea($event, 'M')" /></td>
         <td><input class="form-control input-sm" name="length" type="text" v-model="item['length']" @change="computeArea($event, 'M')"/></td>
         <td><input class="form-control input-sm" name="area" type="text" value="" readonly="readonly" v-model="item['area']"/></td>
         <td is="hinge-punch" :punch="item['punch']" v-model="item['punch']"></td>

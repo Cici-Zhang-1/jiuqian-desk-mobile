@@ -48,8 +48,8 @@
         <td is="wood-plate" :plate="item['wood_name']" v-model="item['wood_name']"></td>
         <td><input class="form-control input-sm" name="core" type="text" v-model="item['core']"/></td>
         <td><input class="form-control input-sm" name="good" type="text" v-model="item['board']"/></td>
-        <td><input class="form-control input-sm" name="width" type="text" v-model="item['width']" @change="computeArea($event)" /></td>
-        <td><input class="form-control input-sm" name="length" type="text" v-model="item['length']" @change="computeArea($event)"/></td>
+        <td><input class="form-control input-sm" name="width" type="text" v-model="item['width']" @focusout="computeArea($event)" /></td>
+        <td><input class="form-control input-sm" name="length" type="text" v-model="item['length']" @focusout="computeArea($event)"/></td>
         <td><input class="form-control input-sm" name="area" type="text" value="" readonly="readonly" v-model="item['area']"/></td>
         <td is="wood-center" :center="item['center']" v-model="item['center']"></td>
         <td is="hinge-punch" :punch="item['punch']" v-model="item['punch']"></td>
