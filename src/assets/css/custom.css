@@ -275,3 +275,66 @@ table .td-lg {
   background: #0097CF;
   color: #FFFFFF;
 }
+@page {
+  size: 10cm 8cm;
+  margin: 0;
+}
+.print-area {
+  width: 10cm;
+}
+.print-label {
+  position: relative;
+  width: 100%;
+  height: 7.9cm;
+  page-break-after: always;
+}
+.print-label > div {
+  display: table;
+}
+.print-label > div, .print-label > table {
+  margin-left: 2mm;
+  margin-top: auto;
+  margin-bottom: auto;
+  width: 66mm;
+  font-weight: bold;
+  text-align: right;
+}
+.print-label > table.plates {
+  width: 94mm;
+  font-size: 0.8rem;
+  font-weight: normal;
+}
+.print-label > div > .middle{
+  display: table-cell;
+  vertical-align: middle;
+  width: 100%;
+}
+.print-label .delivery-address {
+  height: 16mm;
+  font-size: 8mm;
+  font-weight: bold;
+  text-align: center;
+}
+.print-label > table > tr {
+  height: 7.8mm;
+}
+.print-label > table.basic-info > tr > td {
+  width: 50%;
+}
+.print-label .package-total {
+  position: absolute;
+  top: 27mm;
+  left: 68mm;
+  width: 28mm;
+  height: 10mm;
+  font-weight: bolder;
+  text-align: center;
+  font-size: 7mm;
+}
+.print-label > .qrcode {
+  width: 28mm;
+  height: 28mm;
+  position: absolute;
+  top: 2mm;
+  left: 68mm;
+}

@@ -1,6 +1,7 @@
 <template>
   <div class="scanned-nums">
-    <p><span>{{ unCheck }}</span><span>{{ num }}</span></p>
+    <p><span>{{ unCheck }}</span><span>{{ packNum }}</span></p>
+    <p><span>{{ checking }}</span><span>{{ num }}</span></p>
   </div>
 </template>
 
@@ -13,6 +14,12 @@ export default {
     },
     unCheck: {
       type: Number
+    },
+    checking: {
+      type: Number
+    },
+    packNum: {
+      type: Number
     }
   }
 }
@@ -24,23 +31,39 @@ export default {
     position: fixed;
     top: 160px;
     right: 40%;
-    width: 20%;
+    width: 25%;
     height: 200px;
     background-color: rgba(0,0,0,0);
     text-align: center;
     vertical-align: middle;
   }
   .scanned-nums p{
-    margin: 0px;
+    margin: 0;
     font-weight: bold;
+    line-height: 0.9;
   }
 
-  .scanned-nums p span:first-child{
+  .scanned-nums p:first-child{
+    font-size: 50px;
+  }
+  .scanned-nums p:first-child span{
+    display: inline-block;
+    text-align: center;
+    width: 50%;
+  }
+  .scanned-nums p:first-child span:first-child{
+    color: blueviolet;
+
+  }
+  .scanned-nums p:first-child span:last-child{
+    color: green;
+  }
+  .scanned-nums p:last-child span:first-child{
     color: red;
     font-size: 200px;
   }
 
-  .scanned-nums p span:last-child{
+  .scanned-nums p:last-child span:last-child{
     color: blue;
     font-size: 50px;
   }

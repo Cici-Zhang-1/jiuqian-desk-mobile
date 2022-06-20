@@ -152,6 +152,11 @@ export default new Router({
       component: () => import(/* webpackChunkName: "scan_board" */ '@/views/scan/ScanBoard')
     },
     {
+      name: 'ScanPackBoard',
+      path: '/order/scan_pack_board',
+      component: () => import(/* webpackChunkName: "scan_pack_board" */ '@/views/scan/ScanPackBoard')
+    },
+    {
       name: 'UnqrcodeLabel',
       path: '/warehouse/unqrcode_label',
       component: () => import(/* webpackChunkName: "unqrcode_label" */ '@/views/label/UnqrcodeLabel')
