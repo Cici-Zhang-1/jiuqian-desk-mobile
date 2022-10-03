@@ -12,7 +12,7 @@
           </tr>
           <tr>
             <td>客户</td>
-            <td>{{ card.data['order_product']['dealer'] }}</td>
+            <td :class="{'emphasize': card.data['order_product']['delivery_area'] === 'OEA'}">{{ card.data['order_product']['dealer'] }}</td>
             <td>业主</td>
             <td>{{ card.data['order_product']['owner'] }}</td>
           </tr>
@@ -260,3 +260,21 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.emphasize {
+  color: #cc0000;
+  animation-duration: 3s;
+  animation-name: emp;
+  animation-iteration-count: 20;
+  animation-direction: alternate;
+}
+@keyframes emp {
+  from {
+    transform: scale(.5, .5);
+  }
+  to {
+    transform: scale(1.5, 1.5);
+  }
+}
+</style>

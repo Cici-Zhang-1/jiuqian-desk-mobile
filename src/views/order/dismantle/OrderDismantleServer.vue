@@ -17,10 +17,17 @@
         <label>套数</label>
         <input type="number" class="form-control" v-model="orderProduct['product']['set']" min="1" max="20" placeholder="套数">
       </div>
-      <div class="form-group col-md-6">
+      <div class="form-group col-md-3">
         <label>备注</label>
         <input type="text" class="form-control" name="remark" v-model="activeOrderProduct['remark']" placeholder="添加备注" v-if="activeOrderProduct">
         <input type="text" class="form-control" name="remark" v-model="orderProduct['product']['remark']" placeholder="添加备注" v-if="!activeOrderProduct">
+      </div>
+      <div class="form-group col-md-3" v-if="activeOrderProduct && y.order_product">
+        <label>关联</label>
+        <select class="form-control" name="wardrobe_order_product_id" v-model="activeOrderProduct['relate']">
+          <option value="0">选择柜体</option>
+          <option v-for="(item, key, index) in y.order_product" :key="index" :value="item.v">{{ item.num }}-{{ item.product }}</option>
+        </select>
       </div>
       <div class="form-group col-md-1" v-if="activeOrderProduct && allOrderProduct">
         <button class="btn btn-light btn-sm" type="button" @click="craw"><i class="fa fa-crop"></i>抓取</button>
@@ -115,6 +122,7 @@ export default {
         remark: '',
         amount: ''
       },
+      wardrobe_order_product_id: 0,
       all_order_product_id: 0,
       loading: false,
       maxNum: 1,
@@ -142,6 +150,13 @@ export default {
     activeOrderProduct: {
       get () {
         return this.$store.getters.getActiveDismantleData({ uri: this.dismantleUrl, child: 'F' })
+      }
+    },
+    y: {
+      get () {
+        return this.$store.getters.getDismantleData({ uri: this.dismantleUrl, child: 'Y' })
+      },
+      set (Value) {
       }
     },
     allOrderProduct: {

@@ -3,7 +3,7 @@
     <form @submit.prevent="qrcodeSubmit($event.target)">
       <div class="input-group" id="pageSearch" v-if="error">
         <div class="input-group-prepend">
-          <button class="btn btn-outline-secondary" type="button" data-toggle="modal" data-target="#pageSearchModal" v-text="packType()"></button>
+          <button class="btn btn-danger" type="button" data-toggle="modal" data-target="#pageSearchModal" v-text="packType"></button>
         </div>
         <input type="hidden" name="qrcode"  v-model="pageSearches['qrcode'].dv" />
         <input type="search" class="form-control" name="keyword" id="scanBoardQrcode" v-model="keyword" placeholder="扫描板块二维码" autofocus autocomplete="off"/>
@@ -52,6 +52,12 @@ export default {
       get () {
         return !(JSON.stringify(this.pageSearches) === '{}' || JSON.stringify(this.pageSearches) === '[]' || JSON.stringify(this.pageSearches) === '')
       }
+    },
+    packType: {
+      get () {
+        console.log(this.pageSearches['pack_type'].dv)
+        return this.pageSearches['pack_type'].dv === 'thick' ? '厚板' : (this.pageSearches['pack_type'].dv === 'thin' ? '薄板' : '合包')
+      }
     }
   },
   watch: {
@@ -66,9 +72,6 @@ export default {
       this.pageSearches['qrcode'].dv = this.keyword
       this.keyword = ''
       this.$emit('search', $E)
-    },
-    packType () {
-      return this.pageSearches['pack_type'] === 'thick' ? '厚板' : (this.pageSearches['pack_type'] === 'thin' ? '薄板' : '合包')
     }
   },
   components: {

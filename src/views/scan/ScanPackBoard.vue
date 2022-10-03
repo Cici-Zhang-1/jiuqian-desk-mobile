@@ -240,7 +240,7 @@ export default {
       } else if (this.packType === 'thin') {
         packType = '--背板'
       }
-      url = pubUrl + '/' + this.firstOrderProduct['num'] + '-' + pack + '-' + pack + '-' + this.packType
+      url = pubUrl + '/' + this.firstOrderProduct['order_product_num'] + '-' + pack + '-' + pack + '-' + this.packType
       packLabel = '<div class="print-area d-none d-print-block" id="scanPackBoardLabelArea">' +
         '<div class="print-label">' +
           '<div class="delivery-address">' +
@@ -248,15 +248,15 @@ export default {
           '</div>' +
           '<table class="basic-info">' +
             '<tr>' +
-              '<td>' + this.firstOrderProduct['num'] + '</td>' +
-              '<td>产品: ' + this.firstOrderProduct['product'] + packType + '</td>' +
+              '<td>' + this.firstOrderProduct['order_product_num'] + '</td>' +
+              '<td>' + this.firstOrderProduct['product'] + packType + '</td>' +
             '</tr>' +
             '<tr>' +
               '<td>' + dealerName + '</td>' +
-              '<td>收货: ' + this.firstOrderProduct['delivery_linker'] + '</td>' +
+              '<td>' + this.firstOrderProduct['delivery_linker'] + '</td>' +
             '</tr>' +
             '<tr>' +
-              '<td>业主: ' + this.firstOrderProduct['owner'] + '</td>' +
+              '<td>' + this.firstOrderProduct['owner'] + '</td>' +
               '<td>' + printDate + '</td>' +
             '</tr>' +
           '</table>' +

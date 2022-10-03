@@ -24,6 +24,9 @@ if (process.env.NODE_ENV === 'development') {
   // host = 'https://www.365huijia.com'
   // baseUrl = 'https://www.365huijia.com'
   // pubUrl = 'http://pub.365huijia.com'
+  /* host = 'https://t.jqdz.online'
+  baseUrl = 'https://t.jqdz.online'
+  pubUrl = 'http://pub.jqdz.online' */
   host = 'https://www.jqdz.online'
   baseUrl = 'https://www.jqdz.online'
   pubUrl = 'http://pub.jqdz.online'
