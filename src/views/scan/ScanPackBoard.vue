@@ -236,9 +236,9 @@ export default {
 
       let packType = ''
       if (this.packType === 'thick') {
-        packType = '--柜体'
+        packType = '-柜体'
       } else if (this.packType === 'thin') {
-        packType = '--背板'
+        packType = '-背板'
       }
       url = pubUrl + '/' + this.firstOrderProduct['order_product_num'] + '-' + pack + '-' + pack + '-' + this.packType
       packLabel = '<div class="print-area d-none d-print-block" id="scanPackBoardLabelArea">' +
@@ -250,17 +250,20 @@ export default {
             '<tr>' +
               '<td>' + this.firstOrderProduct['order_product_num'] + '</td>' +
               '<td>' + this.firstOrderProduct['product'] + packType + '</td>' +
-            '</tr>' +
-            '<tr>' +
-              '<td>' + dealerName + '</td>' +
-              '<td>' + this.firstOrderProduct['delivery_linker'] + '</td>' +
-            '</tr>' +
-            '<tr>' +
-              '<td>' + this.firstOrderProduct['owner'] + '</td>' +
-              '<td>' + printDate + '</td>' +
-            '</tr>' +
-          '</table>' +
-          '<table class="plates">'
+            '</tr>'
+
+      if (this.firstOrderProduct['delivery_area'] !== 'OEA') {
+        packLabel = packLabel + '<tr>' +
+          '<td>' + dealerName + '</td>' +
+          '<td>' + this.firstOrderProduct['delivery_linker'] + '</td>' +
+          '</tr>'
+      }
+      packLabel = packLabel + '<tr>' +
+        '<td>' + this.firstOrderProduct['owner'] + '</td>' +
+        '<td>' + printDate + '</td>' +
+        '</tr>' +
+        '</table>' +
+        '<table class="plates">'
       packLabel = packLabel + plates + '</table>' +
             '<div class="package-total">' +
               '<div class="middle">' + pack + '-' + platesNum + '</div>' +
@@ -277,10 +280,10 @@ export default {
           text: $(this).data('url')
         })
       })
-      window.onafterprint = (event) => {
-        $('#scanPackBoardLabelArea').remove()
-        $('body').children().removeClass('d-print-none')
-      }
+      // window.onafterprint = (event) => {
+      //   $('#scanPackBoardLabelArea').remove()
+      //   $('body').children().removeClass('d-print-none')
+      // }
       window.print()
     }
   },
