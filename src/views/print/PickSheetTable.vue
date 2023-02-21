@@ -1,6 +1,6 @@
 <template>
   <div class="paging print-page">
-    <h4 style="text-align: center; font-weight: bold;">九千定制家具厂({{tables.num}})</h4>
+    <h4 style="text-align: center; font-weight: bold;">{{configs.company}}({{tables.num}})</h4>
     <table class="basic-info text-nowrap">
       <tbody>
       <tr>
@@ -70,6 +70,7 @@
 
 <script>
 import PickSheetTr from './PickSheetTr'
+import {mapGetters} from 'vuex'
 Date.prototype.Format = function (fmt) {
   var o = {
     'M+': this.getMonth() + 1,
@@ -104,6 +105,11 @@ export default {
     pack: {
       type: [ Number, String ]
     }
+  },
+  computed: {
+    ...mapGetters({
+      configs: 'getConfigs'
+    })
   },
   components: {
     PickSheetTr

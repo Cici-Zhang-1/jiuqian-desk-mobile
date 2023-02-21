@@ -21,6 +21,7 @@ export default new Vuex.Store({
     },
     configs: {
       title: '九千定制管理系统2.1',
+      company: '九千定制家具厂',
       host: host
     },
     collapse: false,

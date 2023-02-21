@@ -280,10 +280,10 @@ export default {
           text: $(this).data('url')
         })
       })
-      // window.onafterprint = (event) => {
-      //   $('#scanPackBoardLabelArea').remove()
-      //   $('body').children().removeClass('d-print-none')
-      // }
+      window.onafterprint = (event) => {
+        $('#scanPackBoardLabelArea').remove()
+        $('body').children().removeClass('d-print-none')
+      }
       window.print()
     }
   },
