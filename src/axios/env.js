@@ -8,9 +8,9 @@ let pubUrl
 if (process.env.NODE_ENV === 'development') {
   host = 'http://localhost:8080'
   // host = 'http://localhost:8080'
-  baseUrl = 'http://localhost/jiuqian-online-back'
+  baseUrl = 'http://localhost:7070/jiuqian-online-back'
   // baseUrl = 'http://localhost/jiuqian-produce'
-  pubUrl = 'http://localhost/pub_365huijia'
+  pubUrl = 'http://localhost:7070/pub_365huijia'
 } else if (process.env.NODE_ENV === 'production') {
   // host = 'http://localhost/jiuqian-mobile'
   // baseUrl = 'http://localhost/jiuqian-mobile'

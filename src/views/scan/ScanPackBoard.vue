@@ -194,19 +194,25 @@ export default {
         platesNum = activeLines.length
         let activeLinesMerge = {}
         activeLines.forEach(v => {
-          let key = v['plate_name'] + '-' + v.length + '-' + v.width + '-' + v.thick
-          if (activeLinesMerge[key] === undefined) {
-            activeLinesMerge[key] = 1
-          } else {
-            activeLinesMerge[key] += 1
+          let [, productNum, plateNum] = v['qrcode'].split('-')
+          if (activeLinesMerge[productNum] === undefined) {
+            activeLinesMerge[productNum] = []
           }
+          activeLinesMerge[productNum].push(plateNum)
+          // let key = v['plate_name'] + '-' + v.length + '-' + v.width + '-' + v.thick
+          // if (activeLinesMerge[key] === undefined) {
+          //   activeLinesMerge[key] = 1
+          // } else {
+          //   activeLinesMerge[key] += 1
+          // }
         })
-        plates = Object.keys(activeLinesMerge).slice(0, 10).map((v, i) => {
-          if (i % 2 === 0) {
-            return '<tr><td>' + v + '-' + activeLinesMerge[v] + '</td>'
-          } else {
-            return '<td>' + v + '-' + activeLinesMerge[v] + '</td></tr>'
-          }
+        plates = Object.keys(activeLinesMerge).map((v) => {
+          return '<tr><td>' + v + ':' + activeLinesMerge[v].join(', ') + '</td></tr>'
+          // if (i % 2 === 0) {
+          //   return '<tr><td>' + v + '-' + activeLinesMerge[v] + '</td>'
+          // } else {
+          //   return '<td>' + v + '-' + activeLinesMerge[v] + '</td></tr>'
+          // }
         }).join('')
       } else {
         return false
@@ -234,12 +240,12 @@ export default {
       let packLabel = ''
       let url = ''
 
-      let packType = ''
-      if (this.packType === 'thick') {
-        packType = '-柜体'
-      } else if (this.packType === 'thin') {
-        packType = '-背板'
-      }
+      // let packType = ''
+      // if (this.packType === 'thick') {
+      //   packType = '-柜体'
+      // } else if (this.packType === 'thin') {
+      //   packType = '-背板'
+      // }
       url = pubUrl + '/' + this.firstOrderProduct['order_product_num'] + '-' + pack + '-' + pack + '-' + this.packType
       packLabel = '<div class="print-area d-none d-print-block" id="scanPackBoardLabelArea">' +
         '<div class="print-label">' +
@@ -249,24 +255,24 @@ export default {
           '<table class="basic-info">' +
             '<tr>' +
               '<td>' + this.firstOrderProduct['order_product_num'] + '</td>' +
-              '<td>' + this.firstOrderProduct['product'] + packType + '</td>' +
+              '<td>' + dealerName + '</td>' +
             '</tr>'
 
       if (this.firstOrderProduct['delivery_area'] !== 'OEA') {
         packLabel = packLabel + '<tr>' +
-          '<td>' + dealerName + '</td>' +
           '<td>' + this.firstOrderProduct['delivery_linker'] + '</td>' +
+          '<td>' + this.firstOrderProduct['owner'] + '</td>' +
           '</tr>'
       }
       packLabel = packLabel + '<tr>' +
-        '<td>' + this.firstOrderProduct['owner'] + '</td>' +
         '<td>' + printDate + '</td>' +
+        '<td>共' + platesNum + '块</td>' +
         '</tr>' +
         '</table>' +
         '<table class="plates">'
       packLabel = packLabel + plates + '</table>' +
             '<div class="package-total">' +
-              '<div class="middle">' + pack + '-' + platesNum + '</div>' +
+              '<div class="middle"><span>第</span>' + pack + '<span>包</span></div>' +
             '</div>' +
           '<div class="qrcode" data-url=' + url + '></div>' +
         '</div>' +

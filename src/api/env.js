@@ -6,7 +6,7 @@ let host
 if (process.env.NODE_ENV === 'development') {
   // host = 'http://localhost/jiuqian.online.back'
   host = 'http://localhost:8080'
-  baseUrl = 'http://localhost/jiuqian-online-back'
+  baseUrl = 'http://localhost:7070/jiuqian-online-back'
 } else if (process.env.NODE_ENV === 'production') {
   // host = 'https://www.365huijia.com'
   // baseUrl = 'https://www.365huijia.com'

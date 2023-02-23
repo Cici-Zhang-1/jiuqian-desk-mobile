@@ -310,8 +310,9 @@ table .td-lg {
   }
   .print-label > table.plates {
     width: 98mm;
-    font-size: 0.8rem;
+    font-size: 1rem;
     font-weight: normal;
+    text-align: center;
   }
   .print-label > div > .middle{
     display: table-cell;
@@ -336,13 +337,16 @@ table .td-lg {
   }
   .print-label .package-total {
     position: absolute;
-    top: 27mm;
+    top: 26mm;
     left: 70mm;
     width: 28mm;
     height: 10mm;
     font-weight: bolder;
     text-align: center;
     font-size: 7mm;
+  }
+  .print-label .package-total span {
+    font-size: 3mm;
   }
   .print-label > .qrcode {
     width: 28mm;
