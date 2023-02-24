@@ -22,7 +22,7 @@
         <scanner :lastScanner="card.data['last_scanner']" v-if="card.data['last_scanner']"/>
         <scan-num :num="card.data.num" :unCheck="unCheck" :checking="checking" :packNum="packNum"/>
         <scan-info :scanning="scanning"/>
-        <scan-board-modal :abnormity="abnormity" :nonExist="nonExist" :qrcode="pageSearchValues.qrcode" :scanning="scanning" @sure="disposeSure($event)" @hidden-modal="$emit('focus-qrcode', $event)"/>
+        <scan-board-modal :abnormity="abnormity" :nonExist="nonExist" :thinEdge="thinEdge" :qrcode="pageSearchValues.qrcode" :scanning="scanning" @sure="disposeSure($event)" @hidden-modal="$emit('focus-qrcode', $event)"/>
       </div>
     </div>
     <audio id="scanBoardRightAudio" preload="auto">
@@ -36,6 +36,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { baseUrl } from '@/axios/env'
+import { THICK } from '@/assets/js/constants'
 import ScanPackBoardTable from './ScanPackBoardTable'
 import Scanner from './Scanner'
 import ScanNum from './ScanNum'
@@ -79,6 +80,7 @@ export default {
       scanning: {},
       abnormity: false,
       nonExist: false,
+      thinEdge: false,
       newScan: false,
       lastScan: false,
       lastScanned: {}
@@ -168,7 +170,7 @@ export default {
       } else {
         this.setScanning()
         if (!this.setNonExist()) {
-          if (!this.setAbnormity()) {
+          if (!this.setAbnormity() || !this.setThinEdge()) {
             if (!this.setPacked()) {
               this.setQrcode()
             }
@@ -196,6 +198,13 @@ export default {
     setAbnormity () {
       if (this.scanning.abnormity !== undefined && (this.scanning.abnormity === '1' || this.scanning.abnormity === 1)) {
         this.abnormity = !this.abnormity
+        return true
+      }
+      return false
+    },
+    setThinEdge () {
+      if (this.scanning.thick.parseInt() < THICK && this.scanning.edge === '') {
+        this.thinEdge = !this.thinEdge
         return true
       }
       return false

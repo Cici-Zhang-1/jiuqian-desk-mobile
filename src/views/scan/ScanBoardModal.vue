@@ -11,6 +11,9 @@
           <audio id="scanBoardAbnormityAudio" preload="auto" loop="loop">
             <source :src="audioLink('abnormity')" type="audio/mpeg" />
           </audio>
+          <audio id="scanBoardThinEdgeAudio" preload="auto" loop="loop">
+            <source :src="audioLink('thin_edge')" type="audio/mpeg" />
+          </audio>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" :class="{'d-none': !sure }" id="scanBoardModalSure" data-dismiss="modal" @click="$emit('sure', $event.target) && $emit('hidden-modal', $event.target)">确认</button>
@@ -32,6 +35,9 @@ export default {
       type: Boolean
     },
     nonExist: {
+      type: Boolean
+    },
+    thinEdge: {
       type: Boolean
     },
     qrcode: {
@@ -78,6 +84,16 @@ export default {
         this.msg = this.qrcode + '不是该订单内部件'
         $('#scanBoardModal').modal({backdrop: 'static', keyword: false}).modal('show')
         this.audio = document.getElementById('scanBoardWrongAudio')
+        this.playAudio()
+      }
+    },
+    thinEdge: { // 薄板封边
+      handler: function (to, from) {
+        this.sure = true
+        this.msg = this.qrcode + this.scanning.remark + '当前薄板是否已经封边?'
+        $('#scanBoardModal').modal({backdrop: 'static', keyword: false}).modal('show')
+        this.autoClose()
+        this.audio = document.getElementById('scanBoardThinEdgeAudio')
         this.playAudio()
       }
     }

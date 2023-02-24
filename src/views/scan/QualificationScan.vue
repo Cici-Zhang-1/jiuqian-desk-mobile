@@ -1,7 +1,7 @@
 <template>
   <div class="row mt-3 j-page" :id="title">
     <div class="col-12 border-bottom rounded-bottom mb-2 border-primary text-center d-print-none"><h5>{{ label }}</h5></div>
-    <div is="scan-board-page-search" :pageSearches="disposeThick(pageSearches)" v-if="pageSearches" @search="searchQrcode($event)" :qrcodeFocus="focus"></div>
+    <div is="qualification-scan-search" :pageSearches="disposeThick(pageSearches)" v-if="pageSearches" @search="searchQrcode($event)" :qrcodeFocus="focus"></div>
     <div is="qualification-scan-func" @show="show($event)" @save="save($event)" @refresh="disposeRefresh($event)"
          @last="disposeLast($event)" @bug="disposeBug($event)">
       <a class="d-none" id="autoSave" href="/order/qualification_scan/edit" data-toggle="save"
@@ -14,7 +14,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import ScanBoardPageSearch from './ScanBoardPageSearch'
+import QualificationScanSearch from './QualificationSearch'
 import QualificationScanFunc from './QualificationScanFunc'
 import ScanBoardCard from './ScanBoardCard'
 import { nameToId } from '@/assets/js/custom'
@@ -172,7 +172,7 @@ export default {
     }
   },
   components: {
-    ScanBoardPageSearch,
+    QualificationScanSearch,
     QualificationScanFunc,
     ScanBoardCard
   }
