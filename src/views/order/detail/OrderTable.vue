@@ -14,6 +14,7 @@
         <th v-if="show('payed')">已支付</th>
         <th v-if="show('remark')">备注</th>
         <th v-if="show('dealer_remark')">客户备注</th>
+        <th v-if="show('pack')">件数</th>
         <th v-if="show('warehouse_num')">库位</th>
       </tr>
       <tr>
@@ -29,6 +30,7 @@
         <td v-if="show('payed')">{{ table.payed }}</td>
         <td v-if="show('remark')">{{ table.remark }}</td>
         <td v-if="show('dealer_remark')">{{ table.dealer_remark }}</td>
+        <td v-if="show('pack')">{{ table.pack }}</td>
         <td v-if="show('warehouse_num')">{{ table.warehouse_num }}</td>
       </tr>
     </tbody>

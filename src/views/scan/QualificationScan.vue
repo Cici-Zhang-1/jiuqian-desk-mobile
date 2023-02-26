@@ -1,25 +1,22 @@
 <template>
   <div class="row mt-3 j-page" :id="title">
     <div class="col-12 border-bottom rounded-bottom mb-2 border-primary text-center d-print-none"><h5>{{ label }}</h5></div>
-    <div is="qualification-scan-search" :pageSearches="disposeThick(pageSearches)" v-if="pageSearches" @search="searchQrcode($event)" :qrcodeFocus="focus"></div>
-    <div is="qualification-scan-func" @show="show($event)" @save="save($event)" @refresh="disposeRefresh($event)"
-         @last="disposeLast($event)" @bug="disposeBug($event)">
+    <div is="qualification-scan-search" :pageSearches="pageSearches" v-if="pageSearches" @search="searchQrcode($event)" :qrcodeFocus="focus"></div>
+    <div is="qualification-scan-func" @show="show($event)" @refresh="disposeRefresh($event)">
       <a class="d-none" id="autoSave" href="/order/qualification_scan/edit" data-toggle="save"
          data-target="#qualificationScanTable" data-multiple="true">自动保存</a>
     </div>
-    <div is="scan-board-card" :card="get_card('qualification_scan_table')" v-if="cards" :reload="reload"
-         :search="search" :showAll="showAll" :refresh="refresh" :last="last" :bug="bug" @focus-qrcode="disposeFocus()"></div>
+    <div is="qualification-card" :card="get_card('qualification_scan_table')" v-if="cards" :reload="reload"
+         :search="search" :showAll="showAll" :refresh="refresh" @focus-qrcode="disposeFocus()"></div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import QualificationScanSearch from './QualificationSearch'
+import QualificationScanSearch from './QualificationScanSearch'
 import QualificationScanFunc from './QualificationScanFunc'
-import ScanBoardCard from './ScanBoardCard'
+import QualificationCard from './QualificationCard'
 import { nameToId } from '@/assets/js/custom'
-import service from '@/axios'
-import $ from 'jquery'
 import { pubMixins } from '@/views/mixins'
 export default {
   mixins: [ pubMixins ],
@@ -34,10 +31,7 @@ export default {
       showAll: false,
       refresh: false,
       focus: false,
-      last: false,
-      bug: false,
       data: {},
-      thick: '',
       autoSaveId: undefined
     }
   },
@@ -50,7 +44,6 @@ export default {
   },
   created () {
     this.set_app_controller()
-    this.thick = this.$localStorage.get('qualification_scan_thick', '')
   },
   beforeRouteEnter (to, from, next) {
     next(vm => {
@@ -66,21 +59,9 @@ export default {
         }
       },
       deep: true
-    },
-    'pageSearches.thick.dv': {
-      handler: function (to, from) {
-        if (to !== from) {
-          this.thick = to
-          this.$localStorage.set('qualification_scan_thick', to)
-        }
-      }
     }
   },
   methods: {
-    disposeThick (pageSearches) {
-      pageSearches.thick.dv = this.thick
-      return pageSearches
-    },
     get_card ($Name) {
       return this.cards.filter(__ => {
         return __.name === $Name
@@ -95,86 +76,23 @@ export default {
     },
     searchQrcode (e) {
       this.search = !this.search
-      if (typeof this.autoSaveId === 'number') {
-        clearTimeout(this.autoSaveId)
-      }
-      this.autoSaveId = setTimeout(() => {
-        // this.save(document.getElementById('autoSave'))
-        this.autoSave(document.getElementById('autoSave'))
-      }, 10000)
-    },
-    disposeLast (E) {
-      if (window.confirm('确认找回上次扫描?')) {
-        this.last = !this.last
-      }
-      this.disposeFocus()
-      return true
-    },
-    disposeBug (E) {
-      this.bug = !this.bug
     },
     disposeRefresh (E) { // 刷新
-      if (this.setData(E)) {
-        if (window.confirm('您有未确认的扫描，是否确认?')) {
-          this.submit(E)
-          return true
-        }
-      }
       this.disposeReset()
       this.disposeFocus()
-      return false
+      return true
     },
     disposeReset () { // 重置
       this.refresh = !this.refresh
     },
     disposeFocus () {
       this.focus = !this.focus
-    },
-    setData (E) {
-      let Target = $(E).data('target')
-      let V = this.$store.getters.currentPageActiveLineVs({source: Target, all: $(E).data('multiple')}).map(__ => __.v)
-      if (V && V.length !== 0) {
-        this.data.v = V
-        return true
-      } else {
-        return false
-      }
-    },
-    save (E) {
-      if (this.setData(E)) {
-        // if (window.confirm('确定执行' + $(E).text() + '操作?')) {
-        this.submit(E)
-        return true
-        // }
-        // return false
-      } else {
-        alert('请先选中')
-        return false
-      }
-    },
-    async autoSave (E) {
-      if (this.setData(E)) {
-        let postReturn = await service.post($(E).attr('href'), this.data)
-        return !postReturn.code
-      }
-    },
-    async submit (E) {
-      let postReturn = await service.post($(E).attr('href'), this.data)
-      if (!postReturn.code) {
-        // alert(postReturn.message)
-        this.disposeReset()
-        this.disposeFocus()
-        return true
-      } else {
-        alert(postReturn.message)
-        return false
-      }
     }
   },
   components: {
     QualificationScanSearch,
     QualificationScanFunc,
-    ScanBoardCard
+    QualificationCard
   }
 }
 </script>

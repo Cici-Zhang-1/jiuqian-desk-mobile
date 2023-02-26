@@ -55,7 +55,6 @@ export default {
     },
     packType: {
       get () {
-        console.log(this.pageSearches['pack_type'].dv)
         return this.pageSearches['pack_type'].dv === 'thick' ? '厚板' : (this.pageSearches['pack_type'].dv === 'thin' ? '薄板' : '合包')
       }
     }

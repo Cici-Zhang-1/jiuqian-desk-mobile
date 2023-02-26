@@ -179,6 +179,20 @@ export default {
       }
     },
     setScanning () { // 正在扫描的qrcode
+      if (this.card.data && this.card.data.num) {
+        this.scanning = this.card.data.content.filter(__ => {
+          return __.qrcode === this.pageSearchValues.qrcode
+        })[0] || {}
+        if (JSON.stringify(this.scanning) === '{}') {
+          let [ searchNum, , , ] = this.pageSearchValues.qrcode.split('-')
+          let [ exitNum, , , ] = this.card.data.content[0].qrcode.split('-')
+          if (searchNum === exitNum) {
+            this.fetchSiblingData()
+          }
+        }
+      } else {
+        this.scanning = {}
+      }
       this.scanning = (this.card.data && this.card.data.num && this.card.data.content.filter(__ => {
         return __.qrcode === this.pageSearchValues.qrcode
       })[0]) || {}
@@ -224,6 +238,37 @@ export default {
       this.loading = true
       this.error = false
       this.$store.dispatch('FETCH_DATA', {
+        url: this.card.url,
+        configs: {
+          params: {
+            ...this.pageSearchValues,
+            ...this.$router.currentRoute.query,
+            ...params
+          }
+        },
+        target: this.card
+      }).then((res) => {
+        if (res.code > 0) {
+          this.errorMsg = res.message
+          this.error = true
+        } else {
+          this.searching = true
+          this.newScan = true
+          this.dispose()
+        }
+      }).catch(err => {
+        this.errorMsg = err.message
+        this.error = true
+      }).finally(() => {
+        this.loading = false
+        this.$bar.finish()
+      })
+    },
+    fetchSiblingData (params = {}) { // 抓去一个大订单下面其他小订单的数据
+      this.$bar.start()
+      this.loading = true
+      this.error = false
+      this.$store.dispatch('FETCH_ACC_DATA', {
         url: this.card.url,
         configs: {
           params: {

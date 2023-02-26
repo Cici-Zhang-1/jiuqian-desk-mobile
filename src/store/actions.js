@@ -241,5 +241,16 @@ export default {
       commit('SET_VALUATE_DATA', { ...data, target })
       return data
     })
+  },
+
+  FETCH_ACC_DATA: ({commit, dispatch, state}, { url, configs = {}, target }) => {
+    return service.get(url, configs).then(data => {
+      if (typeof data === 'object') {
+        if (data.code === 0) commit('SET_ACC_DATA', { ...data, target })
+        return data
+      } else {
+        throw new FetchError('发生未知错误，请联系管理员!')
+      }
+    })
   }
 }

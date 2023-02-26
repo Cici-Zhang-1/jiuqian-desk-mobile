@@ -218,5 +218,20 @@ export default {
         return ___
       })
     }
+  },
+
+  /**
+   * 累计显示
+   * @param state
+   * @param contents
+   * @param target
+   * @constructor
+   */
+  SET_ACC_DATA: (state, { contents, target }) => {
+    if (!(target['data'] === undefined || target['data'] === null || (target['data'] instanceof Array && target['data'].length === 0))) {
+      contents['content'] = [...contents['content'], ...target['data']['content']]
+      contents['num'] = target['data']['num'] + contents['num']
+    }
+    Vue.set(target, 'data', contents)
   }
 }

@@ -3,24 +3,20 @@
     <form @submit.prevent="qrcodeSubmit($event.target)">
       <div class="input-group" id="pageSearch" v-if="error">
         <div class="input-group-prepend">
-          <button class="btn btn-outline-secondary" type="button" data-toggle="modal" data-target="#pageSearchModal"><i class="fa fa-search"></i></button>
+          <button class="btn btn-outline-secondary" type="button"><i class="fa fa-search"></i></button>
         </div>
-        <input type="hidden" name="thick" v-model="pageSearches['thick'].dv" />
-        <input type="hidden" name="qrcode"  v-model="pageSearches['qrcode'].dv" />
-        <input type="search" class="form-control" name="keyword" id="scanBoardQrcode" v-model="keyword" placeholder="扫描板块二维码" autofocus autocomplete="off"/>
+        <input type="search" class="form-control" name="keyword" id="qualificationBoardQrcode" v-model="keyword" placeholder="扫描板块二维码" autofocus autocomplete="off"/>
         <div class="input-group-append">
           <button class="btn btn-outline-secondary" type="submit">Go!</button>
         </div>
       </div>
     </form>
-    <div is="RegularModal" :modal="modal"></div>
   </div>
 </template>
 
 <script>
 import FormGroupInput from '@/components/forms/FormGroupInput'
 import FormGroupSelect from '@/components/forms/FormGroupSelect'
-import RegularModal from '@/components/modals/RegularModal'
 import $ from 'jquery'
 export default {
   name: 'QualificationScanSearch',
@@ -39,16 +35,6 @@ export default {
     }
   },
   computed: {
-    modal: {
-      get () {
-        return {
-          target: '#pageSearchModal',
-          label: '搜索设置',
-          forms: this.pageSearches,
-          modal_type_v: 'filter'
-        }
-      }
-    },
     error: {
       get () {
         return !(JSON.stringify(this.pageSearches) === '{}' || JSON.stringify(this.pageSearches) === '[]' || JSON.stringify(this.pageSearches) === '')
@@ -58,7 +44,7 @@ export default {
   watch: {
     qrcodeFocus: {
       handler: function (to, from) {
-        $('#scanBoardQrcode').focus()
+        $('#qualificationBoardQrcode').focus()
       }
     }
   },
@@ -71,8 +57,7 @@ export default {
   },
   components: {
     FormGroupInput,
-    FormGroupSelect,
-    RegularModal
+    FormGroupSelect
   }
 }
 </script>
