@@ -57,7 +57,7 @@ export default {
       last: false,
       bug: false,
       data: {},
-      packType: 'thick',
+      packType: 'both',
       autoSaveId: undefined,
       firstOrderProduct: {}
     }
@@ -71,7 +71,7 @@ export default {
   },
   created () {
     this.set_app_controller()
-    this.packType = this.$localStorage.get('scan_pack_type', 'thick')
+    this.packType = this.$localStorage.get('scan_pack_type', 'both')
   },
   beforeRouteEnter (to, from, next) {
     next(vm => {

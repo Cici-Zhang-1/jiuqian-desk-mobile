@@ -83,7 +83,8 @@ export default {
       thinEdge: false,
       newScan: false,
       lastScan: false,
-      lastScanned: {}
+      lastScanned: {},
+      sibling: ''
     }
   },
   computed: {
@@ -183,10 +184,11 @@ export default {
         this.scanning = this.card.data.content.filter(__ => {
           return __.qrcode === this.pageSearchValues.qrcode
         })[0] || {}
-        if (JSON.stringify(this.scanning) === '{}') {
+        if (JSON.stringify(this.scanning) === '{}' && this.sibling !== this.pageSearchValues.qrcode) {
           let [ searchNum, , , ] = this.pageSearchValues.qrcode.split('-')
           let [ exitNum, , , ] = this.card.data.content[0].qrcode.split('-')
           if (searchNum === exitNum) {
+            this.sibling = this.pageSearchValues.qrcode // 防止重复scan
             this.fetchSiblingData()
           }
         }
@@ -217,7 +219,7 @@ export default {
       return false
     },
     setThinEdge () {
-      if (this.scanning.thick.parseInt() < THICK && this.scanning.edge === '') {
+      if (parseInt(this.scanning.thick) < THICK && this.scanning.edge === '') {
         this.thinEdge = !this.thinEdge
         return true
       }

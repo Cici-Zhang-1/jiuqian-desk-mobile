@@ -189,7 +189,7 @@ export default {
       return false
     },
     setThinEdge () {
-      if (this.scanning.thick.parseInt() < THICK && this.scanning.edge === '') {
+      if (parseInt(this.scanning.thick) < THICK && this.scanning.edge === '') {
         this.thinEdge = !this.thinEdge
         return true
       }

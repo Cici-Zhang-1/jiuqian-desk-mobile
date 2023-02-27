@@ -1,5 +1,5 @@
 <template>
-  <tr :class="{'table-danger': trData.checked, 'd-none': !showAll && trData.checked}" @click="activeTr($event.currentTarget)" @dblclick="multipleActiveTr" v-if="thickFilter()">
+  <tr :class="{'table-danger': trData.checked}" @click="activeTr($event.currentTarget)" @dblclick="multipleActiveTr">
     <td class="d-print-none"><input type="checkbox" v-model="trData.checked" /> </td>
     <td v-for="(value, key, index) in tableThead" :name="key" :class="[ value.classes ]" :key="index" v-if="value.checked_name" v-html="generateTd(trData[key], value)"></td>
   </tr>
@@ -8,7 +8,6 @@
 <script>
 import $ from 'jquery'
 import { trimRight } from 'voca'
-import { THICK } from '@/assets/js/constants'
 
 export default {
   name: 'QualificationTr',
@@ -23,13 +22,6 @@ export default {
     },
     qrcode: {
       type: String
-    },
-    showAll: {
-      type: Boolean,
-      default: false
-    },
-    thick: {
-      type: Number | String
     }
   },
   created () {
@@ -57,17 +49,6 @@ export default {
           if (!this.trData.checked) {
             this.$store.commit('SET_LINE_ACTIVITY', { tr: this.trData })
           }
-        }
-      }
-    },
-    thickFilter () {
-      if (this.thick === '') {
-        return true
-      } else {
-        if (this.thick === 0 || this.thick === '0') {
-          return this.trData['thick'] < THICK
-        } else {
-          return this.trData['thick'] > THICK
         }
       }
     },

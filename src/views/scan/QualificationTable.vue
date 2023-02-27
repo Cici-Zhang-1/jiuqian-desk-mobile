@@ -7,7 +7,7 @@
       </tr>
     </thead>
     <tbody >
-      <tr @click="inactiveTr" is="qualification-tr" v-for="(value, key, index) in table" :trData="value" :tableThead="tableThead" :key="index" :qrcode="qrcode" :showAll="showAll" :thick="thick"></tr>
+      <tr @click="inactiveTr" is="qualification-tr" v-for="(value, key, index) in table" :trData="value" :tableThead="tableThead" :key="index" :qrcode="qrcode"></tr>
     </tbody>
   </table>
 </template>
@@ -29,13 +29,6 @@ export default {
     qrcode: {
       type: String,
       required: true
-    },
-    showAll: {
-      type: Boolean,
-      default: false
-    },
-    thick: {
-      type: Number | String
     }
   },
   data () {
