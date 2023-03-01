@@ -195,9 +195,9 @@ export default {
       } else {
         this.scanning = {}
       }
-      this.scanning = (this.card.data && this.card.data.num && this.card.data.content.filter(__ => {
-        return __.qrcode === this.pageSearchValues.qrcode
-      })[0]) || {}
+      // this.scanning = (this.card.data && this.card.data.num && this.card.data.content.filter(__ => {
+      //   return __.qrcode === this.pageSearchValues.qrcode
+      // })[0]) || {}
     },
     setNonExist () {
       if (JSON.stringify(this.scanning) === '{}') {

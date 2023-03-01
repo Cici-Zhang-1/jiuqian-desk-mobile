@@ -358,6 +358,20 @@ export default {
     }
   },
 
+  currentPageData: (state) => ({ source, key }) => {
+    if (!(source === false || source === undefined || source === null || source === '')) {
+      let __ = state.apps.filter(app => {
+        return app.url === state.route.path
+      })[0].cards.filter(card => {
+        return '#' + nameToId(card.name) === source
+      })[0]
+      if ((__ !== undefined)) {
+        return __.data[key]
+      }
+    }
+    return null
+  },
+
   getTargetQuery: (state) => ({ source }) => {
     if (source === false || source === undefined || source === null || source === '') {
       return {}

@@ -137,13 +137,15 @@ export default {
     },
     disposeReset () { // 重置
       this.refresh = !this.refresh
+      return true
     },
     disposeFocus () {
       this.focus = !this.focus
+      return true
     },
     setData (E) {
       let Target = $(E).data('target')
-      let V = this.$store.getters.currentPageActiveLineVs({source: Target, all: $(E).data('multiple')}).map(__ => __.v)
+      let V = this.$store.getters.currentPageActiveLineVs({source: Target, all: $(E).data('multiple'), keys: ['v', 'scanner']}).filter(__ => __.scanner === null).map(__ => __.v)
       if (V && V.length !== 0) {
         this.data.v = V
         this.data.pack_type = this.packType
@@ -163,7 +165,7 @@ export default {
         // }
         // return false
       } else {
-        alert('请先选中')
+        alert('请先选中未扫描的板块')
         return false
       }
     },
@@ -177,10 +179,7 @@ export default {
       let postReturn = await service.post($(E).attr('href'), this.data)
       if (!postReturn.code) {
         // alert(postReturn.message)
-        this.printLabel(E)
-        this.disposeReset()
-        this.disposeFocus()
-        return true
+        return this.printLabel(E) && this.disposeReset() && this.disposeFocus()
       } else {
         alert(postReturn.message)
         return false
@@ -194,31 +193,25 @@ export default {
         platesNum = activeLines.length
         let activeLinesMerge = {}
         activeLines.forEach(v => {
-          let [, productNum, plateNum] = v['qrcode'].split('-')
-          if (activeLinesMerge[productNum] === undefined) {
-            activeLinesMerge[productNum] = []
+          if (v['scanner'] === null) {
+            let [, productNum, plateNum] = v['qrcode'].split('-')
+            if (activeLinesMerge[productNum] === undefined) {
+              activeLinesMerge[productNum] = []
+            }
+            activeLinesMerge[productNum].push(plateNum)
           }
-          activeLinesMerge[productNum].push(plateNum)
-          // let key = v['plate_name'] + '-' + v.length + '-' + v.width + '-' + v.thick
-          // if (activeLinesMerge[key] === undefined) {
-          //   activeLinesMerge[key] = 1
-          // } else {
-          //   activeLinesMerge[key] += 1
-          // }
         })
-        plates = Object.keys(activeLinesMerge).map((v) => {
-          return '<tr><td>' + v + ':' + activeLinesMerge[v].join(', ') + '</td></tr>'
-          // if (i % 2 === 0) {
-          //   return '<tr><td>' + v + '-' + activeLinesMerge[v] + '</td>'
-          // } else {
-          //   return '<td>' + v + '-' + activeLinesMerge[v] + '</td></tr>'
-          // }
-        }).join('')
+        if (JSON.stringify(activeLinesMerge) !== '{}') {
+          plates = Object.keys(activeLinesMerge).map((v) => {
+            return '<tr><td>' + v + ':' + activeLinesMerge[v].sort().join(', ') + '</td></tr>'
+          }).join('')
+        } else {
+          return false
+        }
       } else {
         return false
       }
       let printDate = new Date().Format('yyyy-MM-dd')
-      // let orderProduct = this.get_card('scan_pack_board_table').data['order_product']
       let pack = parseInt(this.firstOrderProduct.pack) + 1
       if (this.firstOrderProduct['delivery_area'] === '') {
         this.firstOrderProduct['delivery_area'] = '--'
@@ -240,12 +233,6 @@ export default {
       let packLabel = ''
       let url = ''
 
-      // let packType = ''
-      // if (this.packType === 'thick') {
-      //   packType = '-柜体'
-      // } else if (this.packType === 'thin') {
-      //   packType = '-背板'
-      // }
       url = pubUrl + '/' + this.firstOrderProduct['order_product_num'] + '-' + pack + '-' + pack + '-' + this.packType
       packLabel = '<div class="print-area d-none d-print-block" id="scanPackBoardLabelArea">' +
         '<div class="print-label">' +
@@ -291,6 +278,7 @@ export default {
         $('body').children().removeClass('d-print-none')
       }
       window.print()
+      return true
     }
   },
   components: {
