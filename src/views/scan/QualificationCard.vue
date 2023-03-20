@@ -126,11 +126,13 @@ export default {
     },
     speak () {
       if (this.voice === null) this.setupVoice()
+      console.log('start speaking')
       if (this.synth.speaking) {
         console.error('speechSynthesis.speaking')
         return false
       }
       const msg = this.getMsg()
+      console.log(msg)
       if (msg !== '') {
         const utterThis = new SpeechSynthesisUtterance(msg)
 

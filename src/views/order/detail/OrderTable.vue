@@ -30,7 +30,7 @@
         <td v-if="show('payed')">{{ table.payed }}</td>
         <td v-if="show('remark')">{{ table.remark }}</td>
         <td v-if="show('dealer_remark')">{{ table.dealer_remark }}</td>
-        <td v-if="show('pack')">{{ table.pack }}</td>
+        <td v-if="show('pack')">{{ table.pack2 }}</td>
         <td v-if="show('warehouse_num')">{{ table.warehouse_num }}</td>
       </tr>
     </tbody>

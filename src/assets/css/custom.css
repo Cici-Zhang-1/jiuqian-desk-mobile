@@ -290,7 +290,7 @@ table .td-lg {
   }
   .print-area {
     width: 10cm!important;
-    height: 8cm!important;
+    /*height: 8cm!important;*/
   }
   .print-area:after {
     content: none;
@@ -299,7 +299,7 @@ table .td-lg {
     position: relative;
     width: 100%;
     height: 7.9cm;
-    page-break-after: always;
+    /*page-break-after: always;*/
   }
   .print-label > div {
     display: table;

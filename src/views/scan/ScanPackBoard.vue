@@ -150,7 +150,7 @@ export default {
         this.data.v = V
         this.data.pack_type = this.packType
         this.firstOrderProduct = this.get_card('scan_pack_board_table').data['order_product']
-        this.data.pack = parseInt(this.firstOrderProduct.pack) + 1
+        this.data.pack = parseInt(this.firstOrderProduct.pack2) + 1
         this.data.order_product_board_plate_id = this.firstOrderProduct['v']
         return true
       } else {
@@ -212,7 +212,7 @@ export default {
         return false
       }
       let printDate = new Date().Format('yyyy-MM-dd')
-      let pack = parseInt(this.firstOrderProduct.pack) + 1
+      let pack = parseInt(this.firstOrderProduct.pack2) + 1
       if (this.firstOrderProduct['delivery_area'] === '') {
         this.firstOrderProduct['delivery_area'] = '--'
       }

@@ -109,7 +109,9 @@ export default {
       return true
     },
     func_label (E) {
+      console.log('start func')
       this.printLabel(E)
+      console.log('end func')
     },
     printLabel (E) { // 打印标签
       let activeLines = this.$store.getters.currentPageData({source: $(E).data('target'), key: 'content'})
@@ -136,6 +138,7 @@ export default {
       } else {
         return false
       }
+      console.log('activeLines')
       let printDate = new Date().Format('yyyy-MM-dd')
       let pack = orderProduct['pack']
       if (orderProduct['delivery_area'] === '') {
