@@ -332,6 +332,9 @@ table .td-lg {
   .print-label > table > tr {
     height: 7.8mm;
   }
+  .print-label > table.plates > tr {
+    min-height: 7.8mm;
+  }
   .print-label > table.basic-info > tbody > tr > td {
     display: inline-block;
     width: 35mm;

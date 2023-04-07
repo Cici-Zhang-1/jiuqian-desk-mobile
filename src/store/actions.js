@@ -243,6 +243,13 @@ export default {
     })
   },
 
+  FETCH_PRICING_DATA: ({ commit, dispatch, state }, { url, configs, target }) => {
+    return service.get(url, configs).then(data => {
+      commit('SET_PRICING_DATA', { ...data, target })
+      return data
+    })
+  },
+
   FETCH_ACC_DATA: ({commit, dispatch, state}, { url, configs = {}, target }) => {
     return service.get(url, configs).then(data => {
       if (typeof data === 'object') {

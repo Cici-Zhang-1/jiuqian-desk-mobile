@@ -9,7 +9,8 @@
         <th v-if="show('request_outdate')">要求出厂</th>
         <th v-if="show('end_datetime')">实际出厂</th>
         <th v-if="show('owner')">业主</th>
-        <th v-if="show('sum')">实收</th>
+        <th v-if="show('sum')">金额</th>
+        <th v-if="show('check_sum')">核价</th>
         <th v-if="show('virtual_sum')">应收</th>
         <th v-if="show('payed')">已支付</th>
         <th v-if="show('remark')">备注</th>
@@ -26,6 +27,7 @@
         <td v-if="show('end_datetime')">{{ table.end_datetime }}</td>
         <td v-if="show('owner')">{{ table.owner }}</td>
         <td v-if="show('sum')">{{ table.sum }}</td>
+        <td v-if="show('check_sum')">{{ table['check_sum'] }}</td>
         <td v-if="show('virtual_sum')">{{ table['virtual_sum'] }}</td>
         <td v-if="show('payed')">{{ table.payed }}</td>
         <td v-if="show('remark')">{{ table.remark }}</td>

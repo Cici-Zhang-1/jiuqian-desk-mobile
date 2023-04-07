@@ -107,6 +107,16 @@ export default new Router({
       component: () => import(/* webpackChunkName: "valuate" */ '@/views/order/valuate/Valuate')
     },
     {
+      name: 'PricingSheet',
+      path: '/order/pricing_sheet',
+      component: () => import(/* webpackChunkName: "pricing_sheet" */ '@/views/order/pricing_sheet/PricingSheet')
+    },
+    {
+      name: 'Pricing',
+      path: '/order/pricing_add',
+      component: () => import(/* webpackChunkName: "pricing" */ '@/views/order/pricing/Pricing')
+    },
+    {
       name: 'WaitDelivery',
       path: '/order/wait_delivery',
       component: () => import(/* webpackChunkName: "wait_delivery" */ '@/views/order/wait_delivery/WaitDelivery')

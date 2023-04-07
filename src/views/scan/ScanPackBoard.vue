@@ -190,7 +190,6 @@ export default {
       let plates = ''
       let platesNum = 0 // 板块数目
       if (activeLines && activeLines.length !== 0) {
-        platesNum = activeLines.length
         let activeLinesMerge = {}
         activeLines.forEach(v => {
           if (v['scanner'] === null) {
@@ -199,6 +198,7 @@ export default {
               activeLinesMerge[productNum] = []
             }
             activeLinesMerge[productNum].push(plateNum)
+            platesNum = platesNum + 1
           }
         })
         if (JSON.stringify(activeLinesMerge) !== '{}') {
@@ -242,12 +242,12 @@ export default {
           '<table class="basic-info">' +
             '<tr>' +
               '<td>' + this.firstOrderProduct['order_product_num'] + '</td>' +
-              '<td>' + dealerName + '</td>' +
+              '<td>' + this.firstOrderProduct['product'] + '</td>' +
             '</tr>'
 
       if (this.firstOrderProduct['delivery_area'] !== 'OEA') {
         packLabel = packLabel + '<tr>' +
-          '<td>' + this.firstOrderProduct['delivery_linker'] + '</td>' +
+          '<td>' + dealerName + '</td>' +
           '<td>' + this.firstOrderProduct['owner'] + '</td>' +
           '</tr>'
       }

@@ -200,6 +200,10 @@ export default {
     Vue.set(target, 'valuate', contents)
   },
 
+  SET_PRICING_DATA: (state, { contents, target }) => {
+    Vue.set(target, 'pricing', contents)
+  },
+
   SET_HIDE_ITEM: (state, { source, v }) => {
     if (!(v instanceof Array)) {
       v = [v]

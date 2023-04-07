@@ -11,6 +11,8 @@
         <th v-if="show('amount')">数量</th>
         <th v-if="show('sum')">金额</th>
         <th v-if="show('remark')">备注</th>
+        <th v-if="show('check_unit_price')">核价单价</th>
+        <th v-if="show('check_sum')">核价</th>
       </tr>
     </thead>
     <tbody >
@@ -23,6 +25,8 @@
         <td v-if="show('amount')">{{ item.amount }}</td>
         <td v-if="show('sum')">{{ item.sum }}</td>
         <td v-if="show('remark')">{{ item.remark }}</td>
+        <td v-if="show('check_unit_price')">{{ item['check_unit_price'] }}</td>
+        <td v-if="show('check_sum')">{{ item['check_sum'] }}</td>
       </tr>
     </tbody>
     <tfoot>
