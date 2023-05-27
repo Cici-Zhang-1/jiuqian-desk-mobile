@@ -110,19 +110,20 @@ export default {
       let Data = this.pricingData['content'][$(e.target).parents('tr').eq(0).find('input[name="index"]').val()]
       UnitPrice = parseFloat(Data['check_unit_price'])
       if (Data['area'] === undefined) {
-        Amount = parseFloat(Data['amount'])
+        Amount = Data['amount']
       } else {
-        Amount = parseFloat(Data['area'])
+        Amount = Data['area']
       }
       if (Data['open_hole'] !== undefined) {
-        OpenHole = parseInt(Data['open_hole'])
-        OpenHoleUnitPrice = parseFloat(Data['open_hole_check_unit_price'])
+        OpenHole = Data['open_hole']
+        OpenHoleUnitPrice = Data['open_hole_check_unit_price']
       }
       if (Data['invisibility'] !== undefined) {
-        Invisibility = parseFloat(Data['invisibility'])
-        InvisibilityUnitPrice = parseFloat(Data['invisibility_check_unit_price'])
+        Invisibility = Data['invisibility']
+        InvisibilityUnitPrice = Data['invisibility_check_unit_price']
       }
       Data['check_sum'] = Math.ceil((UnitPrice * Amount + OpenHole * OpenHoleUnitPrice + Invisibility * InvisibilityUnitPrice) * M_TWO) / M_TWO
+      console.log(Data['check_sum'])
     },
     fetchData () { // 获取数据
       // if (typeof this.pricingData === 'undefined' || JSON.stringify(this.pricingData) === '{}') {

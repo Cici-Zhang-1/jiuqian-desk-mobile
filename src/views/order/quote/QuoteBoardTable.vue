@@ -5,6 +5,7 @@
       <tr>
         <th>#</th>
         <th v-if="show('board')">板材</th>
+        <th v-if="show('board')">板材</th>
         <th v-if="show('area')">面积</th>
         <th v-if="show('unit_price')">单价</th>
         <th v-if="show('sum')">金额</th>
