@@ -259,5 +259,16 @@ export default {
         throw new FetchError('发生未知错误，请联系管理员!')
       }
     })
+  },
+
+  FETCH_PACK_DATA: ({commit, dispatch, state}, { url, configs = {}, target }) => {
+    return service.get(url, configs).then(data => {
+      if (typeof data === 'object') {
+        commit('SET_PACK_DATA', { ...data, target })
+        return data
+      } else {
+        throw new FetchError('发生未知错误，请联系管理员!')
+      }
+    })
   }
 }

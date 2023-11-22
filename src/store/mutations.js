@@ -239,5 +239,9 @@ export default {
     } else {
       Vue.set(target, 'data', contents)
     }
+  },
+
+  SET_PACK_DATA: (state, { contents, target }) => {
+    Vue.set(target, 'order_product', contents['order_product'])
   }
 }

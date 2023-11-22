@@ -67,7 +67,10 @@ export default {
     },
     bug: {
       type: Boolean
-    }
+    }// ,
+    // reloadPack: {
+    //   type: Boolean
+    // }
   },
   data () {
     return {
@@ -155,7 +158,12 @@ export default {
       handler: function (to, from) {
         this.reportBug()
       }
-    }
+    }// ,
+    // reloadPack: {
+    //   handler: function (to, from) {
+    //     this.fetchPack()
+    //   }
+    // }
   },
   methods: {
     dispose () {
@@ -297,6 +305,25 @@ export default {
         this.$bar.finish()
       })
     },
+    // fetchPack (params = {}) { // 获取数据
+    //   this.$bar.start()
+    //   this.loading = true
+    //   this.error = false
+    //   this.$store.dispatch('FETCH_PACK_DATA', {
+    //     url: this.card.url,
+    //     configs: {
+    //       params: {
+    //         ...this.pageSearchValues,
+    //         ...this.$router.currentRoute.query,
+    //         ...params
+    //       }
+    //     },
+    //     target: this.card.data
+    //   }).finally(() => {
+    //     this.loading = false
+    //     this.$bar.finish()
+    //   })
+    // },
     setLastScanned () {
       let lastScanned = this.$localStorage.get('last_scanned')
       if (lastScanned === undefined || this.newScan) {

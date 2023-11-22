@@ -2,7 +2,7 @@
   <div class="row mt-3 j-page" :id="title">
     <div class="col-12 border-bottom rounded-bottom mb-2 border-primary text-center d-print-block"><h5>{{ label }}</h5></div>
     <div is="scan-pack-board-page-search" :pageSearches="disposeThick(pageSearches)" :qrcodeFocus="focus" v-if="pageSearches" @search="searchQrcode($event)"></div>
-    <div is="scan-pack-board-func" @show="show($event)" @save="save($event)" @refresh="disposeRefresh($event)">
+    <div is="scan-pack-board-func" @show="show($event)" @save="save($event)" @cancel="cancel($event)" @refresh="disposeRefresh($event)">
     </div>
     <div is="scan-pack-board-card" :card="get_card('scan_pack_board_table')" v-if="cards" :reload="reload" :search="search" :showAll="showAll" :refresh="refresh" @focus-qrcode="disposeFocus()"></div>
   </div>
@@ -56,6 +56,7 @@ export default {
       focus: false,
       last: false,
       bug: false,
+      // reloadPack: false,
       data: {},
       packType: 'both',
       autoSaveId: undefined,
@@ -66,7 +67,8 @@ export default {
     ...mapGetters({
       cards: 'currentPageCards', // 当前页面应该展示的数据
       pageSearches: 'currentPageSearches',
-      label: 'currentLabel'
+      label: 'currentLabel',
+      pageSearchValues: 'currentPageSearchValues'
     })
   },
   created () {
@@ -143,6 +145,10 @@ export default {
       this.focus = !this.focus
       return true
     },
+    // disposeReloadPack () {
+    //   this.reloadPack = !this.reloadPack
+    //   return true
+    // },
     setData (E) {
       let Target = $(E).data('target')
       let V = this.$store.getters.currentPageActiveLineVs({source: Target, all: $(E).data('multiple'), keys: ['v', 'scanner']}).filter(__ => __.scanner === null).map(__ => __.v)
@@ -152,6 +158,16 @@ export default {
         this.firstOrderProduct = this.get_card('scan_pack_board_table').data['order_product']
         this.data.pack = parseInt(this.firstOrderProduct.pack2) + 1
         this.data.order_product_board_plate_id = this.firstOrderProduct['v']
+        return true
+      } else {
+        return false
+      }
+    },
+    setActiveData (E) {
+      let Target = $(E).data('target')
+      let V = this.$store.getters.currentPageActiveLineVs({source: Target, all: $(E).data('multiple'), keys: ['v', 'scanner']}).map(__ => __.v)
+      if (V && V.length !== 0) {
+        this.data.v = V
         return true
       } else {
         return false
@@ -169,6 +185,14 @@ export default {
         return false
       }
     },
+    async cancel (E) {
+      console.log(1234)
+      if (this.setActiveData(E)) {
+        console.log(2345)
+        let postReturn = await service.post($(E).attr('href'), this.data)
+        return !postReturn.code && this.disposeReset() && this.disposeFocus()
+      }
+    },
     async autoSave (E) {
       if (this.setData(E)) {
         let postReturn = await service.post($(E).attr('href'), this.data)
@@ -176,6 +200,16 @@ export default {
       }
     },
     async submit (E) {
+      let getReturn = await service.get(this.get_card('scan_pack_board_table').url, {
+        params: {
+          ...this.pageSearchValues,
+          ...this.$router.currentRoute.query
+        }
+      })
+      if (!getReturn.code) {
+        this.$store.commit('SET_PACK_DATA', { ...getReturn, target: this.get_card('scan_pack_board_table').data })
+        this.firstOrderProduct = getReturn.contents['order_product']
+      }
       let postReturn = await service.post($(E).attr('href'), this.data)
       if (!postReturn.code) {
         // alert(postReturn.message)

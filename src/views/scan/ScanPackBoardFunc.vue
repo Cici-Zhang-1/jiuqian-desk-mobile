@@ -11,7 +11,8 @@
       </div>
     </div>
     <a class="btn btn-primary mb-2 mb-md-3" href="/order/scan_pack_board/edit" data-toggle="save" data-target="#scanPackBoardTable" data-multiple="true" @click.prevent="$emit('save', $event.currentTarget)" ><i class="fa fa-print"></i>&nbsp;&nbsp;打印</a>
-    <a class="btn btn-default mb-2 mb-md-3" href="/order/scan_pack_board/edit" data-toggle="refresh" data-target="#scanPackBoardTable" data-multiple="true" @click.prevent="$emit('refresh', $event.currentTarget)"><i class="fa fa-refresh"></i>&nbsp;&nbsp;刷新</a>
+    <a class="btn btn-primary mb-2 mb-md-3" href="/order/scan_pack_board/cancel" data-toggle="cancel" data-target="#scanPackBoardTable" data-multiple="true" @click.prevent="$emit('cancel', $event.currentTarget)" ><i class="fa fa-times"></i>&nbsp;&nbsp;取消</a>
+    <a class="btn btn-default mb-2 mb-md-3" href="/order/scan_pack_board/refresh" data-toggle="refresh" data-target="#scanPackBoardTable" data-multiple="true" @click.prevent="$emit('refresh', $event.currentTarget)"><i class="fa fa-refresh"></i>&nbsp;&nbsp;刷新</a>
     <slot></slot>
   </div>
 </template>
