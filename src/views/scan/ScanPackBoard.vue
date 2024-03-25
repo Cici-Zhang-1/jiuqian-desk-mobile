@@ -275,8 +275,7 @@ export default {
           '</div>' +
           '<table class="basic-info">' +
             '<tr>' +
-              '<td>' + this.firstOrderProduct['order_product_num'] + '</td>' +
-              '<td>' + this.firstOrderProduct['product'] + '</td>' +
+              '<td class="basic-info-order" colspan="2">订单号:' + this.firstOrderProduct['order_product_num'] + '&nbsp;&nbsp;' + this.firstOrderProduct['product'] + '</td>' +
             '</tr>'
 
       if (this.firstOrderProduct['delivery_area'] !== 'OEA') {

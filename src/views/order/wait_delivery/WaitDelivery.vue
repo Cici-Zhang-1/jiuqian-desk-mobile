@@ -130,7 +130,7 @@ export default {
       } else {
         let unPayed = []
         this.activeLines.map(__ => {
-          if ((__['sum'] - __['payed']).toFixed(3) > __['balance']) {
+          if ((__['sum'] - __['payed']) > __['balance']) {
             if (__['pay_status'] !== 1 && __['pay_status'] !== '1') {
               if (__['payterms'] === '宽松发货') {
                 if (__['application_status'] !== 2 && __['application_status'] !== '2') {

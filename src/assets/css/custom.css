@@ -342,6 +342,9 @@ table .td-lg {
     white-space: nowrap;
     text-overflow: ellipsis;
   }
+  .print-label > table.basic-info > tbody > tr > td.basic-info-order {
+    width: 70mm;
+  }
   .print-label .package-total {
     position: absolute;
     top: 26mm;

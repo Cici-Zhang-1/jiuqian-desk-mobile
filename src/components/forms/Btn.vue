@@ -169,13 +169,12 @@ export default {
         '</div>' +
         '<table class="basic-info">' +
         '<tr>' +
-        '<td>' + orderProduct['order_product_num'] + '</td>' +
-        '<td>' + dealerName + '</td>' +
+        '<td class="basic-info-order" colspan="2">订单号:' + orderProduct['order_product_num'] + '&nbsp;&nbsp;' + orderProduct['product'] + '</td>' +
         '</tr>'
 
       if (orderProduct['delivery_area'] !== 'OEA') {
         packLabel = packLabel + '<tr>' +
-          '<td>' + orderProduct['delivery_linker'] + '</td>' +
+          '<td>' + dealerName + '</td>' +
           '<td>' + orderProduct['owner'] + '</td>' +
           '</tr>'
       }
